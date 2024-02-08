@@ -1,0 +1,17 @@
+import { NuxtPage } from '#build/components';
+
+<script>
+	import '../src/styles/main.css'
+	import Navbar from './src/components/Navbar.vue';
+
+	export default { 
+		components: { Navbar }
+	};
+</script>
+
+<template>
+	<div>
+		<Navbar />
+		<NuxtPage />
+	</div>
+</template>
