@@ -3,8 +3,17 @@ import type { Serialize, Simplify } from 'nitropack'
 declare module 'nitropack' {
   type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
   interface InternalApi {
+    '/api/auth/**': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/[...]').default>>>>
+    }
     '/api/briefings': {
-      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/briefings').default>>>>
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/briefings/index').default>>>>
+    }
+    '/api/briefings/new': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/briefings/new/index').default>>>>
+    }
+    '/api/users/briefings': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/users/briefings/index').default>>>>
     }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>>>

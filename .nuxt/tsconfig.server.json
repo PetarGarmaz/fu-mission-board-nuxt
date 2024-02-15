@@ -51,6 +51,12 @@
       "public/*": [
         "../public/*"
       ],
+      "#auth": [
+        "../node_modules/@sidebase/nuxt-auth/dist/runtime/server/services"
+      ],
+      "#auth/*": [
+        "../node_modules/@sidebase/nuxt-auth/dist/runtime/server/services/*"
+      ],
       "#nuxt/mongoose": [
         "../node_modules/nuxt-mongoose/dist/runtime/server/services"
       ],
@@ -62,8 +68,11 @@
   "include": [
     "./types/nitro-nuxt.d.ts",
     "../node_modules/@sidebase/nuxt-session/runtime/server",
+    "../node_modules/@sidebase/nuxt-auth/runtime/server",
     "../node_modules/nuxt-mongoose/runtime/server",
-    "../node_modules/@nuxt/devtools/runtime/server",
+    "../node_modules/@samk-dev/nuxt-vcalendar/runtime/server",
+    "../node_modules/mobx-vue-lite/nuxt/runtime/server",
+    "../node_modules/nuxt/node_modules/@nuxt/devtools/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "./types/nitro.d.ts",
     "../**/*",

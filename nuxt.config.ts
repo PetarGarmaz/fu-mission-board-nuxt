@@ -1,11 +1,30 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	devtools: { enabled: true },
-	modules: ['@sidebase/nuxt-session', "nuxt-mongoose"],
+	modules: ['@sidebase/nuxt-session', '@sidebase/nuxt-auth', "nuxt-mongoose", '@samk-dev/nuxt-vcalendar', 'mobx-vue-lite/nuxt'],
+	build: {
+		babel: {
+		  plugins: [
+			[
+			  '@babel/plugin-proposal-decorators',
+			  {
+				legacy: true
+			  }
+			],
+			[
+			  '@babel/plugin-proposal-class-properties',
+			  {
+				loose: true
+			  }
+			]
+		  ]
+		},
+		transpile: ['@vuepic/vue-datepicker']
+    },
 	postcss: {
 		plugins: {
-		tailwindcss: {},
-		autoprefixer: {},
+			tailwindcss: {},
+			autoprefixer: {},
 		},
 	},
 	mongoose: {
@@ -13,4 +32,5 @@ export default defineNuxtConfig({
 		options: {dbName: "fu_mission_board"},
 		modelsDir: 'models',
 	},
+	
 })

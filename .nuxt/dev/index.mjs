@@ -3,33 +3,36 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { parentPort, threadId } from 'node:worker_threads';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, isEvent, createEvent, getRequestHeader, eventHandler, setHeaders, sendRedirect, proxyRequest, setResponseHeader, send, getResponseStatus, setResponseStatus, setResponseHeaders, getRequestHeaders, deleteCookie, parseCookies, setCookie, readBody, createError, createApp, createRouter as createRouter$1, toNodeListener, fetchWithEvent, lazyEventHandler, getQuery as getQuery$1, getResponseStatusText } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/h3/dist/index.mjs';
-import mongoose, { Schema } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/mongoose/index.js';
-import { getRequestDependencies, getPreloadLinks, getPrefetchLinks, createRenderer } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/vue-bundle-renderer/dist/runtime.mjs';
-import { stringify, uneval } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/devalue/index.js';
-import { renderToString } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/vue/server-renderer/index.mjs';
-import { renderSSRHead } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/@unhead/ssr/dist/index.mjs';
-import { createFetch as createFetch$1, Headers as Headers$1 } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/ofetch/dist/node.mjs';
-import destr from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/destr/dist/index.mjs';
-import { createCall, createFetch } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/unenv/runtime/fetch/index.mjs';
-import { createHooks } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/hookable/dist/index.mjs';
-import { snakeCase } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/scule/dist/index.mjs';
-import { klona } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/klona/dist/index.mjs';
-import defu, { defuFn } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/defu/dist/defu.mjs';
-import { hash } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/ohash/dist/index.mjs';
-import { parseURL, withoutBase, joinURL, getQuery, withQuery } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/ufo/dist/index.mjs';
-import { createStorage, prefixStorage } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/unstorage/dist/index.mjs';
-import unstorage_47drivers_47fs from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/unstorage/drivers/fs.mjs';
-import { toRouteMatcher, createRouter } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/radix3/dist/index.mjs';
-import { consola } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/unenv/runtime/npm/consola.mjs';
-import { colors } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/unenv/runtime/npm/consola/utils.mjs';
-import { nanoid } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/nanoid/index.js';
-import dayjs from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/dayjs/dayjs.min.js';
-import sessionDriver from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/unstorage/drivers/memory.mjs';
-import * as argon2 from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/argon2/argon2.js';
-import { version, unref } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/vue/index.mjs';
-import { createServerHead as createServerHead$1 } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/unhead/dist/index.mjs';
-import { defineHeadPlugin } from 'file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/node_modules/@unhead/shared/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, isEvent, createEvent, getRequestHeader, eventHandler, setHeaders, sendRedirect, proxyRequest, setResponseHeader, send, getResponseStatus, setResponseStatus, setResponseHeaders, getRequestHeaders, deleteCookie, parseCookies, setCookie, readBody, createError, createApp, createRouter as createRouter$1, toNodeListener, fetchWithEvent, lazyEventHandler, appendHeader, getHeaders, getMethod, getQuery as getQuery$1, isMethod, getResponseStatusText } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/h3/dist/index.mjs';
+import DiscordProvider from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/next-auth/providers/discord.js';
+import { AuthHandler } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/next-auth/core/index.js';
+import defu, { defuFn, defu as defu$1 } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/defu/dist/defu.mjs';
+import mongoose, { Schema } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/mongoose/index.js';
+import { getRequestDependencies, getPreloadLinks, getPrefetchLinks, createRenderer } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/vue-bundle-renderer/dist/runtime.mjs';
+import { stringify, uneval } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/devalue/index.js';
+import { renderToString } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/vue/server-renderer/index.mjs';
+import { renderSSRHead } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/@unhead/ssr/dist/index.mjs';
+import { createFetch as createFetch$1, Headers as Headers$1 } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/ofetch/dist/node.mjs';
+import destr from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/destr/dist/index.mjs';
+import { createCall, createFetch } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/unenv/runtime/fetch/index.mjs';
+import { createHooks } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/hookable/dist/index.mjs';
+import { snakeCase } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/scule/dist/index.mjs';
+import { klona } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/klona/dist/index.mjs';
+import { hash } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/ohash/dist/index.mjs';
+import { parseURL, withoutBase, joinURL, getQuery, withQuery } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/ufo/dist/index.mjs';
+import { createStorage, prefixStorage } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/unstorage/dist/index.mjs';
+import unstorage_47drivers_47fs from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/unstorage/drivers/fs.mjs';
+import { toRouteMatcher, createRouter } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/radix3/dist/index.mjs';
+import getURL from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/requrl/dist/requrl.js';
+import { consola } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/unenv/runtime/npm/consola.mjs';
+import { colors } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/unenv/runtime/npm/consola/utils.mjs';
+import { nanoid } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/nanoid/index.js';
+import dayjs from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/dayjs/dayjs.min.js';
+import sessionDriver from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/unstorage/drivers/memory.mjs';
+import * as argon2 from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/argon2/argon2.js';
+import { version, unref } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/vue/index.mjs';
+import { createServerHead as createServerHead$1 } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/unhead/dist/index.mjs';
+import { defineHeadPlugin } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/@unhead/shared/dist/index.mjs';
 
 const r=Object.create(null),E=e=>globalThis.process?.env||globalThis._importMeta_.env||globalThis.Deno?.env.toObject()||globalThis.__env__||(e?r:globalThis),s=new Proxy(r,{get(e,o){return E()[o]??r[o]},has(e,o){const i=E();return o in i||o in r},set(e,o,i){const g=E(!0);return g[o]=i,!0},deleteProperty(e,o){if(!o)return !1;const i=E(!0);return delete i[o],!0},ownKeys(){const e=E(!0);return Object.keys(e)}}),t=typeof process<"u"&&process.env&&"development"||"",p=[["APPVEYOR"],["AWS_AMPLIFY","AWS_APP_ID",{ci:!0}],["AZURE_PIPELINES","SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"],["AZURE_STATIC","INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN"],["APPCIRCLE","AC_APPCIRCLE"],["BAMBOO","bamboo_planKey"],["BITBUCKET","BITBUCKET_COMMIT"],["BITRISE","BITRISE_IO"],["BUDDY","BUDDY_WORKSPACE_ID"],["BUILDKITE"],["CIRCLE","CIRCLECI"],["CIRRUS","CIRRUS_CI"],["CLOUDFLARE_PAGES","CF_PAGES",{ci:!0}],["CODEBUILD","CODEBUILD_BUILD_ARN"],["CODEFRESH","CF_BUILD_ID"],["DRONE"],["DRONE","DRONE_BUILD_EVENT"],["DSARI"],["GITHUB_ACTIONS"],["GITLAB","GITLAB_CI"],["GITLAB","CI_MERGE_REQUEST_ID"],["GOCD","GO_PIPELINE_LABEL"],["LAYERCI"],["HUDSON","HUDSON_URL"],["JENKINS","JENKINS_URL"],["MAGNUM"],["NETLIFY"],["NETLIFY","NETLIFY_LOCAL",{ci:!1}],["NEVERCODE"],["RENDER"],["SAIL","SAILCI"],["SEMAPHORE"],["SCREWDRIVER"],["SHIPPABLE"],["SOLANO","TDDIUM"],["STRIDER"],["TEAMCITY","TEAMCITY_VERSION"],["TRAVIS"],["VERCEL","NOW_BUILDER"],["VERCEL","VERCEL",{ci:!1}],["VERCEL","VERCEL_ENV",{ci:!1}],["APPCENTER","APPCENTER_BUILD_ID"],["CODESANDBOX","CODESANDBOX_SSE",{ci:!1}],["STACKBLITZ"],["STORMKIT"],["CLEAVR"],["ZEABUR"],["CODESPHERE","CODESPHERE_APP_ID",{ci:!0}],["RAILWAY","RAILWAY_PROJECT_ID"],["RAILWAY","RAILWAY_SERVICE_ID"]];function B(){if(globalThis.process?.env)for(const e of p){const o=e[1]||e[0];if(globalThis.process?.env[o])return {name:e[0].toLowerCase(),...e[2]}}return globalThis.process?.env?.SHELL==="/bin/jsh"&&globalThis.process?.versions?.webcontainer?{name:"stackblitz",ci:!1}:{name:"",ci:!1}}const l=B(),d=l.name;function n(e){return e?e!=="false":!1}const I=globalThis.process?.platform||"",T=n(s.CI)||l.ci!==!1,R=n(globalThis.process?.stdout&&globalThis.process?.stdout.isTTY);n(s.DEBUG);const C=t==="test"||n(s.TEST);n(s.MINIMAL)||T||C||!R;const a=/^win/i.test(I);!n(s.NO_COLOR)&&(n(s.FORCE_COLOR)||(R||a)&&s.TERM!=="dumb"||T);const _=(globalThis.process?.versions?.node||"").replace(/^v/,"")||null;Number(_?.split(".")[0])||null;const W=globalThis.process||Object.create(null),c={versions:{}};new Proxy(W,{get(e,o){if(o==="env")return s;if(o in e)return e[o];if(o in c)return c[o]}});const A=globalThis.process?.release?.name==="node",L=!!globalThis.Bun||!!globalThis.process?.versions?.bun,D=!!globalThis.Deno,O=!!globalThis.fastly,S=!!globalThis.Netlify,N=!!globalThis.EdgeRuntime,u=globalThis.navigator?.userAgent==="Cloudflare-Workers",b=!!globalThis.__lagon__,F=[[S,"netlify"],[N,"edge-light"],[u,"workerd"],[O,"fastly"],[D,"deno"],[L,"bun"],[A,"node"],[b,"lagon"]];function G(){const e=F.find(o=>o[0]);if(e)return {name:e[1]}}const P=G();P?.name||"";
 
@@ -79,7 +82,31 @@ const _inlineRuntimeConfig = {
         ],
         "basePath": "/api/session"
       }
-    }
+    },
+    "auth": {
+      "computed": {
+        "origin": "",
+        "pathname": "/api/auth",
+        "fullBaseUrl": "/api/auth"
+      },
+      "isEnabled": true,
+      "session": {
+        "enableRefreshPeriodically": false,
+        "enableRefreshOnWindowFocus": true
+      },
+      "globalAppMiddleware": {
+        "isEnabled": false,
+        "allow404WithoutAuth": true,
+        "addDefaultCallbackUrl": true
+      },
+      "provider": {
+        "type": "authjs",
+        "trustHost": false,
+        "defaultProvider": "",
+        "addDefaultCallbackUrl": true
+      }
+    },
+    "vcalendar": ""
   },
   "session": {
     "isEnabled": true,
@@ -115,7 +142,7 @@ const _inlineRuntimeConfig = {
       "dbName": "fu_mission_board"
     },
     "devtools": true,
-    "modelsDir": "D:/Projects/Web Dev/Freelancers Union/fu-mission-board-nuxt/server/models"
+    "modelsDir": "D:/Projects/Web Dev/fu-mission-board-nuxt/server/models"
   }
 };
 const ENV_PREFIX = "NITRO_";
@@ -183,7 +210,7 @@ new Proxy(/* @__PURE__ */ Object.create(null), {
   }
 });
 
-const serverAssets = [{"baseName":"server","dir":"D:/Projects/Web Dev/Freelancers Union/fu-mission-board-nuxt/server/assets"}];
+const serverAssets = [{"baseName":"server","dir":"D:/Projects/Web Dev/fu-mission-board-nuxt/server/assets"}];
 
 const assets = createStorage();
 
@@ -195,11 +222,11 @@ const storage$1 = createStorage({});
 
 storage$1.mount('/assets', assets);
 
-storage$1.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"D:\\Projects\\Web Dev\\Freelancers Union\\fu-mission-board-nuxt","ignore":["**/node_modules/**","**/.git/**"]}));
-storage$1.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"D:\\Projects\\Web Dev\\Freelancers Union\\fu-mission-board-nuxt\\server","ignore":["**/node_modules/**","**/.git/**"]}));
-storage$1.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"D:\\Projects\\Web Dev\\Freelancers Union\\fu-mission-board-nuxt\\.nuxt","ignore":["**/node_modules/**","**/.git/**"]}));
-storage$1.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"D:\\Projects\\Web Dev\\Freelancers Union\\fu-mission-board-nuxt\\.nuxt\\cache","ignore":["**/node_modules/**","**/.git/**"]}));
-storage$1.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"D:\\Projects\\Web Dev\\Freelancers Union\\fu-mission-board-nuxt\\.data\\kv","ignore":["**/node_modules/**","**/.git/**"]}));
+storage$1.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"D:\\Projects\\Web Dev\\fu-mission-board-nuxt","ignore":["**/node_modules/**","**/.git/**"]}));
+storage$1.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"D:\\Projects\\Web Dev\\fu-mission-board-nuxt\\server","ignore":["**/node_modules/**","**/.git/**"]}));
+storage$1.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"D:\\Projects\\Web Dev\\fu-mission-board-nuxt\\.nuxt","ignore":["**/node_modules/**","**/.git/**"]}));
+storage$1.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"D:\\Projects\\Web Dev\\fu-mission-board-nuxt\\.nuxt\\cache","ignore":["**/node_modules/**","**/.git/**"]}));
+storage$1.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"D:\\Projects\\Web Dev\\fu-mission-board-nuxt\\.data\\kv","ignore":["**/node_modules/**","**/.git/**"]}));
 
 function useStorage(base = "") {
   return base ? prefixStorage(storage$1, base) : storage$1;
@@ -626,11 +653,21 @@ if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
 window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 `;
 
-const _qlxu4pFcPG = (function(nitro) {
+const _k3Yc2qbFb2 = (function(nitro) {
   nitro.hooks.hook("render:html", (htmlContext) => {
     htmlContext.head.push(`<script>${script}<\/script>`);
   });
 });
+
+const ERROR_MESSAGES = {
+  NO_SECRET: "AUTH_NO_SECRET: No `secret` - this is an error in production, see https://sidebase.io/nuxt-auth/resources/errors. You can ignore this during development",
+  NO_ORIGIN: "AUTH_NO_ORIGIN: No `origin` - this is an error in production, see https://sidebase.io/nuxt-auth/resources/errors. You can ignore this during development"
+};
+
+const isProduction = "development" === "production";
+const useTypedBackendConfig = (runtimeConfig, _type) => {
+  return runtimeConfig.public.auth.provider;
+};
 
 function defineRenderHandler(handler) {
   return eventHandler(async (event) => {
@@ -674,6 +711,34 @@ function publicAssetsURL(...path) {
   return path.length ? joinURL(publicBase, ...path) : publicBase;
 }
 
+async function defineMongooseConnection({ uri, options } = {}) {
+  const config = useRuntimeConfig().mongoose;
+  const mongooseUri = uri || config.uri;
+  const mongooseOptions = options || config.options;
+  try {
+    await mongoose.connect(mongooseUri, { ...mongooseOptions });
+    consola.success("Connected to MongoDB");
+  } catch (err) {
+    consola.error(colors.red(`Error connecting to MongoDB: ${err}`));
+  }
+}
+
+function defineMongooseModel(nameOrOptions, schema, options, hooks) {
+  let name;
+  if (typeof nameOrOptions === "string") {
+    name = nameOrOptions;
+  } else {
+    name = nameOrOptions.name;
+    schema = nameOrOptions.schema;
+    options = nameOrOptions.options;
+    hooks = nameOrOptions.hooks;
+  }
+  const newSchema = new mongoose.Schema(schema, options);
+  if (hooks)
+    hooks(newSchema);
+  return mongoose.model(name, newSchema);
+}
+
 Promise.resolve().then(function () { return userModel; });
 const BriefingSchema = defineMongooseModel({
   name: "Briefing",
@@ -708,7 +773,7 @@ const BriefingSchema = defineMongooseModel({
   }
 });
 
-defineMongooseModel({
+const UserSchema = defineMongooseModel({
   name: "User",
   schema: {
     email: {
@@ -730,47 +795,64 @@ defineMongooseModel({
 });
 
 const userModel = /*#__PURE__*/Object.freeze({
-  __proto__: null
+  __proto__: null,
+  UserSchema: UserSchema
 });
 
-async function defineMongooseConnection({ uri, options } = {}) {
-  const config = useRuntimeConfig().mongoose;
-  const mongooseUri = uri || config.uri;
-  const mongooseOptions = options || config.options;
+const getServerOrigin = (event) => {
+  const envOrigin = process.env.AUTH_ORIGIN;
+  if (envOrigin) {
+    return envOrigin;
+  }
+  const runtimeConfigOrigin = useRuntimeConfig().public.auth.computed.origin;
+  if (runtimeConfigOrigin) {
+    return runtimeConfigOrigin;
+  }
+  if (event && !isProduction) {
+    return getURL(event.node.req, false);
+  }
+  throw new Error(ERROR_MESSAGES.NO_ORIGIN);
+};
+const getRequestURLFromRequest = (event, { trustHost }) => {
+  if (trustHost) {
+    const forwardedValue = getURL(event.node.req);
+    if (forwardedValue) {
+      return Array.isArray(forwardedValue) ? forwardedValue[0] : forwardedValue;
+    }
+  }
+  let origin;
   try {
-    await mongoose.connect(mongooseUri, { ...mongooseOptions });
-    consola.success("Connected to MongoDB");
-  } catch (err) {
-    consola.error(colors.red(`Error connecting to MongoDB: ${err}`));
+    origin = getServerOrigin(event);
+  } catch (error) {
+    return void 0;
   }
-}
+  return joinURL(origin, useRuntimeConfig().public.auth.computed.pathname);
+};
 
-function defineMongooseModel(nameOrOptions, schema, options, hooks) {
-  let name;
-  if (typeof nameOrOptions === "string") {
-    name = nameOrOptions;
-  } else {
-    name = nameOrOptions.name;
-    schema = nameOrOptions.schema;
-    options = nameOrOptions.options;
-    hooks = nameOrOptions.hooks;
-  }
-  const newSchema = new mongoose.Schema(schema, options);
-  if (hooks)
-    hooks(newSchema);
-  return mongoose.model(name, newSchema);
+function defineNitroPlugin$1(def) {
+  return def;
 }
+const _C9mPPShAGv = defineNitroPlugin$1(() => {
+  try {
+    getServerOrigin();
+  } catch (error) {
+    {
+      console.info(ERROR_MESSAGES.NO_ORIGIN);
+    }
+  }
+});
 
 function defineNitroPlugin(def) {
   return def;
 }
-const _UDWa5MwW1T = defineNitroPlugin(() => {
+const _LlJrgI5WZN = defineNitroPlugin(() => {
   defineMongooseConnection();
 });
 
 const plugins = [
-  _qlxu4pFcPG,
-_UDWa5MwW1T
+  _k3Yc2qbFb2,
+_C9mPPShAGv,
+_LlJrgI5WZN
 ];
 
 const errorHandler = (async function errorhandler(error, event) {
@@ -988,7 +1070,7 @@ const ensureSession = async (event) => {
   event.context.session = session;
   return session;
 };
-const _FQScgS = eventHandler(async (event) => {
+const _UZfLdc = eventHandler(async (event) => {
   await ensureSession(event);
   event.res.on("finish", async () => {
     const session = await getSession(event);
@@ -1005,7 +1087,7 @@ const checkIfObjectAndContainsIllegalKeys = (shape) => {
   }
   return !!["id", "createdAt", "ip"].find((key) => Object.prototype.hasOwnProperty.call(shape, key));
 };
-const _we72gR = eventHandler(async (event) => {
+const _7oIihK = eventHandler(async (event) => {
   const body = await readBody(event);
   if (checkIfObjectAndContainsIllegalKeys(body)) {
     throw createError({ statusCode: 400, message: "Trying to pass invalid data to session, likely an object with `id` or `createdAt` fields or a non-object" });
@@ -1017,14 +1099,14 @@ const _we72gR = eventHandler(async (event) => {
   return event.context.session;
 });
 
-const _Lep6jL = eventHandler(async (event) => {
+const _8AJXKB = eventHandler(async (event) => {
   await deleteSession(event);
   return null;
 });
 
-const _YBUkD7 = eventHandler((event) => event.context.session);
+const _RzbcgA = eventHandler((event) => event.context.session);
 
-const _YowIiz = eventHandler(async (event) => {
+const _pXkagm = eventHandler(async (event) => {
   const body = await readBody(event);
   if (checkIfObjectAndContainsIllegalKeys(body)) {
     throw createError({ statusCode: 400, message: "Trying to pass invalid data to session, likely an object with `id` or `createdAt` fields or a non-object" });
@@ -1038,18 +1120,24 @@ const _YowIiz = eventHandler(async (event) => {
   return event.context.session;
 });
 
-const _lazy_S30c7A = () => Promise.resolve().then(function () { return briefings$1; });
-const _lazy_1VrlYB = () => Promise.resolve().then(function () { return renderer$1; });
+const _lazy_rL8vIu = () => Promise.resolve().then(function () { return _____; });
+const _lazy_US74y4 = () => Promise.resolve().then(function () { return index$5; });
+const _lazy_lCeCs0 = () => Promise.resolve().then(function () { return index$3; });
+const _lazy_Td16A9 = () => Promise.resolve().then(function () { return index$1; });
+const _lazy_16Qs8o = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
-  { route: '/api/briefings', handler: _lazy_S30c7A, lazy: true, middleware: false, method: undefined },
-  { route: '/__nuxt_error', handler: _lazy_1VrlYB, lazy: true, middleware: false, method: undefined },
-  { route: '', handler: _FQScgS, lazy: false, middleware: true, method: undefined },
-  { route: '/api/session', handler: _we72gR, lazy: false, middleware: false, method: "patch" },
-  { route: '/api/session', handler: _Lep6jL, lazy: false, middleware: false, method: "delete" },
-  { route: '/api/session', handler: _YBUkD7, lazy: false, middleware: false, method: "get" },
-  { route: '/api/session', handler: _YowIiz, lazy: false, middleware: false, method: "post" },
-  { route: '/**', handler: _lazy_1VrlYB, lazy: true, middleware: false, method: undefined }
+  { route: '/api/auth/**', handler: _lazy_rL8vIu, lazy: true, middleware: false, method: undefined },
+  { route: '/api/briefings', handler: _lazy_US74y4, lazy: true, middleware: false, method: undefined },
+  { route: '/api/briefings/new', handler: _lazy_lCeCs0, lazy: true, middleware: false, method: undefined },
+  { route: '/api/users/briefings', handler: _lazy_Td16A9, lazy: true, middleware: false, method: undefined },
+  { route: '/__nuxt_error', handler: _lazy_16Qs8o, lazy: true, middleware: false, method: undefined },
+  { route: '', handler: _UZfLdc, lazy: false, middleware: true, method: undefined },
+  { route: '/api/session', handler: _7oIihK, lazy: false, middleware: false, method: "patch" },
+  { route: '/api/session', handler: _8AJXKB, lazy: false, middleware: false, method: "delete" },
+  { route: '/api/session', handler: _RzbcgA, lazy: false, middleware: false, method: "get" },
+  { route: '/api/session', handler: _pXkagm, lazy: false, middleware: false, method: "post" },
+  { route: '/**', handler: _lazy_16Qs8o, lazy: true, middleware: false, method: undefined }
 ];
 
 function createNitroApp() {
@@ -1233,11 +1321,178 @@ const errorDev = /*#__PURE__*/Object.freeze({
   template: template$1
 });
 
-const filterBriefings = (data, query, sort, order, future) => {
+let preparedAuthHandler;
+let usedSecret;
+const SUPPORTED_ACTIONS = ["providers", "session", "csrf", "signin", "signout", "callback", "verify-request", "error", "_log"];
+const useConfig = () => useTypedBackendConfig(useRuntimeConfig());
+const readBodyForNext = async (event) => {
+  let body;
+  if (isMethod(event, "PATCH") || isMethod(event, "POST") || isMethod(event, "PUT") || isMethod(event, "DELETE")) {
+    body = await readBody(event);
+  }
+  return body;
+};
+const parseActionAndProvider = ({ context }) => {
+  const params = context.params?._?.split("/");
+  if (!params || ![1, 2].includes(params.length)) {
+    throw createError({ statusCode: 400, statusMessage: `Invalid path used for auth-endpoint. Supply either one path parameter (e.g., \`/api/auth/session\`) or two (e.g., \`/api/auth/signin/github\` after the base path (in previous examples base path was: \`/api/auth/\`. Received \`${params}\`` });
+  }
+  const [unvalidatedAction, providerId] = params;
+  const action = SUPPORTED_ACTIONS.find((action2) => action2 === unvalidatedAction);
+  if (!action) {
+    throw createError({ statusCode: 400, statusMessage: `Called endpoint with unsupported action ${unvalidatedAction}. Only the following actions are supported: ${SUPPORTED_ACTIONS.join(", ")}` });
+  }
+  return { action, providerId };
+};
+const NuxtAuthHandler = (nuxtAuthOptions) => {
+  usedSecret = nuxtAuthOptions?.secret;
+  if (!usedSecret) {
+    {
+      console.info(ERROR_MESSAGES.NO_SECRET);
+      usedSecret = "secret";
+    }
+  }
+  const options = defu$1(nuxtAuthOptions, {
+    secret: usedSecret,
+    logger: void 0,
+    providers: [],
+    trustHost: useConfig().trustHost
+  });
+  const getInternalNextAuthRequestData = async (event) => {
+    const nextRequest = {
+      host: getRequestURLFromRequest(event, { trustHost: useConfig().trustHost }),
+      body: void 0,
+      cookies: parseCookies(event),
+      query: void 0,
+      headers: getHeaders(event),
+      method: getMethod(event),
+      providerId: void 0,
+      error: void 0
+    };
+    if (event.context.checkSessionOnNonAuthRequest === true) {
+      return {
+        ...nextRequest,
+        method: "GET",
+        action: "session"
+      };
+    }
+    const query = getQuery$1(event);
+    const { action, providerId } = parseActionAndProvider(event);
+    const error = query.error;
+    if (Array.isArray(error)) {
+      throw createError({ statusCode: 400, statusMessage: "Error query parameter can only appear once" });
+    }
+    const body = await readBodyForNext(event);
+    return {
+      ...nextRequest,
+      body,
+      query,
+      action,
+      providerId,
+      error: String(error) || void 0
+    };
+  };
+  const handler = eventHandler(async (event) => {
+    const { res } = event.node;
+    const nextRequest = await getInternalNextAuthRequestData(event);
+    const nextResult = await AuthHandler({
+      req: nextRequest,
+      options
+    });
+    if (nextResult.status) {
+      res.statusCode = nextResult.status;
+    }
+    nextResult.cookies?.forEach((cookie) => setCookie(event, cookie.name, cookie.value, cookie.options));
+    nextResult.headers?.forEach((header) => appendHeader(event, header.key, header.value));
+    if (!nextResult.redirect) {
+      return nextResult.body;
+    }
+    if (nextRequest.body?.json) {
+      return { url: nextResult.redirect };
+    }
+    return sendRedirect(event, nextResult.redirect);
+  });
+  if (preparedAuthHandler) {
+    console.warn("You setup the auth handler for a second time - this is likely undesired. Make sure that you only call `NuxtAuthHandler( ... )` once");
+  }
+  preparedAuthHandler = handler;
+  return handler;
+};
+
+const handler = NuxtAuthHandler({
+  providers: [
+    DiscordProvider.default({
+      clientId: process.env.DISCORD_CLIENT_ID,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET,
+      authorization: process.env.DISCORD_AUTHORIZATION,
+      token: "https://discord.com/api/oauth2/token",
+      userinfo: "https://discord.com/api/users/@me"
+    })
+  ],
+  callbacks: {
+    async session({ session, token }) {
+      const sessionUser = await UserSchema.findOne({ email: session.user.email });
+      session.accessToken = token.access_token;
+      session.user.id = sessionUser._id.toString();
+      session.user.isAdmin = sessionUser.isAdmin;
+      return { ...session, isAdmin: true };
+    },
+    async jwt({ token, account, profile }) {
+      if (account) {
+        token.accessToken = account.access_token;
+        token = Object.assign({}, token, { access_token: account.access_token });
+      }
+      return token;
+    },
+    async signIn({ user, account, profile, email, credentials }) {
+      var returnValue = false;
+      try {
+        const userExists = await UserSchema.findOne({ email: user.email });
+        const guildResponse = await fetch("https://discord.com/api/users/@me/guilds", { headers: { Authorization: "Bearer " + account.access_token } });
+        const guilds = await guildResponse.json();
+        var isAdmin = false;
+        for (let i = 0; i < guilds.length; i++) {
+          if (guilds[i].id == "282514718445273089") {
+            const roleResponse = await fetch(`https://discord.com/api/users/@me/guilds/${guilds[i].id}/member`, { headers: { Authorization: "Bearer " + account.access_token } });
+            const memberInfo = await roleResponse.json();
+            for (let j = 0; j < memberInfo.roles.length; j++) {
+              if (memberInfo.roles[j] == "598258350718713864") {
+                returnValue = true;
+              }
+              if (memberInfo.roles[j] == "714949430649815140") {
+                isAdmin = true;
+              }
+            }
+          }
+          ;
+        }
+        if (!userExists && returnValue) {
+          await UserSchema.create({
+            email: user.email,
+            username: user.name,
+            image: user.image,
+            isAdmin
+          });
+        }
+        return returnValue;
+      } catch (error) {
+        console.log("Error checking if user exists:\n- ", error.message);
+        return returnValue;
+      }
+    }
+  }
+});
+
+const _____ = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: handler
+});
+
+const filterBriefings = (data, query, sort, order, show) => {
   const regex = new RegExp(query, "i");
   const nextWeek = Date.parse(/* @__PURE__ */ new Date()) + 604800 * 1e3;
   var sortedData = data.filter((item) => regex.test(item.host) || regex.test(item.title) || regex.test(item.desc) || regex.test(item.status));
-  sortedData = sortedData.filter((item) => future ? item : parseInt(item.timestamp) < nextWeek);
+  sortedData = sortedData.filter((item) => show === "Upcoming Missions" ? item : parseInt(item.timestamp) < nextWeek);
   for (let i = 0; i < sortedData.length; i++) {
     for (let j = 0; j < sortedData.length; j++) {
       if (sort == "Title") {
@@ -1277,19 +1532,58 @@ const filterBriefings = (data, query, sort, order, future) => {
   }
   return sortedData;
 };
-const briefings = defineEventHandler(async (event) => {
-  console.log(event.req.method);
+const index$4 = defineEventHandler(async (event) => {
   if (event.req.method == "GET") {
     const data = await BriefingSchema.find().populate({ path: "creator" });
     const params = getQuery$1(event);
-    const sortedData = filterBriefings(data, params.searchQuery, params.sortBy, params.orderBy, params.includeFuture);
+    const sortedData = filterBriefings(data, params.searchQuery, params.sortBy, params.orderBy, params.show);
     return sortedData;
   }
 });
 
-const briefings$1 = /*#__PURE__*/Object.freeze({
+const index$5 = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  default: briefings
+  default: index$4
+});
+
+const index$2 = defineEventHandler(async (event) => {
+  if (event.req.method == "POST") {
+    const body = JSON.parse(await readBody(event));
+    const { creator, title, host, timestamp, desc, image, status } = body;
+    try {
+      const newBriefing = new BriefingSchema({
+        creator,
+        title,
+        host,
+        timestamp,
+        desc,
+        image,
+        status
+      });
+      await newBriefing.save();
+      return new Response(JSON.stringify(newBriefing), { status: 201 });
+    } catch (error) {
+      return new Response("Failed to create briefing", { status: 500 });
+    }
+  }
+});
+
+const index$3 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index$2
+});
+
+const index = defineEventHandler(async (event) => {
+  if (event.req.method == "GET") {
+    const params = getQuery$1(event);
+    const data = await BriefingSchema.find({ creator: params.creator }).populate({ path: "creator" });
+    return new Response(JSON.stringify(data), { status: 200 });
+  }
+});
+
+const index$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index
 });
 
 const Vue3 = version.startsWith("3");
@@ -1356,8 +1650,8 @@ const appRootTag = "div";
 
 globalThis.__buildAssetsURL = buildAssetsURL;
 globalThis.__publicAssetsURL = publicAssetsURL;
-const getClientManifest = () => import('file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/.nuxt/dist/server/client.manifest.mjs').then((r) => r.default || r).then((r) => typeof r === "function" ? r() : r);
-const getServerEntry = () => import('file://D:/Projects/Web%20Dev/Freelancers%20Union/fu-mission-board-nuxt/.nuxt/dist/server/server.mjs').then((r) => r.default || r);
+const getClientManifest = () => import('file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/.nuxt/dist/server/client.manifest.mjs').then((r) => r.default || r).then((r) => typeof r === "function" ? r() : r);
+const getServerEntry = () => import('file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/.nuxt/dist/server/server.mjs').then((r) => r.default || r);
 const getSSRRenderer = lazyCachedFunction(async () => {
   const manifest = await getClientManifest();
   if (!manifest) {

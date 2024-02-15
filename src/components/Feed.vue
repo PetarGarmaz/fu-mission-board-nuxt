@@ -1,12 +1,13 @@
 <script>
 	import { ref } from "vue";
+	import SortBar from '../src/components/SortBar.vue';
 	import FeedCard from '../src/components/FeedCard.vue';
 
 	const allBriefings = ref([]);
 	const query = ref("");
 	const sort = ref("Date");
 	const order = ref("Desc");
-	const future = ref(false);
+	const show = ref("Upcoming Missions");
 
 	const fetchBriefings = async () => {
 		const res = await $fetch('/api/briefings?', {
@@ -15,27 +16,23 @@
 				searchQuery: query.value,
 				sortBy: sort.value,
 				orderBy: order.value,
-				includeFuture: future.value,
+				show: show.value,
 			}
 		});
 
 		allBriefings.value = res;
-		console.log(allBriefings.value);
 	};
-
-
-	//<SortBar query={query} setQuery={setQuery} sort={sort} setSort={setSort} order={order} setOrder={setOrder} future={future} setFuture={setFuture}/>
 
 	export default {
 		data() {
 			return {
-				allBriefings: allBriefings
+				allBriefings: allBriefings,
 			};
 		},
 		mounted() {
 			fetchBriefings();
 		},
-		components: { FeedCard }
+		components: { FeedCard, SortBar },
 	}
 </script>
 
@@ -48,7 +45,7 @@
 				<p class='text-gray-200 text-center max-lg:text-sm tracking-wider italic my-4 mx-4'>View and search upcoming mission briefings.</p>
 				<hr class='border-gray-600'/>
 
-				
+				<SortBar/>
 			</header>
 
 			<div v-for="item in allBriefings">

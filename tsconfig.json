@@ -1,4 +1,7 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "experimentalDecorators": false /* or just remove the flag */
+  }
 }

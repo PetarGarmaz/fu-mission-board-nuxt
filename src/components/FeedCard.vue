@@ -1,8 +1,6 @@
 <script setup>
 	const props = defineProps(['briefing']);
 
-	console.log(props);
-
 	const getDateString = (timestamp) => {
 		const parsedDate = new Date(parseInt(timestamp));
 		const newDate = parsedDate.toLocaleDateString('en-uk', { weekday:"long", month:"long", year:"numeric", day:"numeric"});
@@ -17,7 +15,7 @@
 </script>
 
 <template>
-	<nuxt-link to="/" class="flex flex-col bg-gray-900 my-5 border border-gray-600 rounded-lg transition duration-300 hover:bg-gray-700 hover:-translate-y-1 hover:translate-x-1 hover:drop-shadow-[-5px_5px_2px_rgba(0,0,0,0.5)" :class="briefing.status.includes('Failed') && 'bg-[#271111] hover:bg-[#513737]', briefing.status.includes('Completed') && 'bg-[#112725] hover:bg-[#37514f]'">
+	<nuxt-link to="/" class="flex flex-col bg-gray-900 my-5 border border-gray-600 rounded-lg transition duration-300 hover:bg-gray-700 hover:-translate-y-1 hover:translate-x-1 hover:drop-shadow-[-5px_5px_2px_rgba(0,0,0,0.5)">
 		<header class='flex max-lg:flex-col'>
 			<img v-bind:src="briefing.creator.image" alt="Logo" class='object-cover w-16 mx-5 max-lg:mx-auto my-2 max-lg:my-5 rounded-full' />
 			<hr class='lg:hidden max-lg:border-gray-600'/>
