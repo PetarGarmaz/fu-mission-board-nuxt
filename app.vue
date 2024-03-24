@@ -3,9 +3,10 @@ import { NuxtPage } from '#build/components';
 <script>
 	import '../src/styles/main.css'
 	import Navbar from './src/components/Navbar.vue';
+	import FooterComp from './src/components/FooterComp.vue';
 
 	export default { 
-		components: { Navbar }
+		components: { Navbar, FooterComp }
 	};
 </script>
 
@@ -13,5 +14,6 @@ import { NuxtPage } from '#build/components';
 	<div>
 		<Navbar />
 		<NuxtPage />
+		<FooterComp />
 	</div>
 </template>

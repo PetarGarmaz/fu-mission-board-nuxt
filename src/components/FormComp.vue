@@ -2,13 +2,16 @@
 	import { ref } from "vue";
 	import VueDatePicker from '@vuepic/vue-datepicker';
 	import '@vuepic/vue-datepicker/dist/main.css';
+
+	import briefingStore from "../src/stores/BriefingStore";
 	import formStore from "../src/stores/FormStore";
 	import navbarStore from "../src/stores/NavbarStore";
+	
 	import { Observer } from 'mobx-vue-lite';
 
 	const date = ref(formStore.date);
 	
-	formStore.fetchBriefings();	
+	briefingStore.getBriefings();	
 </script>
 
 <template>
@@ -28,7 +31,7 @@
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Date:</h3>
 				
 				<client-only>
-					<VueDatePicker required :minDate="new Date()" :enable-time-picker="false" :disabled-week-days="[0, 1, 2, 3, 4, 6]" :disabledDates="formStore.getDisabledDates()" :start-date="formStore.date" auto-apply v-model="date" @date-update="formStore.setDate" />
+					<VueDatePicker required :minDate="new Date()" :enable-time-picker="false" :disabled-week-days="[0, 1, 2, 3, 4, 6]" :disabledDates="formStore.getDisabledDates(briefingStore.allBriefings)" :start-date="formStore.date" auto-apply v-model="date" @date-update="formStore.setDate" />
 				</client-only>	
 			</div>
 

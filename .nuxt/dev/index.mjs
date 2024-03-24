@@ -1488,56 +1488,9 @@ const _____ = /*#__PURE__*/Object.freeze({
   default: handler
 });
 
-const filterBriefings = (data, query, sort, order, show) => {
-  const regex = new RegExp(query, "i");
-  const nextWeek = Date.parse(/* @__PURE__ */ new Date()) + 604800 * 1e3;
-  var sortedData = data.filter((item) => regex.test(item.host) || regex.test(item.title) || regex.test(item.desc) || regex.test(item.status));
-  sortedData = sortedData.filter((item) => show === "Upcoming Missions" ? item : parseInt(item.timestamp) < nextWeek);
-  for (let i = 0; i < sortedData.length; i++) {
-    for (let j = 0; j < sortedData.length; j++) {
-      if (sort == "Title") {
-        let titleI = sortedData[i].title;
-        let titleJ = sortedData[j].title;
-        if (order == "Desc") {
-          if (titleI < titleJ) {
-            var tempData = sortedData[i];
-            sortedData[i] = sortedData[j];
-            sortedData[j] = tempData;
-          }
-        } else {
-          if (titleI > titleJ) {
-            var tempData = sortedData[i];
-            sortedData[i] = sortedData[j];
-            sortedData[j] = tempData;
-          }
-        }
-      } else if (sort == "Date") {
-        let parsedDateI = parseInt(sortedData[i].timestamp);
-        let parsedDateJ = parseInt(sortedData[j].timestamp);
-        if (order == "Desc") {
-          if (parsedDateI > parsedDateJ) {
-            var tempData = sortedData[i];
-            sortedData[i] = sortedData[j];
-            sortedData[j] = tempData;
-          }
-        } else {
-          if (parsedDateI < parsedDateJ) {
-            var tempData = sortedData[i];
-            sortedData[i] = sortedData[j];
-            sortedData[j] = tempData;
-          }
-        }
-      }
-    }
-  }
-  return sortedData;
-};
 const index$4 = defineEventHandler(async (event) => {
   if (event.req.method == "GET") {
-    const data = await BriefingSchema.find().populate({ path: "creator" });
-    const params = getQuery$1(event);
-    const sortedData = filterBriefings(data, params.searchQuery, params.sortBy, params.orderBy, params.show);
-    return sortedData;
+    getQuery$1(event);
   }
 });
 

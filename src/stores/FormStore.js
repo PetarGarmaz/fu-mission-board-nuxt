@@ -1,7 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 
 class FormStore {
-	allBriefings = [];
 	type = "";
 	date = new Date();
 	disabledDates = null;
@@ -39,25 +38,11 @@ class FormStore {
 		this.allBriefings = val;
 	};
 
-	fetchBriefings = async () => {
-		const res = await $fetch('/api/briefings?', {
-			method: "GET",
-			query: {
-				searchQuery: "",
-				sortBy: "Date",
-				orderBy: "Desc",
-				show: "Upcoming Missions",
-			}
-		});
-
-		this.setAllBriefing(res);
-	};
-
-	getDisabledDates = () => {
+	getDisabledDates = (allBriefings) => {
 		var dates = [];
 
-		for (let i = 0; i < this.allBriefings.length; i++) {
-			const postDate = new Date(parseInt(this.allBriefings[i].timestamp));
+		for (let i = 0; i < allBriefings.length; i++) {
+			const postDate = new Date(parseInt(allBriefings[i].timestamp));
 			dates.push(postDate);
 		};
 

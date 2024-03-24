@@ -17,6 +17,7 @@
     "mobx": "^6.12.0",
     "mobx-vue-lite": "^0.4.2",
     "mongoose": "^8.1.1",
+    "mongoose-paginate-v2": "^1.8.0",
     "next-auth": "^4.21.1",
     "nuxt": "^3.10.0",
     "nuxt-mongoose": "^1.0.5",

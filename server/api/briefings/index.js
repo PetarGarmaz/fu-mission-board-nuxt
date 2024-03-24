@@ -1,60 +1,61 @@
-const filterBriefings = (data, query, sort, order, show) => {
-	const regex = new RegExp(query, "i");
+const filterBriefings = (briefing, params) => {
+	var showBriefing = true;
 	const nextWeek = Date.parse(new Date()) + 604800 * 1000; //Get next week
-	var sortedData = data.filter((item) => (regex.test(item.host) || regex.test(item.title) || regex.test(item.desc) || regex.test(item.status)));
 
-	sortedData = sortedData.filter((item) => show === "Upcoming Missions" ? (item) : (parseInt(item.timestamp) < nextWeek)); // Filter out future missions (excluding next mission)
-
-	for (let i = 0; i < sortedData.length; i++) {
-		for (let j = 0; j < sortedData.length; j++) {
-			if(sort == "Title") {
-				let titleI = sortedData[i].title;
-				let titleJ = sortedData[j].title;
-
-				if(order == "Desc") {
-					if(titleI < titleJ) {
-						var tempData = sortedData[i];
-						sortedData[i] = sortedData[j];
-						sortedData[j] = tempData;
-					};
-				} else {
-					if(titleI > titleJ) {
-						var tempData = sortedData[i];
-						sortedData[i] = sortedData[j];
-						sortedData[j] = tempData;
-					};	
-				}
-			} else if (sort == "Date") {
-				let parsedDateI = parseInt(sortedData[i].timestamp);
-				let parsedDateJ = parseInt(sortedData[j].timestamp);
-
-				if(order == "Desc") {
-					if(parsedDateI > parsedDateJ) {
-						var tempData = sortedData[i];
-						sortedData[i] = sortedData[j];
-						sortedData[j] = tempData;
-					};
-				} else {
-					if(parsedDateI < parsedDateJ) {
-						var tempData = sortedData[i];
-						sortedData[i] = sortedData[j];
-						sortedData[j] = tempData;
-					};	
-				}
+	if(briefing.title.toLowerCase().includes(params.searchQuery.toLowerCase()) || briefing.host.toLowerCase().includes(params.searchQuery.toLowerCase())) {
+		if(parseInt(briefing.timestamp) > nextWeek) {
+			if(params.showFuture == "false") {
+				showBriefing = false;
 			};
-		};
-	};
-	
-	return sortedData;
+		} else {
+			if(briefing.status.toLowerCase().includes("completed")) {
+				if(params.showCompleted == "false") {
+					showBriefing = false;
+				}
+			} else if (briefing.status.toLowerCase().includes("failed")) {
+				if(params.showFailed == "false") {
+					showBriefing = false;
+				}
+			} else {
+				if(params.showCurrent == "false") {
+					showBriefing = false;
+				}
+			}
+		}
+	}	
+
+	return showBriefing;
 };
 
 export default defineEventHandler(async (event) => {
 	if (event.req.method == 'GET') {
-		const data = await BriefingSchema.find().populate({path:"creator"});
+		const params = getQuery(event);
+		
+		
+		/*
 		const params = getQuery(event);
 
-		const sortedData = filterBriefings(data, params.searchQuery, params.sortBy, params.orderBy, params.show);
+		const countDocs = await BriefingSchema.countDocuments();
 		
-		return sortedData;
+		//const aggregate = BriefingSchema.aggregate([
+		//	{ $match: (briefing) => filterBriefings(briefing, params) },
+		//	{ $skip: (params.page - 1) * 10 },
+		//	{ $sort: {timestamp : -1}}
+		//]);
+		//console.log(aggregate);
+
+		const data = await BriefingSchema.find({}).populate({path:"creator"}).limit(10).skip((params.page - 1) * 10).sort({timestamp : -1}).then(briefings => {return briefings.filter(briefing => filterBriefings(briefing, params))});
+		const otherData = await BriefingSchema.find().populate({path:"creator"}).limit(10).skip((params.page - 1) * 10).sort({timestamp : -1});
+
+		console.log(typeof data);
+		console.log(typeof otherData)
+
+		//const data = await BriefingSchema.find().agregate().populate({path:"creator"}).match(briefing => filterBriefings(briefing, params)).limit(10).skip((params.page - 1) * 10).sort({timestamp : -1});
+		//console.log(data);
+		//const data = await BriefingSchema.find().populate({path:"creator"}).limit(10).skip((params.page - 1) * 10).sort({timestamp : -1});
+
+		//const sortedData = filterBriefings(data, params.searchQuery, params.sortBy, params.orderBy, params.show);
+		return [data, countDocs];
+		*/
 	}
 })

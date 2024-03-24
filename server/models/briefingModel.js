@@ -33,4 +33,4 @@ export const BriefingSchema = defineMongooseModel({
 			required: [true, "Status is required!"]
 		}
 	},
-})
+});
