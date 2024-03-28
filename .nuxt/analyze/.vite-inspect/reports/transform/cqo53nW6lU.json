@@ -1,0 +1,219 @@
+{
+  "resolvedId": "D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/markdown-it-attrs/patterns.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "'use strict';\n/**\n * If a pattern matches the token stream,\n * then run transform.\n */\n\nconst utils = require('./utils.js');\n\nmodule.exports = options => {\n  const __hr = new RegExp('^ {0,3}[-*_]{3,} ?'\n                          + utils.escapeRegExp(options.leftDelimiter)\n                          + '[^' + utils.escapeRegExp(options.rightDelimiter) + ']');\n\n  return ([\n    {\n      /**\n       * ```python {.cls}\n       * for i in range(10):\n       *     print(i)\n       * ```\n       */\n      name: 'fenced code blocks',\n      tests: [\n        {\n          shift: 0,\n          block: true,\n          info: utils.hasDelimiters('end', options)\n        }\n      ],\n      transform: (tokens, i) => {\n        const token = tokens[i];\n        const start = token.info.lastIndexOf(options.leftDelimiter);\n        const attrs = utils.getAttrs(token.info, start, options);\n        utils.addAttrs(attrs, token);\n        token.info = utils.removeDelimiter(token.info, options);\n      }\n    }, {\n      /**\n       * bla `click()`{.c} ![](img.png){.d}\n       *\n       * differs from 'inline attributes' as it does\n       * not have a closing tag (nesting: -1)\n       */\n      name: 'inline nesting 0',\n      tests: [\n        {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              shift: -1,\n              type: (str) => str === 'image' || str === 'code_inline'\n            }, {\n              shift: 0,\n              type: 'text',\n              content: utils.hasDelimiters('start', options)\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const endChar = token.content.indexOf(options.rightDelimiter);\n        const attrToken = tokens[i].children[j - 1];\n        const attrs = utils.getAttrs(token.content, 0, options);\n        utils.addAttrs(attrs, attrToken);\n        if (token.content.length === (endChar + options.rightDelimiter.length)) {\n          tokens[i].children.splice(j, 1);\n        } else {\n          token.content = token.content.slice(endChar + options.rightDelimiter.length);\n        }\n      }\n    }, {\n      /**\n       * | h1 |\n       * | -- |\n       * | c1 |\n       *\n       * {.c}\n       */\n      name: 'tables',\n      tests: [\n        {\n          // let this token be i, such that for-loop continues at\n          // next token after tokens.splice\n          shift: 0,\n          type: 'table_close'\n        }, {\n          shift: 1,\n          type: 'paragraph_open'\n        }, {\n          shift: 2,\n          type: 'inline',\n          content: utils.hasDelimiters('only', options)\n        }\n      ],\n      transform: (tokens, i) => {\n        const token = tokens[i + 2];\n        const tableOpen = utils.getMatchingOpeningToken(tokens, i);\n        const attrs = utils.getAttrs(token.content, 0, options);\n        // add attributes\n        utils.addAttrs(attrs, tableOpen);\n        // remove <p>{.c}</p>\n        tokens.splice(i + 1, 3);\n      }\n    }, {\n      /**\n       * *emphasis*{.with attrs=1}\n       */\n      name: 'inline attributes',\n      tests: [\n        {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              shift: -1,\n              nesting: -1  // closing inline tag, </em>{.a}\n            }, {\n              shift: 0,\n              type: 'text',\n              content: utils.hasDelimiters('start', options)\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const content = token.content;\n        const attrs = utils.getAttrs(content, 0, options);\n        const openingToken = utils.getMatchingOpeningToken(tokens[i].children, j - 1);\n        utils.addAttrs(attrs, openingToken);\n        token.content = content.slice(content.indexOf(options.rightDelimiter) + options.rightDelimiter.length);\n      }\n    }, {\n      /**\n       * - item\n       * {.a}\n       */\n      name: 'list softbreak',\n      tests: [\n        {\n          shift: -2,\n          type: 'list_item_open'\n        }, {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              position: -2,\n              type: 'softbreak'\n            }, {\n              position: -1,\n              type: 'text',\n              content: utils.hasDelimiters('only', options)\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const content = token.content;\n        const attrs = utils.getAttrs(content, 0, options);\n        let ii = i - 2;\n        while (tokens[ii - 1] &&\n          tokens[ii - 1].type !== 'ordered_list_open' &&\n          tokens[ii - 1].type !== 'bullet_list_open') { ii--; }\n        utils.addAttrs(attrs, tokens[ii - 1]);\n        tokens[i].children = tokens[i].children.slice(0, -2);\n      }\n    }, {\n      /**\n       * - nested list\n       *   - with double \\n\n       *   {.a} <-- apply to nested ul\n       *\n       * {.b} <-- apply to root <ul>\n       */\n      name: 'list double softbreak',\n      tests: [\n        {\n          // let this token be i = 0 so that we can erase\n          // the <p>{.a}</p> tokens below\n          shift: 0,\n          type: (str) =>\n            str === 'bullet_list_close' ||\n            str === 'ordered_list_close'\n        }, {\n          shift: 1,\n          type: 'paragraph_open'\n        }, {\n          shift: 2,\n          type: 'inline',\n          content: utils.hasDelimiters('only', options),\n          children: (arr) => arr.length === 1\n        }, {\n          shift: 3,\n          type: 'paragraph_close'\n        }\n      ],\n      transform: (tokens, i) => {\n        const token = tokens[i + 2];\n        const content = token.content;\n        const attrs = utils.getAttrs(content, 0, options);\n        const openingToken = utils.getMatchingOpeningToken(tokens, i);\n        utils.addAttrs(attrs, openingToken);\n        tokens.splice(i + 1, 3);\n      }\n    }, {\n      /**\n       * - end of {.list-item}\n       */\n      name: 'list item end',\n      tests: [\n        {\n          shift: -2,\n          type: 'list_item_open'\n        }, {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              position: -1,\n              type: 'text',\n              content: utils.hasDelimiters('end', options)\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const content = token.content;\n        const attrs = utils.getAttrs(content, content.lastIndexOf(options.leftDelimiter), options);\n        utils.addAttrs(attrs, tokens[i - 2]);\n        const trimmed = content.slice(0, content.lastIndexOf(options.leftDelimiter));\n        token.content = last(trimmed) !== ' ' ?\n          trimmed : trimmed.slice(0, -1);\n      }\n    }, {\n      /**\n       * something with softbreak\n       * {.cls}\n       */\n      name: '\\n{.a} softbreak then curly in start',\n      tests: [\n        {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              position: -2,\n              type: 'softbreak'\n            }, {\n              position: -1,\n              type: 'text',\n              content: utils.hasDelimiters('only', options)\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const attrs = utils.getAttrs(token.content, 0, options);\n        // find last closing tag\n        let ii = i + 1;\n        while (tokens[ii + 1] && tokens[ii + 1].nesting === -1) { ii++; }\n        const openingToken = utils.getMatchingOpeningToken(tokens, ii);\n        utils.addAttrs(attrs, openingToken);\n        tokens[i].children = tokens[i].children.slice(0, -2);\n      }\n    }, {\n      /**\n       * horizontal rule --- {#id}\n       */\n      name: 'horizontal rule',\n      tests: [\n        {\n          shift: 0,\n          type: 'paragraph_open'\n        },\n        {\n          shift: 1,\n          type: 'inline',\n          children: (arr) => arr.length === 1,\n          content: (str) => str.match(__hr) !== null,\n        },\n        {\n          shift: 2,\n          type: 'paragraph_close'\n        }\n      ],\n      transform: (tokens, i) => {\n        const token = tokens[i];\n        token.type = 'hr';\n        token.tag = 'hr';\n        token.nesting = 0;\n        const content = tokens[i + 1].content;\n        const start = content.lastIndexOf(options.leftDelimiter);\n        const attrs = utils.getAttrs(content, start, options);\n        utils.addAttrs(attrs, token);\n        token.markup = content;\n        tokens.splice(i + 1, 2);\n      }\n    }, {\n      /**\n       * end of {.block}\n       */\n      name: 'end of block',\n      tests: [\n        {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              position: -1,\n              content: utils.hasDelimiters('end', options),\n              type: (t) => t !== 'code_inline' && t !== 'math_inline'\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const content = token.content;\n        const attrs = utils.getAttrs(content, content.lastIndexOf(options.leftDelimiter), options);\n        let ii = i + 1;\n        while (tokens[ii + 1] && tokens[ii + 1].nesting === -1) { ii++; }\n        const openingToken = utils.getMatchingOpeningToken(tokens, ii);\n        utils.addAttrs(attrs, openingToken);\n        const trimmed = content.slice(0, content.lastIndexOf(options.leftDelimiter));\n        token.content = last(trimmed) !== ' ' ?\n          trimmed : trimmed.slice(0, -1);\n      }\n    }\n  ]);\n};\n\n// get last element of array or string\nfunction last(arr) {\n  return arr.slice(-1)[0];\n}\n",
+      "start": 1711658791795,
+      "end": 1711658791842,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1711658791842,
+      "end": 1711658791842,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/markdown-it-attrs/utils.js?commonjs-proxy\";\n\n'use strict';\n/**\n * If a pattern matches the token stream,\n * then run transform.\n */\n\nconst utils = require$$0;\n\nvar patterns = options => {\n  const __hr = new RegExp('^ {0,3}[-*_]{3,} ?'\n                          + utils.escapeRegExp(options.leftDelimiter)\n                          + '[^' + utils.escapeRegExp(options.rightDelimiter) + ']');\n\n  return ([\n    {\n      /**\n       * ```python {.cls}\n       * for i in range(10):\n       *     print(i)\n       * ```\n       */\n      name: 'fenced code blocks',\n      tests: [\n        {\n          shift: 0,\n          block: true,\n          info: utils.hasDelimiters('end', options)\n        }\n      ],\n      transform: (tokens, i) => {\n        const token = tokens[i];\n        const start = token.info.lastIndexOf(options.leftDelimiter);\n        const attrs = utils.getAttrs(token.info, start, options);\n        utils.addAttrs(attrs, token);\n        token.info = utils.removeDelimiter(token.info, options);\n      }\n    }, {\n      /**\n       * bla `click()`{.c} ![](img.png){.d}\n       *\n       * differs from 'inline attributes' as it does\n       * not have a closing tag (nesting: -1)\n       */\n      name: 'inline nesting 0',\n      tests: [\n        {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              shift: -1,\n              type: (str) => str === 'image' || str === 'code_inline'\n            }, {\n              shift: 0,\n              type: 'text',\n              content: utils.hasDelimiters('start', options)\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const endChar = token.content.indexOf(options.rightDelimiter);\n        const attrToken = tokens[i].children[j - 1];\n        const attrs = utils.getAttrs(token.content, 0, options);\n        utils.addAttrs(attrs, attrToken);\n        if (token.content.length === (endChar + options.rightDelimiter.length)) {\n          tokens[i].children.splice(j, 1);\n        } else {\n          token.content = token.content.slice(endChar + options.rightDelimiter.length);\n        }\n      }\n    }, {\n      /**\n       * | h1 |\n       * | -- |\n       * | c1 |\n       *\n       * {.c}\n       */\n      name: 'tables',\n      tests: [\n        {\n          // let this token be i, such that for-loop continues at\n          // next token after tokens.splice\n          shift: 0,\n          type: 'table_close'\n        }, {\n          shift: 1,\n          type: 'paragraph_open'\n        }, {\n          shift: 2,\n          type: 'inline',\n          content: utils.hasDelimiters('only', options)\n        }\n      ],\n      transform: (tokens, i) => {\n        const token = tokens[i + 2];\n        const tableOpen = utils.getMatchingOpeningToken(tokens, i);\n        const attrs = utils.getAttrs(token.content, 0, options);\n        // add attributes\n        utils.addAttrs(attrs, tableOpen);\n        // remove <p>{.c}</p>\n        tokens.splice(i + 1, 3);\n      }\n    }, {\n      /**\n       * *emphasis*{.with attrs=1}\n       */\n      name: 'inline attributes',\n      tests: [\n        {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              shift: -1,\n              nesting: -1  // closing inline tag, </em>{.a}\n            }, {\n              shift: 0,\n              type: 'text',\n              content: utils.hasDelimiters('start', options)\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const content = token.content;\n        const attrs = utils.getAttrs(content, 0, options);\n        const openingToken = utils.getMatchingOpeningToken(tokens[i].children, j - 1);\n        utils.addAttrs(attrs, openingToken);\n        token.content = content.slice(content.indexOf(options.rightDelimiter) + options.rightDelimiter.length);\n      }\n    }, {\n      /**\n       * - item\n       * {.a}\n       */\n      name: 'list softbreak',\n      tests: [\n        {\n          shift: -2,\n          type: 'list_item_open'\n        }, {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              position: -2,\n              type: 'softbreak'\n            }, {\n              position: -1,\n              type: 'text',\n              content: utils.hasDelimiters('only', options)\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const content = token.content;\n        const attrs = utils.getAttrs(content, 0, options);\n        let ii = i - 2;\n        while (tokens[ii - 1] &&\n          tokens[ii - 1].type !== 'ordered_list_open' &&\n          tokens[ii - 1].type !== 'bullet_list_open') { ii--; }\n        utils.addAttrs(attrs, tokens[ii - 1]);\n        tokens[i].children = tokens[i].children.slice(0, -2);\n      }\n    }, {\n      /**\n       * - nested list\n       *   - with double \\n\n       *   {.a} <-- apply to nested ul\n       *\n       * {.b} <-- apply to root <ul>\n       */\n      name: 'list double softbreak',\n      tests: [\n        {\n          // let this token be i = 0 so that we can erase\n          // the <p>{.a}</p> tokens below\n          shift: 0,\n          type: (str) =>\n            str === 'bullet_list_close' ||\n            str === 'ordered_list_close'\n        }, {\n          shift: 1,\n          type: 'paragraph_open'\n        }, {\n          shift: 2,\n          type: 'inline',\n          content: utils.hasDelimiters('only', options),\n          children: (arr) => arr.length === 1\n        }, {\n          shift: 3,\n          type: 'paragraph_close'\n        }\n      ],\n      transform: (tokens, i) => {\n        const token = tokens[i + 2];\n        const content = token.content;\n        const attrs = utils.getAttrs(content, 0, options);\n        const openingToken = utils.getMatchingOpeningToken(tokens, i);\n        utils.addAttrs(attrs, openingToken);\n        tokens.splice(i + 1, 3);\n      }\n    }, {\n      /**\n       * - end of {.list-item}\n       */\n      name: 'list item end',\n      tests: [\n        {\n          shift: -2,\n          type: 'list_item_open'\n        }, {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              position: -1,\n              type: 'text',\n              content: utils.hasDelimiters('end', options)\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const content = token.content;\n        const attrs = utils.getAttrs(content, content.lastIndexOf(options.leftDelimiter), options);\n        utils.addAttrs(attrs, tokens[i - 2]);\n        const trimmed = content.slice(0, content.lastIndexOf(options.leftDelimiter));\n        token.content = last(trimmed) !== ' ' ?\n          trimmed : trimmed.slice(0, -1);\n      }\n    }, {\n      /**\n       * something with softbreak\n       * {.cls}\n       */\n      name: '\\n{.a} softbreak then curly in start',\n      tests: [\n        {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              position: -2,\n              type: 'softbreak'\n            }, {\n              position: -1,\n              type: 'text',\n              content: utils.hasDelimiters('only', options)\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const attrs = utils.getAttrs(token.content, 0, options);\n        // find last closing tag\n        let ii = i + 1;\n        while (tokens[ii + 1] && tokens[ii + 1].nesting === -1) { ii++; }\n        const openingToken = utils.getMatchingOpeningToken(tokens, ii);\n        utils.addAttrs(attrs, openingToken);\n        tokens[i].children = tokens[i].children.slice(0, -2);\n      }\n    }, {\n      /**\n       * horizontal rule --- {#id}\n       */\n      name: 'horizontal rule',\n      tests: [\n        {\n          shift: 0,\n          type: 'paragraph_open'\n        },\n        {\n          shift: 1,\n          type: 'inline',\n          children: (arr) => arr.length === 1,\n          content: (str) => str.match(__hr) !== null,\n        },\n        {\n          shift: 2,\n          type: 'paragraph_close'\n        }\n      ],\n      transform: (tokens, i) => {\n        const token = tokens[i];\n        token.type = 'hr';\n        token.tag = 'hr';\n        token.nesting = 0;\n        const content = tokens[i + 1].content;\n        const start = content.lastIndexOf(options.leftDelimiter);\n        const attrs = utils.getAttrs(content, start, options);\n        utils.addAttrs(attrs, token);\n        token.markup = content;\n        tokens.splice(i + 1, 2);\n      }\n    }, {\n      /**\n       * end of {.block}\n       */\n      name: 'end of block',\n      tests: [\n        {\n          shift: 0,\n          type: 'inline',\n          children: [\n            {\n              position: -1,\n              content: utils.hasDelimiters('end', options),\n              type: (t) => t !== 'code_inline' && t !== 'math_inline'\n            }\n          ]\n        }\n      ],\n      transform: (tokens, i, j) => {\n        const token = tokens[i].children[j];\n        const content = token.content;\n        const attrs = utils.getAttrs(content, content.lastIndexOf(options.leftDelimiter), options);\n        let ii = i + 1;\n        while (tokens[ii + 1] && tokens[ii + 1].nesting === -1) { ii++; }\n        const openingToken = utils.getMatchingOpeningToken(tokens, ii);\n        utils.addAttrs(attrs, openingToken);\n        const trimmed = content.slice(0, content.lastIndexOf(options.leftDelimiter));\n        token.content = last(trimmed) !== ' ' ?\n          trimmed : trimmed.slice(0, -1);\n      }\n    }\n  ]);\n};\n\n// get last element of array or string\nfunction last(arr) {\n  return arr.slice(-1)[0];\n}\n\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(patterns);\nexport { patterns as __moduleExports };",
+      "start": 1711658791842,
+      "end": 1711658791989,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          ""
+        ],
+        "names": [],
+        "mappings": "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"
+      }
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1711658791989,
+      "end": 1711658791989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1711658791989,
+      "end": 1711658791989,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1711658791989,
+      "end": 1711658791989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1711658791989,
+      "end": 1711658791989,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1711658791989,
+      "end": 1711658791989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1711658791989,
+      "end": 1711658791989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1711658791989,
+      "end": 1711658791989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1711658791989,
+      "end": 1711658791989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1711658791990,
+      "end": 1711658791990,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1711658791990,
+      "end": 1711658791990,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1711658791990,
+      "end": 1711658791990,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1711658791990,
+      "end": 1711658791990,
+      "order": "normal"
+    }
+  ]
+}

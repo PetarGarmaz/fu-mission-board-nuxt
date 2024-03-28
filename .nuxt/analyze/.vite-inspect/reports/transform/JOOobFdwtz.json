@@ -1,0 +1,219 @@
+{
+  "resolvedId": "D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/nuxt-mail/dist/plugin-nuxt3.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { defineNuxtPlugin } from '#imports';\nexport default defineNuxtPlugin(() => ({\n  provide: {\n    mail: {\n      send: async config => {\n        try {\n          await $fetch('/mail/send', {\n            body: config,\n            method: 'POST'\n          });\n        } catch (error) {\n          throw new Error(error.response._data.statusMessage);\n        }\n      }\n    }\n  }\n}));",
+      "start": 1711658790175,
+      "end": 1711658790220,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1711658790220,
+      "end": 1711658790220,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "result": "import { defineNuxtPlugin } from '#app/nuxt';\nexport default defineNuxtPlugin(() => ({\n  provide: {\n    mail: {\n      send: async config => {\n        try {\n          await $fetch('/mail/send', {\n            body: config,\n            method: 'POST'\n          });\n        } catch (error) {\n          throw new Error(error.response._data.statusMessage);\n        }\n      }\n    }\n  }\n}));",
+      "start": 1711658790220,
+      "end": 1711658790222,
+      "order": "post",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          ""
+        ],
+        "names": [],
+        "mappings": ";AACA,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACxC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACZ,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACX,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC7B,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACb,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACtC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACzB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC1B,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACb,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACzB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC9D,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACT,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACP,CAAC,CAAC,CAAC,CAAC,CAAC;AACL,CAAC,CAAC,CAAC;AACH,CAAC,CAAC,CAAC"
+      }
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1711658790222,
+      "end": 1711658790222,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1711658790222,
+      "end": 1711658790222,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1711658790222,
+      "end": 1711658790222,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1711658790222,
+      "end": 1711658790222,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1711658790222,
+      "end": 1711658790222,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1711658790222,
+      "end": 1711658790222,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1711658790222,
+      "end": 1711658790222,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1711658790222,
+      "end": 1711658790222,
+      "order": "normal"
+    }
+  ]
+}

@@ -1,0 +1,258 @@
+{
+  "resolvedId": "D:/Projects/Web Dev/fu-mission-board-nuxt/src/components/PageBar.vue",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "<script setup>\n\timport { Observer } from 'mobx-vue-lite';\n\timport briefingStore from \"../src/stores/BriefingStore\";\n\n\tconst props = defineProps(['type', \"profileId\"]);\n</script>\n\n<template>\n\t<Observer>\n\t\t<div class=\"flex mx-auto gap-2\">\n\t\t\t<button @click=\"briefingStore.prevPage(type, profileId)\" class='py-1 px-2 text-3xl text-gray-200 rounded-md border border-gray-600 bg-gray-900 hover:bg-gray-600 disabled:bg-gray-700 cursor-pointer transition duration-300'>◂</button>\n\t\t\t<p class=\"py-1 px-4 text-2xl text-gray-200 rounded-md border border-gray-600 bg-gray-900\">{{ briefingStore.currentPage }} / {{ briefingStore.maxPages }}</p>\n\t\t\t<button @click=\"briefingStore.nextPage(type, profileId)\" class=\"py-1 px-2 text-3xl text-gray-200 rounded-md border border-gray-600 bg-gray-900 hover:bg-gray-600 disabled:bg-gray-700 cursor-pointer transition duration-300\">▸</button>\n\t\t</div>\n\t</Observer>\n</template>\n",
+      "start": 1711658795049,
+      "end": 1711658795210,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1711658795210,
+      "end": 1711658795210,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1711658795210,
+      "end": 1711658795210,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1711658795210,
+      "end": 1711658795210,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1711658795210,
+      "end": 1711658795210,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1711658795210,
+      "end": 1711658795210,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1711658795210,
+      "end": 1711658795210,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1711658795210,
+      "end": 1711658795210,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1711658795210,
+      "end": 1711658795210,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1711658795210,
+      "end": 1711658795210,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "result": "import { unref as _unref, withCtx as _withCtx, createVNode as _createVNode, toDisplayString as _toDisplayString } from \"vue\"\nimport { ssrRenderComponent as _ssrRenderComponent, ssrInterpolate as _ssrInterpolate } from \"vue/server-renderer\"\n\nimport { Observer } from 'mobx-vue-lite';\n\timport briefingStore from \"../src/stores/BriefingStore\";\n\n\t\nconst _sfc_main = {\n  __name: 'PageBar',\n  __ssrInlineRender: true,\n  props: ['type', \"profileId\"],\n  setup(__props) {\n\n\tconst props = __props;\n\nreturn (_ctx, _push, _parent, _attrs) => {\n  _push(_ssrRenderComponent(_unref(Observer), _attrs, {\n    default: _withCtx((_, _push, _parent, _scopeId) => {\n      if (_push) {\n        _push(`<div class=\"flex mx-auto gap-2\"${\n          _scopeId\n        }><button class=\"py-1 px-2 text-3xl text-gray-200 rounded-md border border-gray-600 bg-gray-900 hover:bg-gray-600 disabled:bg-gray-700 cursor-pointer transition duration-300\"${\n          _scopeId\n        }>◂</button><p class=\"py-1 px-4 text-2xl text-gray-200 rounded-md border border-gray-600 bg-gray-900\"${\n          _scopeId\n        }>${\n          _ssrInterpolate(_unref(briefingStore).currentPage)\n        } / ${\n          _ssrInterpolate(_unref(briefingStore).maxPages)\n        }</p><button class=\"py-1 px-2 text-3xl text-gray-200 rounded-md border border-gray-600 bg-gray-900 hover:bg-gray-600 disabled:bg-gray-700 cursor-pointer transition duration-300\"${\n          _scopeId\n        }>▸</button></div>`)\n      } else {\n        return [\n          _createVNode(\"div\", { class: \"flex mx-auto gap-2\" }, [\n            _createVNode(\"button\", {\n              onClick: $event => (_unref(briefingStore).prevPage(__props.type, __props.profileId)),\n              class: \"py-1 px-2 text-3xl text-gray-200 rounded-md border border-gray-600 bg-gray-900 hover:bg-gray-600 disabled:bg-gray-700 cursor-pointer transition duration-300\"\n            }, \"◂\", 8, [\"onClick\"]),\n            _createVNode(\"p\", { class: \"py-1 px-4 text-2xl text-gray-200 rounded-md border border-gray-600 bg-gray-900\" }, _toDisplayString(_unref(briefingStore).currentPage) + \" / \" + _toDisplayString(_unref(briefingStore).maxPages), 1),\n            _createVNode(\"button\", {\n              onClick: $event => (_unref(briefingStore).nextPage(__props.type, __props.profileId)),\n              class: \"py-1 px-2 text-3xl text-gray-200 rounded-md border border-gray-600 bg-gray-900 hover:bg-gray-600 disabled:bg-gray-700 cursor-pointer transition duration-300\"\n            }, \"▸\", 8, [\"onClick\"])\n          ])\n        ]\n      }\n    }),\n    _: 1\n  }, _parent))\n}\n}\n\n}\n\n\n\nimport { useSSRContext as __vite_useSSRContext } from 'vue'\nconst _sfc_setup = _sfc_main.setup\n_sfc_main.setup = (props, ctx) => {\n  const ssrContext = __vite_useSSRContext()\n  ;(ssrContext.modules || (ssrContext.modules = new Set())).add(\"src/components/PageBar.vue\")\n  return _sfc_setup ? _sfc_setup(props, ctx) : undefined\n}\nexport default _sfc_main",
+      "start": 1711658795210,
+      "end": 1711658795212,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "D:/Projects/Web Dev/fu-mission-board-nuxt/src/components/PageBar.vue"
+        ],
+        "sourcesContent": [
+          "<script setup>\n\timport { Observer } from 'mobx-vue-lite';\n\timport briefingStore from \"../src/stores/BriefingStore\";\n\n\tconst props = defineProps(['type', \"profileId\"]);\n</script>\n\n<template>\n\t<Observer>\n\t\t<div class=\"flex mx-auto gap-2\">\n\t\t\t<button @click=\"briefingStore.prevPage(type, profileId)\" class='py-1 px-2 text-3xl text-gray-200 rounded-md border border-gray-600 bg-gray-900 hover:bg-gray-600 disabled:bg-gray-700 cursor-pointer transition duration-300'>◂</button>\n\t\t\t<p class=\"py-1 px-4 text-2xl text-gray-200 rounded-md border border-gray-600 bg-gray-900\">{{ briefingStore.currentPage }} / {{ briefingStore.maxPages }}</p>\n\t\t\t<button @click=\"briefingStore.nextPage(type, profileId)\" class=\"py-1 px-2 text-3xl text-gray-200 rounded-md border border-gray-600 bg-gray-900 hover:bg-gray-600 disabled:bg-gray-700 cursor-pointer transition duration-300\">▸</button>\n\t\t</div>\n\t</Observer>\n</template>\n"
+        ],
+        "names": [],
+        "mappings": ";;;AACC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC1C,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACzD;AACA;;;;;;AAJc;AACd,CAGC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,OAAkC,CAAC;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
+      }
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1711658795212,
+      "end": 1711658795212,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1711658795212,
+      "end": 1711658795213,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1711658795212,
+      "end": 1711658795213,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1711658795213,
+      "end": 1711658795213,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1711658795213,
+      "end": 1711658795213,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1711658795213,
+      "end": 1711658795213,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1711658795213,
+      "end": 1711658795213,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-template",
+      "start": 1711658795213,
+      "end": 1711658795213,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1711658795213,
+      "end": 1711658795213,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1711658795213,
+      "end": 1711658795213,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1711658795213,
+      "end": 1711658795213,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1711658795213,
+      "end": 1711658795213,
+      "order": "normal"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "resolvedId": "D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/nuxt/dist/app/types.js",
+  "transforms": [
+    {
+      "name": "__load__",
+      "result": "",
+      "start": 1711658790898,
+      "end": 1711658790898
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1711658790898,
+      "end": 1711658790898,
+      "order": "normal"
+    }
+  ]
+}

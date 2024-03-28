@@ -52,7 +52,10 @@
         "../public/*"
       ],
       "#mail": [
-        "./file:/D:/Projects/Web%20Dev/fu-mission-board-nuxt/.nuxt/nuxt-mail"
+        "./nuxt-mail"
+      ],
+      "#mail/*": [
+        "./nuxt-mail/*"
       ],
       "#auth": [
         "../node_modules/@sidebase/nuxt-auth/dist/runtime/server/services"

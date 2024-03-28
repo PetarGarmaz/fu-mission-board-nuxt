@@ -63,7 +63,7 @@
         "../node_modules/nuxt/dist/app/compat/vue-demi"
       ],
       "#mail": [
-        "file:///D:/Projects/Web%20Dev/fu-mission-board-nuxt/.nuxt/nuxt-mail"
+        "./nuxt-mail"
       ],
       "#vue-router": [
         "./vue-router-stub"

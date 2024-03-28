@@ -1,0 +1,210 @@
+{
+  "resolvedId": "D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/markdown-it/lib/parser_inline.mjs",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "/** internal\n * class ParserInline\n *\n * Tokenizes paragraph content.\n **/\n\nimport Ruler from './ruler.mjs'\nimport StateInline from './rules_inline/state_inline.mjs'\n\nimport r_text from './rules_inline/text.mjs'\nimport r_linkify from './rules_inline/linkify.mjs'\nimport r_newline from './rules_inline/newline.mjs'\nimport r_escape from './rules_inline/escape.mjs'\nimport r_backticks from './rules_inline/backticks.mjs'\nimport r_strikethrough from './rules_inline/strikethrough.mjs'\nimport r_emphasis from './rules_inline/emphasis.mjs'\nimport r_link from './rules_inline/link.mjs'\nimport r_image from './rules_inline/image.mjs'\nimport r_autolink from './rules_inline/autolink.mjs'\nimport r_html_inline from './rules_inline/html_inline.mjs'\nimport r_entity from './rules_inline/entity.mjs'\n\nimport r_balance_pairs from './rules_inline/balance_pairs.mjs'\nimport r_fragments_join from './rules_inline/fragments_join.mjs'\n\n// Parser rules\n\nconst _rules = [\n  ['text',            r_text],\n  ['linkify',         r_linkify],\n  ['newline',         r_newline],\n  ['escape',          r_escape],\n  ['backticks',       r_backticks],\n  ['strikethrough',   r_strikethrough.tokenize],\n  ['emphasis',        r_emphasis.tokenize],\n  ['link',            r_link],\n  ['image',           r_image],\n  ['autolink',        r_autolink],\n  ['html_inline',     r_html_inline],\n  ['entity',          r_entity]\n]\n\n// `rule2` ruleset was created specifically for emphasis/strikethrough\n// post-processing and may be changed in the future.\n//\n// Don't use this for anything except pairs (plugins working with `balance_pairs`).\n//\nconst _rules2 = [\n  ['balance_pairs',   r_balance_pairs],\n  ['strikethrough',   r_strikethrough.postProcess],\n  ['emphasis',        r_emphasis.postProcess],\n  // rules for pairs separate '**' into its own text tokens, which may be left unused,\n  // rule below merges unused segments back with the rest of the text\n  ['fragments_join',  r_fragments_join]\n]\n\n/**\n * new ParserInline()\n **/\nfunction ParserInline () {\n  /**\n   * ParserInline#ruler -> Ruler\n   *\n   * [[Ruler]] instance. Keep configuration of inline rules.\n   **/\n  this.ruler = new Ruler()\n\n  for (let i = 0; i < _rules.length; i++) {\n    this.ruler.push(_rules[i][0], _rules[i][1])\n  }\n\n  /**\n   * ParserInline#ruler2 -> Ruler\n   *\n   * [[Ruler]] instance. Second ruler used for post-processing\n   * (e.g. in emphasis-like rules).\n   **/\n  this.ruler2 = new Ruler()\n\n  for (let i = 0; i < _rules2.length; i++) {\n    this.ruler2.push(_rules2[i][0], _rules2[i][1])\n  }\n}\n\n// Skip single token by running all rules in validation mode;\n// returns `true` if any rule reported success\n//\nParserInline.prototype.skipToken = function (state) {\n  const pos = state.pos\n  const rules = this.ruler.getRules('')\n  const len = rules.length\n  const maxNesting = state.md.options.maxNesting\n  const cache = state.cache\n\n  if (typeof cache[pos] !== 'undefined') {\n    state.pos = cache[pos]\n    return\n  }\n\n  let ok = false\n\n  if (state.level < maxNesting) {\n    for (let i = 0; i < len; i++) {\n      // Increment state.level and decrement it later to limit recursion.\n      // It's harmless to do here, because no tokens are created. But ideally,\n      // we'd need a separate private state variable for this purpose.\n      //\n      state.level++\n      ok = rules[i](state, true)\n      state.level--\n\n      if (ok) {\n        if (pos >= state.pos) { throw new Error(\"inline rule didn't increment state.pos\") }\n        break\n      }\n    }\n  } else {\n    // Too much nesting, just skip until the end of the paragraph.\n    //\n    // NOTE: this will cause links to behave incorrectly in the following case,\n    //       when an amount of `[` is exactly equal to `maxNesting + 1`:\n    //\n    //       [[[[[[[[[[[[[[[[[[[[[foo]()\n    //\n    // TODO: remove this workaround when CM standard will allow nested links\n    //       (we can replace it by preventing links from being parsed in\n    //       validation mode)\n    //\n    state.pos = state.posMax\n  }\n\n  if (!ok) { state.pos++ }\n  cache[pos] = state.pos\n}\n\n// Generate tokens for input range\n//\nParserInline.prototype.tokenize = function (state) {\n  const rules = this.ruler.getRules('')\n  const len = rules.length\n  const end = state.posMax\n  const maxNesting = state.md.options.maxNesting\n\n  while (state.pos < end) {\n    // Try all possible rules.\n    // On success, rule should:\n    //\n    // - update `state.pos`\n    // - update `state.tokens`\n    // - return true\n    const prevPos = state.pos\n    let ok = false\n\n    if (state.level < maxNesting) {\n      for (let i = 0; i < len; i++) {\n        ok = rules[i](state, false)\n        if (ok) {\n          if (prevPos >= state.pos) { throw new Error(\"inline rule didn't increment state.pos\") }\n          break\n        }\n      }\n    }\n\n    if (ok) {\n      if (state.pos >= end) { break }\n      continue\n    }\n\n    state.pending += state.src[state.pos++]\n  }\n\n  if (state.pending) {\n    state.pushPending()\n  }\n}\n\n/**\n * ParserInline.parse(str, md, env, outTokens)\n *\n * Process input string and push inline tokens into `outTokens`\n **/\nParserInline.prototype.parse = function (str, md, env, outTokens) {\n  const state = new this.State(str, md, env, outTokens)\n\n  this.tokenize(state)\n\n  const rules = this.ruler2.getRules('')\n  const len = rules.length\n\n  for (let i = 0; i < len; i++) {\n    rules[i](state)\n  }\n}\n\nParserInline.prototype.State = StateInline\n\nexport default ParserInline\n",
+      "start": 1711658791998,
+      "end": 1711658792026,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1711658792026,
+      "end": 1711658792026,
+      "order": "normal"
+    }
+  ]
+}

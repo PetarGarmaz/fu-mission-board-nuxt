@@ -1,0 +1,246 @@
+{
+  "resolvedId": "D:/Projects/Web Dev/fu-mission-board-nuxt/src/stores/BriefingStore.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { makeAutoObservable } from 'mobx';\n\nclass BriefingStore {\n\tallBriefings = [];\n\tbriefing = {};\n\tquery = \"\";\n\tfilter = \"Present & Past Missions\";\n\tfilterType = 0;\n\torder = \"Descending\";\n\tcurrentPage = 1;\n\tmaxPages = 1;\n\n\tconstructor () {\n\t\tmakeAutoObservable(this);\n\t}\n\n\tsetAllBriefing = (val) => {\n\t\tthis.allBriefings = val;\n\t};\n\n\tsetBriefing = (val) => {\n\t\tthis.briefing = val;\n\t};\n\n\tsetQuery = (val) => {\n\t\tthis.query = val;\n\t};\n\n\tsetFilter = (val) => {\n\t\tthis.filter = val;\n\t};\n\n\tsetFilterType = (val, type, profileId) => {\n\t\tthis.filterType = val;\n\t\tthis.setFilter(['Present & Past Missions', 'Future Missions', 'All Missions'][val]);\n\t\tthis.getBriefings(type, profileId);\n\t\tconsole.log(type);\n\t};\n\n\tsetOrder = (val, type, profileId) => {\n\t\tthis.order = val;\n\t\tthis.getBriefings(type, profileId)\n\t};\n\n\tsetMaxPages = (val) => {\n\t\tthis.maxPages = val;\n\t}\n\n\tsetPage = (val) => {\n\t\tthis.currentPage = val;\n\t}\n\n\tnextPage = (type, profileId) => {\n\t\tif(this.currentPage < this.maxPages) {\n\t\t\tthis.currentPage += 1;\n\t\t\tthis.getBriefings(type, profileId)\n\t\t};\n\t};\n\n\tprevPage = (type, profileId) => {\n\t\tif(this.currentPage > 1) {\n\t\t\tthis.currentPage -= 1;\n\t\t\tthis.getBriefings(type, profileId)\n\t\t}\n\t};\n\n\tgetBriefings = async (type, profileId) => {\n\t\tconst req = type == \"Profile\" ? \"/api/users/briefings?\" : \"api/briefings?\";\n\t\tconst res = await $fetch(req, {\n\t\t\tmethod: \"GET\",\n\t\t\tquery: {\n\t\t\t\tpage: this.currentPage,\n\t\t\t\tpageLimit: 10,\n\t\t\t\tsearchQuery: this.query,\n\t\t\t\tfilterBy: this.filterType,\n\t\t\t\torderBy: this.order,\n\t\t\t\tcreatorId: profileId\n\t\t\t}\n\t\t});\n\t\tconst data = JSON.parse(res);\n\n\t\tthis.setMaxPages(Math.ceil(data[1]/10));\n\t\tthis.setAllBriefing(data[0]);\n\n\t\treturn data;\n\t};\n\n\tgetBriefing = async (briefingId) => {\n\t\tthis.setBriefing(null);\n\n\t\tconst res = await $fetch('/api/briefings/' + briefingId, {\n\t\t\tmethod: \"GET\",\n\t\t});\n\n\t\tconst data = JSON.parse(res);\n\t\tthis.setBriefing(data);\n\n\t\treturn data;\n\t};\n}\n\nexport default new BriefingStore();",
+      "start": 1711658795006,
+      "end": 1711658795080,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1711658795080,
+      "end": 1711658795080,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1711658795080,
+      "end": 1711658795080,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1711658795080,
+      "end": 1711658795080,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1711658795080,
+      "end": 1711658795080,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1711658795080,
+      "end": 1711658795080,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1711658795080,
+      "end": 1711658795080,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1711658795080,
+      "end": 1711658795080,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1711658795080,
+      "end": 1711658795080,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1711658795080,
+      "end": 1711658795080,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1711658795081,
+      "end": 1711658795081,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1711658795081,
+      "end": 1711658795082,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1711658795081,
+      "end": 1711658795082,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1711658795082,
+      "end": 1711658795082,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1711658795082,
+      "end": 1711658795082,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1711658795082,
+      "end": 1711658795082,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1711658795082,
+      "end": 1711658795082,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-template",
+      "start": 1711658795082,
+      "end": 1711658795082,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1711658795082,
+      "end": 1711658795082,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1711658795082,
+      "end": 1711658795082,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1711658795082,
+      "end": 1711658795082,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1711658795082,
+      "end": 1711658795082,
+      "order": "normal"
+    }
+  ]
+}

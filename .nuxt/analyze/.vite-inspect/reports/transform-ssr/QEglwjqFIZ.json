@@ -1,0 +1,258 @@
+{
+  "resolvedId": "D:/Projects/Web Dev/fu-mission-board-nuxt/src/components/SortBar.vue",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "<script setup>\n\timport { Observer } from 'mobx-vue-lite';\n\timport briefingStore from \"../src/stores/BriefingStore\";\n\timport sortStore from \"../src/stores/SortStore\";\n\n\tconst props = defineProps(['type', \"profileId\"]);\n</script>\n\n<template>\n\t<Observer>\n\t\t<section class='flex flex-wrap max-sm:flex-col'>\n\t\t\t<input placeholder=\"Mission title, description, host...\" :value=\"briefingStore.query\" @input=\"event => briefingStore.setQuery(event.target.value)\" @keyup.enter=\"briefingStore.getBriefings(type, profileId)\" class=\"mx-5 my-5 sm:w-full text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-600 rounded-lg transition duration-300 p-1\"/>\t\n\t\n\t\t\t<div class='flex my-5 w-6/12 select-none max-lg:w-full'>\n\t\t\t\t<div class=\"flex flex-col mx-5 w-full\">\n\t\t\t\t\t<p class='my-auto py-1 text-gray-200 tracking-wider lg:text-lg'>Filter missions:</p>\n\t\t\t\t\t<div @click=\"sortStore.toggleFilterDropdown()\" class='flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer'>\n\t\t\t\t\t\t<div class='flex flex-col'>\n\t\t\t\t\t\t\t<p class='m-auto ml-4 text-gray-200 tracking-wider lg:text-lg'>{{briefingStore.filter}}</p>\n\t\t\t\t\t\t\t<div v-if=\"sortStore.filterDropdown\" class=\"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\">\n\t\t\t\t\t\t\t\t<button v-for=\"(item, index) in ['Present & Past Missions', 'Future Missions', 'All Missions']\" type=\"button\" @click=\"briefingStore.setFilterType(index, type, profileId)\" class='text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300'>{{item}}</button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p class=\"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\" :class=\"sortStore.filterDropdown && 'rotate-180'\">▼</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\n\t\t\t<div class='flex my-5 w-6/12 select-none max-lg:w-full'>\n\t\t\t\t<div class=\"flex flex-col mx-5 w-full\">\n\t\t\t\t\t<p class='my-auto py-1 text-gray-200 tracking-wider lg:text-lg'>Order by:</p>\n\t\t\t\t\t<div @click=\"sortStore.toggleOrderDropdown()\" class='flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer'>\n\t\t\t\t\t\t<div class='flex flex-col'>\n\t\t\t\t\t\t\t<p class='m-auto ml-4 text-gray-200 tracking-wider lg:text-lg'>{{briefingStore.order}}</p>\n\t\t\t\t\t\t\t<div v-if=\"sortStore.orderDropdown\" class=\"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\">\n\t\t\t\t\t\t\t\t<button type=\"button\" v-for=\"item in ['Ascending', 'Descending']\" @click=\"briefingStore.setOrder(item, type, profileId)\" class=\"text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300\">{{item}}</button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p class=\"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\" :class=\"sortStore.orderDropdown && 'rotate-180'\">▼</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</section>\n\t</Observer>\n</template>\n",
+      "start": 1711658795042,
+      "end": 1711658795193,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1711658795193,
+      "end": 1711658795193,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1711658795193,
+      "end": 1711658795193,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1711658795193,
+      "end": 1711658795193,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1711658795193,
+      "end": 1711658795193,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1711658795193,
+      "end": 1711658795193,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1711658795193,
+      "end": 1711658795193,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1711658795193,
+      "end": 1711658795193,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1711658795193,
+      "end": 1711658795193,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1711658795193,
+      "end": 1711658795193,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "result": "import { unref as _unref, withCtx as _withCtx, withKeys as _withKeys, createVNode as _createVNode, toDisplayString as _toDisplayString, renderList as _renderList, Fragment as _Fragment, openBlock as _openBlock, createBlock as _createBlock, createCommentVNode as _createCommentVNode } from \"vue\"\nimport { ssrRenderAttr as _ssrRenderAttr, ssrRenderClass as _ssrRenderClass, ssrRenderComponent as _ssrRenderComponent, ssrInterpolate as _ssrInterpolate, ssrRenderList as _ssrRenderList } from \"vue/server-renderer\"\n\nimport { Observer } from 'mobx-vue-lite';\n\timport briefingStore from \"../src/stores/BriefingStore\";\n\timport sortStore from \"../src/stores/SortStore\";\n\n\t\nconst _sfc_main = {\n  __name: 'SortBar',\n  __ssrInlineRender: true,\n  props: ['type', \"profileId\"],\n  setup(__props) {\n\n\tconst props = __props;\n\nreturn (_ctx, _push, _parent, _attrs) => {\n  _push(_ssrRenderComponent(_unref(Observer), _attrs, {\n    default: _withCtx((_, _push, _parent, _scopeId) => {\n      if (_push) {\n        _push(`<section class=\"flex flex-wrap max-sm:flex-col\"${\n          _scopeId\n        }><input placeholder=\"Mission title, description, host...\"${\n          _ssrRenderAttr(\"value\", _unref(briefingStore).query)\n        } class=\"mx-5 my-5 sm:w-full text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-600 rounded-lg transition duration-300 p-1\"${\n          _scopeId\n        }><div class=\"flex my-5 w-6/12 select-none max-lg:w-full\"${\n          _scopeId\n        }><div class=\"flex flex-col mx-5 w-full\"${\n          _scopeId\n        }><p class=\"my-auto py-1 text-gray-200 tracking-wider lg:text-lg\"${\n          _scopeId\n        }>Filter missions:</p><div class=\"flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer\"${\n          _scopeId\n        }><div class=\"flex flex-col\"${\n          _scopeId\n        }><p class=\"m-auto ml-4 text-gray-200 tracking-wider lg:text-lg\"${\n          _scopeId\n        }>${\n          _ssrInterpolate(_unref(briefingStore).filter)\n        }</p>`)\n        if (_unref(sortStore).filterDropdown) {\n          _push(`<div class=\"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\"${_scopeId}><!--[-->`)\n          _ssrRenderList(['Present & Past Missions', 'Future Missions', 'All Missions'], (item, index) => {\n            _push(`<button type=\"button\" class=\"text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300\"${\n              _scopeId\n            }>${\n              _ssrInterpolate(item)\n            }</button>`)\n          })\n          _push(`<!--]--></div>`)\n        } else {\n          _push(`<!---->`)\n        }\n        _push(`</div><p class=\"${\n          _ssrRenderClass([_unref(sortStore).filterDropdown && 'rotate-180', \"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\"])\n        }\"${\n          _scopeId\n        }>▼</p></div></div></div><div class=\"flex my-5 w-6/12 select-none max-lg:w-full\"${\n          _scopeId\n        }><div class=\"flex flex-col mx-5 w-full\"${\n          _scopeId\n        }><p class=\"my-auto py-1 text-gray-200 tracking-wider lg:text-lg\"${\n          _scopeId\n        }>Order by:</p><div class=\"flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer\"${\n          _scopeId\n        }><div class=\"flex flex-col\"${\n          _scopeId\n        }><p class=\"m-auto ml-4 text-gray-200 tracking-wider lg:text-lg\"${\n          _scopeId\n        }>${\n          _ssrInterpolate(_unref(briefingStore).order)\n        }</p>`)\n        if (_unref(sortStore).orderDropdown) {\n          _push(`<div class=\"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\"${_scopeId}><!--[-->`)\n          _ssrRenderList(['Ascending', 'Descending'], (item) => {\n            _push(`<button type=\"button\" class=\"text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300\"${\n              _scopeId\n            }>${\n              _ssrInterpolate(item)\n            }</button>`)\n          })\n          _push(`<!--]--></div>`)\n        } else {\n          _push(`<!---->`)\n        }\n        _push(`</div><p class=\"${\n          _ssrRenderClass([_unref(sortStore).orderDropdown && 'rotate-180', \"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\"])\n        }\"${\n          _scopeId\n        }>▼</p></div></div></div></section>`)\n      } else {\n        return [\n          _createVNode(\"section\", { class: \"flex flex-wrap max-sm:flex-col\" }, [\n            _createVNode(\"input\", {\n              placeholder: \"Mission title, description, host...\",\n              value: _unref(briefingStore).query,\n              onInput: event => _unref(briefingStore).setQuery(event.target.value),\n              onKeyup: _withKeys($event => (_unref(briefingStore).getBriefings(__props.type, __props.profileId)), [\"enter\"]),\n              class: \"mx-5 my-5 sm:w-full text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-600 rounded-lg transition duration-300 p-1\"\n            }, null, 40, [\"value\", \"onInput\", \"onKeyup\"]),\n            _createVNode(\"div\", { class: \"flex my-5 w-6/12 select-none max-lg:w-full\" }, [\n              _createVNode(\"div\", { class: \"flex flex-col mx-5 w-full\" }, [\n                _createVNode(\"p\", { class: \"my-auto py-1 text-gray-200 tracking-wider lg:text-lg\" }, \"Filter missions:\"),\n                _createVNode(\"div\", {\n                  onClick: $event => (_unref(sortStore).toggleFilterDropdown()),\n                  class: \"flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer\"\n                }, [\n                  _createVNode(\"div\", { class: \"flex flex-col\" }, [\n                    _createVNode(\"p\", { class: \"m-auto ml-4 text-gray-200 tracking-wider lg:text-lg\" }, _toDisplayString(_unref(briefingStore).filter), 1),\n                    (_unref(sortStore).filterDropdown)\n                      ? (_openBlock(), _createBlock(\"div\", {\n                          key: 0,\n                          class: \"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\"\n                        }, [\n                          (_openBlock(), _createBlock(_Fragment, null, _renderList(['Present & Past Missions', 'Future Missions', 'All Missions'], (item, index) => {\n                            return _createVNode(\"button\", {\n                              type: \"button\",\n                              onClick: $event => (_unref(briefingStore).setFilterType(index, __props.type, __props.profileId)),\n                              class: \"text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300\"\n                            }, _toDisplayString(item), 9, [\"onClick\"])\n                          }), 64))\n                        ]))\n                      : _createCommentVNode(\"\", true)\n                  ]),\n                  _createVNode(\"p\", {\n                    class: [\"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\", _unref(sortStore).filterDropdown && 'rotate-180']\n                  }, \"▼\", 2)\n                ], 8, [\"onClick\"])\n              ])\n            ]),\n            _createVNode(\"div\", { class: \"flex my-5 w-6/12 select-none max-lg:w-full\" }, [\n              _createVNode(\"div\", { class: \"flex flex-col mx-5 w-full\" }, [\n                _createVNode(\"p\", { class: \"my-auto py-1 text-gray-200 tracking-wider lg:text-lg\" }, \"Order by:\"),\n                _createVNode(\"div\", {\n                  onClick: $event => (_unref(sortStore).toggleOrderDropdown()),\n                  class: \"flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer\"\n                }, [\n                  _createVNode(\"div\", { class: \"flex flex-col\" }, [\n                    _createVNode(\"p\", { class: \"m-auto ml-4 text-gray-200 tracking-wider lg:text-lg\" }, _toDisplayString(_unref(briefingStore).order), 1),\n                    (_unref(sortStore).orderDropdown)\n                      ? (_openBlock(), _createBlock(\"div\", {\n                          key: 0,\n                          class: \"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\"\n                        }, [\n                          (_openBlock(), _createBlock(_Fragment, null, _renderList(['Ascending', 'Descending'], (item) => {\n                            return _createVNode(\"button\", {\n                              type: \"button\",\n                              onClick: $event => (_unref(briefingStore).setOrder(item, __props.type, __props.profileId)),\n                              class: \"text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300\"\n                            }, _toDisplayString(item), 9, [\"onClick\"])\n                          }), 64))\n                        ]))\n                      : _createCommentVNode(\"\", true)\n                  ]),\n                  _createVNode(\"p\", {\n                    class: [\"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\", _unref(sortStore).orderDropdown && 'rotate-180']\n                  }, \"▼\", 2)\n                ], 8, [\"onClick\"])\n              ])\n            ])\n          ])\n        ]\n      }\n    }),\n    _: 1\n  }, _parent))\n}\n}\n\n}\n\n\n\nimport { useSSRContext as __vite_useSSRContext } from 'vue'\nconst _sfc_setup = _sfc_main.setup\n_sfc_main.setup = (props, ctx) => {\n  const ssrContext = __vite_useSSRContext()\n  ;(ssrContext.modules || (ssrContext.modules = new Set())).add(\"src/components/SortBar.vue\")\n  return _sfc_setup ? _sfc_setup(props, ctx) : undefined\n}\nexport default _sfc_main",
+      "start": 1711658795193,
+      "end": 1711658795197,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "D:/Projects/Web Dev/fu-mission-board-nuxt/src/components/SortBar.vue"
+        ],
+        "sourcesContent": [
+          "<script setup>\n\timport { Observer } from 'mobx-vue-lite';\n\timport briefingStore from \"../src/stores/BriefingStore\";\n\timport sortStore from \"../src/stores/SortStore\";\n\n\tconst props = defineProps(['type', \"profileId\"]);\n</script>\n\n<template>\n\t<Observer>\n\t\t<section class='flex flex-wrap max-sm:flex-col'>\n\t\t\t<input placeholder=\"Mission title, description, host...\" :value=\"briefingStore.query\" @input=\"event => briefingStore.setQuery(event.target.value)\" @keyup.enter=\"briefingStore.getBriefings(type, profileId)\" class=\"mx-5 my-5 sm:w-full text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-600 rounded-lg transition duration-300 p-1\"/>\t\n\t\n\t\t\t<div class='flex my-5 w-6/12 select-none max-lg:w-full'>\n\t\t\t\t<div class=\"flex flex-col mx-5 w-full\">\n\t\t\t\t\t<p class='my-auto py-1 text-gray-200 tracking-wider lg:text-lg'>Filter missions:</p>\n\t\t\t\t\t<div @click=\"sortStore.toggleFilterDropdown()\" class='flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer'>\n\t\t\t\t\t\t<div class='flex flex-col'>\n\t\t\t\t\t\t\t<p class='m-auto ml-4 text-gray-200 tracking-wider lg:text-lg'>{{briefingStore.filter}}</p>\n\t\t\t\t\t\t\t<div v-if=\"sortStore.filterDropdown\" class=\"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\">\n\t\t\t\t\t\t\t\t<button v-for=\"(item, index) in ['Present & Past Missions', 'Future Missions', 'All Missions']\" type=\"button\" @click=\"briefingStore.setFilterType(index, type, profileId)\" class='text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300'>{{item}}</button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p class=\"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\" :class=\"sortStore.filterDropdown && 'rotate-180'\">▼</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\n\t\t\t<div class='flex my-5 w-6/12 select-none max-lg:w-full'>\n\t\t\t\t<div class=\"flex flex-col mx-5 w-full\">\n\t\t\t\t\t<p class='my-auto py-1 text-gray-200 tracking-wider lg:text-lg'>Order by:</p>\n\t\t\t\t\t<div @click=\"sortStore.toggleOrderDropdown()\" class='flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer'>\n\t\t\t\t\t\t<div class='flex flex-col'>\n\t\t\t\t\t\t\t<p class='m-auto ml-4 text-gray-200 tracking-wider lg:text-lg'>{{briefingStore.order}}</p>\n\t\t\t\t\t\t\t<div v-if=\"sortStore.orderDropdown\" class=\"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\">\n\t\t\t\t\t\t\t\t<button type=\"button\" v-for=\"item in ['Ascending', 'Descending']\" @click=\"briefingStore.setOrder(item, type, profileId)\" class=\"text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300\">{{item}}</button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p class=\"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\" :class=\"sortStore.orderDropdown && 'rotate-180'\">▼</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</section>\n\t</Observer>\n</template>\n"
+        ],
+        "names": [],
+        "mappings": ";;;AACC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC1C,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACzD,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACjD;AACA;;;;;;AALc;AACd,CAIC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,OAAkC,CAAC;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
+      }
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1711658795197,
+      "end": 1711658795197,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1711658795197,
+      "end": 1711658795198,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1711658795197,
+      "end": 1711658795198,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1711658795198,
+      "end": 1711658795199,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1711658795198,
+      "end": 1711658795199,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1711658795199,
+      "end": 1711658795199,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1711658795199,
+      "end": 1711658795199,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-template",
+      "start": 1711658795199,
+      "end": 1711658795199,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1711658795199,
+      "end": 1711658795199,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1711658795199,
+      "end": 1711658795199,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1711658795199,
+      "end": 1711658795199,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1711658795199,
+      "end": 1711658795199,
+      "order": "normal"
+    }
+  ]
+}
