@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
 			return new Response(JSON.stringify(newBriefing), {status: 201})
 		} catch (error) {
-			return new Response("Failed to create briefing", {status: 500})
+			return new Response("Failed to create briefing:\n" + error, {status: 500})
 		}
 	}
 })

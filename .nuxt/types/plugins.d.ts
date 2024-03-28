@@ -20,7 +20,8 @@ type NuxtAppInjections =
   InjectionType<typeof import("../../node_modules/@samk-dev/nuxt-vcalendar/dist/runtime/plugin.client").default> &
   InjectionType<typeof import("../../node_modules/@sidebase/nuxt-auth/dist/runtime/plugin").default> &
   InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/chunk-reload.client").default> &
-  InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/check-if-layout-used").default>
+  InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/check-if-layout-used").default> &
+  InjectionType<typeof import("../../node_modules/nuxt-mail/dist/plugin-nuxt3").default>
 
 declare module '#app' {
   interface NuxtApp extends NuxtAppInjections { }

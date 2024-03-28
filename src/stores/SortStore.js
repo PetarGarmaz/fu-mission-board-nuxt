@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
 class SortStore {
-	sortDropdown = false;
+	filterDropdown = false;
 	orderDropdown = false;
 	showDropdown = false;
 
@@ -13,8 +13,8 @@ class SortStore {
 		this.showDropdown = val;
 	}
 
-	setSortDropdown = (val) => {
-		this.sortDropdown = val;
+	setFilterDropdown = (val) => {
+		this.filterDropdown = val;
 	}
 
 	setOrderDropdown = (val) => {
@@ -25,8 +25,8 @@ class SortStore {
 		this.showDropdown = !this.showDropdown;
 	}
 
-	toggleSortDropdown = () => {
-		this.sortDropdown = !this.sortDropdown;
+	toggleFilterDropdown = () => {
+		this.filterDropdown = !this.filterDropdown;
 	}
 
 	toggleOrderDropdown = () => {

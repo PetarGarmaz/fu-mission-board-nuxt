@@ -6,51 +6,99 @@
 	import briefingStore from "../src/stores/BriefingStore";
 	import formStore from "../src/stores/FormStore";
 	import navbarStore from "../src/stores/NavbarStore";
+	import tooltipStore from "../src/stores/TooltipStore";
 	
+	import Tooltip from '../src/components/Tooltip.vue';
 	import { Observer } from 'mobx-vue-lite';
 
 	const date = ref(formStore.date);
-	
-	briefingStore.getBriefings();	
+	const router = useRouter();
+	const props = defineProps(["briefingId"]);
+
+	const doMouseEnter = (event) => {
+		tooltipStore.setTooltip(event.target.getAttribute("tooltipvalue"));
+	}
+
+	const doMouseMove = (event) => {
+		tooltipStore.setPos([event.clientX, event.clientY]);
+	}
+
+	const doMouseExit = (event) => {
+		tooltipStore.setTooltip("");
+	}
+
+	const handleSubmit = (event) => {
+		if(formStore.type == "Edit") {
+			formStore.handleEdit(event, navbarStore.session, props.briefingId);
+		} else {
+			formStore.handleSubmit(event, navbarStore.session);
+		}
+		sendMail();
+		router.push("/");
+	};
+
+	const sendMail = () => {
+		try {
+			const mail = useMail();
+
+			mail.send({
+				from: 'mailtrap@demomailtrap.com',
+				subject: formStore.briefing.title + " - " + formStore.briefing.host,
+				text: "Mission Briefing:\n" + formStore.briefing.desc,
+			})
+		} catch (error) {
+			console.log("Error sending mail:\n" + error);
+		}		
+	};
+
+	const initForm = async () => {
+		if(props.briefingId) {
+			await formStore.getBriefing(props.briefingId);
+		}
+		await briefingStore.getBriefings();
+	};
+
+	initForm();
 </script>
 
 <template>
 	<Observer>
-		<form :onSubmit="event => formStore.handleSubmit(event, navbarStore.session)" class="flex flex-col bg-gray-900 my-10 border border-gray-600 rounded-lg">
+		<Tooltip />
+		<form :onSubmit="event => handleSubmit(event)" class="flex flex-col bg-gray-900 my-10 border border-gray-600 rounded-lg">
 			<div class="m-5">
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Title:</h3>
-				<input placeholder="Desert Storm, Thunder, Sword, etc..." required maxLength="50" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.title" @input="event => formStore.setBriefing({...formStore.briefing, title: event.target.value})" />
+				<input @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Desert Storm, Thunder, Sword, etc..." required maxLength="50" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.title" @input="event => formStore.setBriefing({...formStore.briefing, title: event.target.value})" :tooltipValue="'Enter the operation title, e.g. Operation: Cinder, Operation: Sandstorm, etc...'"/>
 			</div>
 
 			<div class="m-5">
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Host:</h3>
-				<input placeholder="Warlord Beezo, Slobodan Beast, etc..." required maxLength="30" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.host" @input="event => formStore.setBriefing({...formStore.briefing, host: event.target.value})"/>
+				<input @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Warlord Beezo, Slobodan Beast, etc..." required maxLength="30" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.host" @input="event => formStore.setBriefing({...formStore.briefing, host: event.target.value})" :tooltipValue="'Enter the operation host name, e.g. Chyper, Pug, Weasel, Bizo, Dotz0r, etc...'"/>
 			</div>
 
 			<div class="m-5">
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Date:</h3>
 				
 				<client-only>
-					<VueDatePicker required :minDate="new Date()" :enable-time-picker="false" :disabled-week-days="[0, 1, 2, 3, 4, 6]" :disabledDates="formStore.getDisabledDates(briefingStore.allBriefings)" :start-date="formStore.date" auto-apply v-model="date" @date-update="formStore.setDate" />
+					<VueDatePicker @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" required :minDate="new Date()" :enable-time-picker="false" :disabled-week-days="[0, 1, 2, 3, 4, 6]" :disabledDates="formStore.getDisabledDates(briefingStore.allBriefings)" :start-date="new Date(parseInt(formStore.date))" auto-apply v-model="date" @date-update="formStore.setDate" :tooltipValue="'Select an available date to host your mission. Only Fridays are available.'"/>
 				</client-only>	
 			</div>
 
 			<div class="m-5">
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Description:</h3>
-				<textarea placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non sem fringilla, malesuada nibh sit amet, mollis nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam varius eu mi in pellentesque. Maecenas a dolor vel enim volutpat." required rows="15" class="flex resize-none text-gray-200 tracking-wider lg:text-lg text-justify bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg py-1 px-2 w-full transition duration-300" :value="formStore.briefing.desc" @input="event => formStore.setBriefing({...formStore.briefing, desc: event.target.value})" ></textarea>
+				<textarea @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non sem fringilla, malesuada nibh sit amet, mollis nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam varius eu mi in pellentesque. Maecenas a dolor vel enim volutpat." required rows="15" class="flex resize-none text-gray-200 tracking-wider lg:text-lg text-justify bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg py-1 px-2 w-full transition duration-300" :value="formStore.briefing.desc" @input="event => formStore.setBriefing({...formStore.briefing, desc: event.target.value})" :tooltipValue="'Enter a mission description, it can be as big or small as you want. It allows MARKDOWN syntax, for example:\n# Big Heading\n## Normal Heading\n ### Small Heading\n*Italic text*\n**Bold text**\n- List item\n\nFor a proper example:\n## SITUATION:\nYou are FACTION A fighting FACTION B.\n\n## MISSION:\nYour tasks include:\n- Destroy this\n- Destroy that\n\n## EXECUTION:\nDetailed mission explanation and execution, blah blah blah.'"></textarea>
 			</div>
 
 			<div class="m-5">
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Status:</h3>
-				<input placeholder="Unknown, Completed, Failed, etc..." required maxLength="30" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.status" @input="event => formStore.setBriefing({...formStore.briefing, status: event.target.value})" />
+				<input @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Unknown, Completed, Failed, etc..." required maxLength="30" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.status" @input="event => formStore.setBriefing({...formStore.briefing, status: event.target.value})" :tooltipValue="'Enter custom status of the mission, usually you can put it as Unknown.'" />
 			</div>
 
 			<div class="m-5">
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Image (Optional):</h3>
-				<input placeholder="Insert image link here..." rows="2" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.image" @input="event => formStore.setBriefing({...formStore.briefing, image: event.target.value})"/>
+				<input @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Insert image link here..." rows="2" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.image" @input="event => formStore.setBriefing({...formStore.briefing, image: event.target.value})" :tooltipValue="'Enter a custom image link, e.g. https://i.imgur.com/XUgMBZN.jpeg'"/>
 			</div>
 
-			<button type='submit' class="flex m-auto my-5 py-1 px-6 text-gray-200 tracking-wider text-2xl bg-red-600 hover:bg-red-400 rounded-lg transition duration-300">
+			<button @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" type='submit' class="flex m-auto my-5 py-1 px-6 text-gray-200 tracking-wider text-2xl bg-red-600 hover:bg-red-400 rounded-lg transition duration-300" :tooltipValue="'Submit'">
 				{{formStore.type == "Create" ? "Create Briefing" : "Edit Briefing"}}
 			</button>
 		</form>

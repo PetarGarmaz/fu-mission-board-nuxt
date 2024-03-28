@@ -11,9 +11,11 @@ import { NuxtPage } from '#build/components';
 </script>
 
 <template>
-	<div>
+	<main class="flex flex-col">
 		<Navbar />
-		<NuxtPage />
+		<div class=" min-h-screen">
+			<NuxtPage />
+		</div>
 		<FooterComp />
-	</div>
+	</main>
 </template>

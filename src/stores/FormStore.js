@@ -53,10 +53,12 @@ class FormStore {
 		e.preventDefault();
 
 		try {
+			//const offset = (this.date.getTimezoneOffset() / 60);
+			//console.log(offset);
 			const timestamp = this.date.setUTCHours(18,0,0,0);
 			this.setBriefing({...this.briefing, creator: session.user.id, timestamp: timestamp});
 			
-			await fetch("api/briefings/new", {
+			await fetch("/api/briefings/new", {
 				method: "POST", 
 				body: JSON.stringify(this.briefing)
 			})
@@ -64,6 +66,43 @@ class FormStore {
 			console.log(error);
 		}
 	}
+
+	handleEdit = async (e, session, briefingId) => {
+		e.preventDefault();
+
+		try {
+			//const offset = (this.date.getTimezoneOffset() / 60);
+			//console.log(offset);
+			const timestamp = this.date.setUTCHours(18,0,0,0);
+			this.setBriefing({...this.briefing, creator: session.user.id, timestamp: timestamp});
+			
+			await fetch("/api/briefings/" + briefingId, {
+				method: "PATCH",
+				body: JSON.stringify(this.briefing),
+			})
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	handleDelete = async (briefingId) => {
+		try {
+			await fetch("/api/briefings/" + briefingId, {
+				method: "DELETE"
+			})
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	getBriefing = async (briefingId) => {
+		const res = await $fetch('/api/briefings/' + briefingId, {
+			method: "GET"
+		});
+
+		const data = JSON.parse(res);
+		this.setBriefing(data);
+	};
 }
 
 export default new FormStore();

@@ -1,61 +1,31 @@
-const filterBriefings = (briefing, params) => {
-	var showBriefing = true;
-	const nextWeek = Date.parse(new Date()) + 604800 * 1000; //Get next week
-
-	if(briefing.title.toLowerCase().includes(params.searchQuery.toLowerCase()) || briefing.host.toLowerCase().includes(params.searchQuery.toLowerCase())) {
-		if(parseInt(briefing.timestamp) > nextWeek) {
-			if(params.showFuture == "false") {
-				showBriefing = false;
-			};
-		} else {
-			if(briefing.status.toLowerCase().includes("completed")) {
-				if(params.showCompleted == "false") {
-					showBriefing = false;
-				}
-			} else if (briefing.status.toLowerCase().includes("failed")) {
-				if(params.showFailed == "false") {
-					showBriefing = false;
-				}
-			} else {
-				if(params.showCurrent == "false") {
-					showBriefing = false;
-				}
-			}
-		}
-	}	
-
-	return showBriefing;
-};
-
 export default defineEventHandler(async (event) => {
 	if (event.req.method == 'GET') {
-		const params = getQuery(event);
-		
-		
-		/*
+		const nextWeek = Date.parse(new Date()) + 604800 * 1000;
 		const params = getQuery(event);
 
-		const countDocs = await BriefingSchema.countDocuments();
-		
-		//const aggregate = BriefingSchema.aggregate([
-		//	{ $match: (briefing) => filterBriefings(briefing, params) },
-		//	{ $skip: (params.page - 1) * 10 },
-		//	{ $sort: {timestamp : -1}}
-		//]);
-		//console.log(aggregate);
+		try {
+			const title = new RegExp(params.searchQuery, "i");
+			const host = new RegExp(params.searchQuery, "i");
+			const sort = params.orderBy == "Descending" ? "descending" : "ascending";
+			const filter = params.filterBy;
+			let data = [];
+			let dataCount = 0;
 
-		const data = await BriefingSchema.find({}).populate({path:"creator"}).limit(10).skip((params.page - 1) * 10).sort({timestamp : -1}).then(briefings => {return briefings.filter(briefing => filterBriefings(briefing, params))});
-		const otherData = await BriefingSchema.find().populate({path:"creator"}).limit(10).skip((params.page - 1) * 10).sort({timestamp : -1});
-
-		console.log(typeof data);
-		console.log(typeof otherData)
-
-		//const data = await BriefingSchema.find().agregate().populate({path:"creator"}).match(briefing => filterBriefings(briefing, params)).limit(10).skip((params.page - 1) * 10).sort({timestamp : -1});
-		//console.log(data);
-		//const data = await BriefingSchema.find().populate({path:"creator"}).limit(10).skip((params.page - 1) * 10).sort({timestamp : -1});
-
-		//const sortedData = filterBriefings(data, params.searchQuery, params.sortBy, params.orderBy, params.show);
-		return [data, countDocs];
-		*/
-	}
+			if(filter == 0) {
+				data = await BriefingSchema.find({$or: [{title}, {host}]}).lte("timestamp", nextWeek).populate({path:"creator"}).limit(10).skip((params.page - 1) * params.pageLimit).sort({timestamp : sort});
+				dataCount = await BriefingSchema.countDocuments({$or: [{title}, {host}]}).lte("timestamp", nextWeek);
+			} else if(filter == 1) {
+				data = await BriefingSchema.find({$or: [{title}, {host}]}).gt("timestamp", nextWeek).populate({path:"creator"}).limit(10).skip((params.page - 1) * params.pageLimit).sort({timestamp : sort});
+				dataCount = await BriefingSchema.countDocuments({$or: [{title}, {host}]}).gt("timestamp", nextWeek);
+			} else if(filter == 2) {
+				data = await BriefingSchema.find({$or: [{title}, {host}]}).populate({path:"creator"}).limit(10).skip((params.page - 1) * params.pageLimit).sort({timestamp : sort});
+				dataCount = await BriefingSchema.countDocuments({$or: [{title}, {host}]});
+			}
+			
+			
+			return new Response(JSON.stringify([data, dataCount]), {status: 200});
+		} catch (error) {
+			return new Response("Error fetching all briefings:\n" + error, {status: 500});
+		}
+	};
 })

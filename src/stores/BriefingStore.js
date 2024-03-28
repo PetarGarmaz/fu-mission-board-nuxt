@@ -2,12 +2,13 @@ import { makeAutoObservable } from 'mobx';
 
 class BriefingStore {
 	allBriefings = [];
+	briefing = {};
 	query = "";
-	sort = "Date";
-	order = "Desc";
+	filter = "Present & Past Missions";
+	filterType = 0;
+	order = "Descending";
 	currentPage = 1;
 	maxPages = 1;
-	filter = [false,true,true,true]; //['Future Missions', 'Current Mission', 'Completed Missions', 'Failed Missions']
 
 	constructor () {
 		makeAutoObservable(this);
@@ -17,61 +18,84 @@ class BriefingStore {
 		this.allBriefings = val;
 	};
 
+	setBriefing = (val) => {
+		this.briefing = val;
+	};
+
 	setQuery = (val) => {
 		this.query = val;
 	};
 
 	setFilter = (val) => {
 		this.filter = val;
-		this.getBriefings();
 	};
 
-	setSort = (val) => {
-		this.sort = val;
+	setFilterType = (val, type, profileId) => {
+		this.filterType = val;
+		this.setFilter(['Present & Past Missions', 'Future Missions', 'All Missions'][val]);
+		this.getBriefings(type, profileId);
+		console.log(type);
 	};
 
-	setOrder = (val) => {
+	setOrder = (val, type, profileId) => {
 		this.order = val;
+		this.getBriefings(type, profileId)
 	};
 
 	setMaxPages = (val) => {
 		this.maxPages = val;
 	}
 
-	nextPage = () => {
+	setPage = (val) => {
+		this.currentPage = val;
+	}
+
+	nextPage = (type, profileId) => {
 		if(this.currentPage < this.maxPages) {
 			this.currentPage += 1;
-			this.getBriefings()
-		}
+			this.getBriefings(type, profileId)
+		};
 	};
 
-	prevPage = () => {
+	prevPage = (type, profileId) => {
 		if(this.currentPage > 1) {
 			this.currentPage -= 1;
-			this.getBriefings()
+			this.getBriefings(type, profileId)
 		}
 	};
 
-	getBriefings = async () => {
-		console.log(this.allBriefings.length);
-		const res = await $fetch('/api/briefings?', {
+	getBriefings = async (type, profileId) => {
+		const req = type == "Profile" ? "/api/users/briefings?" : "api/briefings?";
+		const res = await $fetch(req, {
 			method: "GET",
 			query: {
 				page: this.currentPage,
 				pageLimit: 10,
-				searchQuery: "",
-				sortBy: "Date",
-				orderBy: "Desc",
-				showFuture: this.filter[0],
-				showCurrent: this.filter[1],
-				showCompleted: this.filter[2],
-				showFailed: this.filter[3],
+				searchQuery: this.query,
+				filterBy: this.filterType,
+				orderBy: this.order,
+				creatorId: profileId
 			}
 		});
-		const data = res[0];
+		const data = JSON.parse(res);
 
-		this.setMaxPages(Math.ceil(res[1]/10));
-		this.setAllBriefing(data);
+		this.setMaxPages(Math.ceil(data[1]/10));
+		this.setAllBriefing(data[0]);
+
+		return data;
+	};
+
+	getBriefing = async (briefingId) => {
+		this.setBriefing(null);
+
+		const res = await $fetch('/api/briefings/' + briefingId, {
+			method: "GET",
+		});
+
+		const data = JSON.parse(res);
+		this.setBriefing(data);
+
+		return data;
 	};
 }
 

@@ -9,12 +9,23 @@ class NavbarStore {
 		makeAutoObservable(this);
 	}
 
-	createSession = async () => {
+	getSession = async () => {
 		const { getSession, getProviders } = useAuth();
-		this.session = await getSession();
-		this.providers = await getProviders();
+		const sesh = await getSession();
+		const prov = await getProviders();
+
+		this.setSession(sesh);
+		this.setProviders(prov);
 	};
 	
+	setSession = (sesh) => {
+		this.session = sesh;
+	};
+
+	setProviders = (prov) => {
+		this.providers = prov;
+	};
+
 	toggleDropdown = () => {
 		this.dropdown = !this.dropdown;
 	};

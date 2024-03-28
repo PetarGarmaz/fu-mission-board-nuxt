@@ -62,6 +62,9 @@
       "vue-demi": [
         "../node_modules/nuxt/dist/app/compat/vue-demi"
       ],
+      "#mail": [
+        "file:///D:/Projects/Web%20Dev/fu-mission-board-nuxt/.nuxt/nuxt-mail"
+      ],
       "#vue-router": [
         "./vue-router-stub"
       ],
@@ -87,6 +90,7 @@
     "../node_modules/nuxt-mongoose/runtime",
     "../node_modules/@samk-dev/nuxt-vcalendar/runtime",
     "../node_modules/mobx-vue-lite/nuxt/runtime",
+    "../node_modules/nuxt-mail/runtime",
     "../node_modules/nuxt/node_modules/@nuxt/devtools/runtime",
     "../node_modules/@nuxt/telemetry/runtime",
     ".."
@@ -99,6 +103,7 @@
     "../node_modules/nuxt-mongoose/runtime/server",
     "../node_modules/@samk-dev/nuxt-vcalendar/runtime/server",
     "../node_modules/mobx-vue-lite/nuxt/runtime/server",
+    "../node_modules/nuxt-mail/runtime/server",
     "../node_modules/nuxt/node_modules/@nuxt/devtools/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "../dist",

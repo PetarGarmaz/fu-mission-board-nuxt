@@ -6,6 +6,9 @@ declare module 'nitropack' {
     '/api/auth/**': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/[...]').default>>>>
     }
+    '/api/briefings/:id': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/briefings/[id]/index').default>>>>
+    }
     '/api/briefings': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/briefings/index').default>>>>
     }
@@ -23,6 +26,9 @@ declare module 'nitropack' {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@sidebase/nuxt-session/dist/runtime/server/api/session.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@sidebase/nuxt-session/dist/runtime/server/api/session.get').default>>>>
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@sidebase/nuxt-session/dist/runtime/server/api/session.post').default>>>>
+    }
+    '/mail/send': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt-mail/dist/server-handler.post').default>>>>
     }
   }
 }

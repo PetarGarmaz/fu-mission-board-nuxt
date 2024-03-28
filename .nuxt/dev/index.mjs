@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { parentPort, threadId } from 'node:worker_threads';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, isEvent, createEvent, getRequestHeader, eventHandler, setHeaders, sendRedirect, proxyRequest, setResponseHeader, send, getResponseStatus, setResponseStatus, setResponseHeaders, getRequestHeaders, deleteCookie, parseCookies, setCookie, readBody, createError, createApp, createRouter as createRouter$1, toNodeListener, fetchWithEvent, lazyEventHandler, appendHeader, getHeaders, getMethod, getQuery as getQuery$1, isMethod, getResponseStatusText } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, isEvent, createEvent, getRequestHeader, eventHandler, setHeaders, sendRedirect, proxyRequest, setResponseHeader, send, getResponseStatus, setResponseStatus, setResponseHeaders, getRequestHeaders, deleteCookie, parseCookies, setCookie, readBody, createError, createApp, createRouter as createRouter$1, toNodeListener, fetchWithEvent, lazyEventHandler, appendHeader, getHeaders, getMethod, getQuery as getQuery$1, isMethod, getRouterParams, getResponseStatusText } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/h3/dist/index.mjs';
 import DiscordProvider from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/next-auth/providers/discord.js';
 import { AuthHandler } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/next-auth/core/index.js';
 import defu, { defuFn, defu as defu$1 } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/defu/dist/defu.mjs';
@@ -30,6 +30,9 @@ import { nanoid } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_
 import dayjs from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/dayjs/dayjs.min.js';
 import sessionDriver from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/unstorage/drivers/memory.mjs';
 import * as argon2 from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/argon2/argon2.js';
+import nodemailer from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/nodemailer/lib/nodemailer.js';
+import options from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/.nuxt/nuxt-mail/options.mjs';
+import send$1 from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/.nuxt/nuxt-mail/send.mjs';
 import { version, unref } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/vue/index.mjs';
 import { createServerHead as createServerHead$1 } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/unhead/dist/index.mjs';
 import { defineHeadPlugin } from 'file://D:/Projects/Web%20Dev/fu-mission-board-nuxt/node_modules/@unhead/shared/dist/index.mjs';
@@ -1120,7 +1123,21 @@ const _pXkagm = eventHandler(async (event) => {
   return event.context.session;
 });
 
+const transport = nodemailer.createTransport(options.smtp);
+const _DaAakc = defineEventHandler(async event => {
+  try {
+    await send$1(await readBody(event), options, transport);
+  } catch (error) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: error.message
+    });
+  }
+  return '';
+});
+
 const _lazy_rL8vIu = () => Promise.resolve().then(function () { return _____; });
+const _lazy_7iwZbX = () => Promise.resolve().then(function () { return index$7; });
 const _lazy_US74y4 = () => Promise.resolve().then(function () { return index$5; });
 const _lazy_lCeCs0 = () => Promise.resolve().then(function () { return index$3; });
 const _lazy_Td16A9 = () => Promise.resolve().then(function () { return index$1; });
@@ -1128,6 +1145,7 @@ const _lazy_16Qs8o = () => Promise.resolve().then(function () { return renderer$
 
 const handlers = [
   { route: '/api/auth/**', handler: _lazy_rL8vIu, lazy: true, middleware: false, method: undefined },
+  { route: '/api/briefings/:id', handler: _lazy_7iwZbX, lazy: true, middleware: false, method: undefined },
   { route: '/api/briefings', handler: _lazy_US74y4, lazy: true, middleware: false, method: undefined },
   { route: '/api/briefings/new', handler: _lazy_lCeCs0, lazy: true, middleware: false, method: undefined },
   { route: '/api/users/briefings', handler: _lazy_Td16A9, lazy: true, middleware: false, method: undefined },
@@ -1137,6 +1155,7 @@ const handlers = [
   { route: '/api/session', handler: _8AJXKB, lazy: false, middleware: false, method: "delete" },
   { route: '/api/session', handler: _RzbcgA, lazy: false, middleware: false, method: "get" },
   { route: '/api/session', handler: _pXkagm, lazy: false, middleware: false, method: "post" },
+  { route: '/mail/send', handler: _DaAakc, lazy: false, middleware: false, method: "post" },
   { route: '/**', handler: _lazy_16Qs8o, lazy: true, middleware: false, method: undefined }
 ];
 
@@ -1488,9 +1507,78 @@ const _____ = /*#__PURE__*/Object.freeze({
   default: handler
 });
 
+const index$6 = defineEventHandler(async (event) => {
+  if (event.req.method == "GET") {
+    const params = getRouterParams(event);
+    try {
+      const data = await BriefingSchema.findOne({ _id: params.id }).populate({ path: "creator" });
+      return new Response(JSON.stringify(data), { status: 200 });
+    } catch (error) {
+      return new Response("Error fetching briefing:\n" + error, { status: 500 });
+    }
+  }
+  if (event.req.method == "PATCH") {
+    const params = getRouterParams(event);
+    const body = JSON.parse(await readBody(event));
+    const { creator, title, host, timestamp, desc, image, status } = body;
+    try {
+      const briefing = await BriefingSchema.findOne({ _id: params.id });
+      if (!briefing) {
+        return new Response("Briefing not found", { status: 404 });
+      }
+      briefing.title = title;
+      briefing.host = host;
+      briefing.timestamp = timestamp;
+      briefing.desc = desc;
+      briefing.image = image;
+      briefing.status = status;
+      await briefing.save();
+      return new Response(JSON.stringify(briefing), { status: 200 });
+    } catch (error) {
+      return new Response("Failed to edit briefing:\n" + error, { status: 500 });
+    }
+  }
+  if (event.req.method == "DELETE") {
+    try {
+      const params = getRouterParams(event);
+      const briefing = await BriefingSchema.findByIdAndDelete({ _id: params.id });
+      return new Response("Briefing removed!", { status: 200 });
+    } catch (error) {
+      return new Response("Failed to delete briefing:\n" + error, { status: 500 });
+    }
+  }
+});
+
+const index$7 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index$6
+});
+
 const index$4 = defineEventHandler(async (event) => {
   if (event.req.method == "GET") {
-    getQuery$1(event);
+    const nextWeek = Date.parse(/* @__PURE__ */ new Date()) + 604800 * 1e3;
+    const params = getQuery$1(event);
+    try {
+      const title = new RegExp(params.searchQuery, "i");
+      const host = new RegExp(params.searchQuery, "i");
+      const sort = params.orderBy == "Descending" ? "descending" : "ascending";
+      const filter = params.filterBy;
+      let data = [];
+      let dataCount = 0;
+      if (filter == 0) {
+        data = await BriefingSchema.find({ $or: [{ title }, { host }] }).lte("timestamp", nextWeek).populate({ path: "creator" }).limit(10).skip((params.page - 1) * params.pageLimit).sort({ timestamp: sort });
+        dataCount = await BriefingSchema.countDocuments({ $or: [{ title }, { host }] }).lte("timestamp", nextWeek);
+      } else if (filter == 1) {
+        data = await BriefingSchema.find({ $or: [{ title }, { host }] }).gt("timestamp", nextWeek).populate({ path: "creator" }).limit(10).skip((params.page - 1) * params.pageLimit).sort({ timestamp: sort });
+        dataCount = await BriefingSchema.countDocuments({ $or: [{ title }, { host }] }).gt("timestamp", nextWeek);
+      } else if (filter == 2) {
+        data = await BriefingSchema.find({ $or: [{ title }, { host }] }).populate({ path: "creator" }).limit(10).skip((params.page - 1) * params.pageLimit).sort({ timestamp: sort });
+        dataCount = await BriefingSchema.countDocuments({ $or: [{ title }, { host }] });
+      }
+      return new Response(JSON.stringify([data, dataCount]), { status: 200 });
+    } catch (error) {
+      return new Response("Error fetching all briefings:\n" + error, { status: 500 });
+    }
   }
 });
 
@@ -1516,7 +1604,7 @@ const index$2 = defineEventHandler(async (event) => {
       await newBriefing.save();
       return new Response(JSON.stringify(newBriefing), { status: 201 });
     } catch (error) {
-      return new Response("Failed to create briefing", { status: 500 });
+      return new Response("Failed to create briefing:\n" + error, { status: 500 });
     }
   }
 });
@@ -1528,9 +1616,30 @@ const index$3 = /*#__PURE__*/Object.freeze({
 
 const index = defineEventHandler(async (event) => {
   if (event.req.method == "GET") {
+    const nextWeek = Date.parse(/* @__PURE__ */ new Date()) + 604800 * 1e3;
     const params = getQuery$1(event);
-    const data = await BriefingSchema.find({ creator: params.creator }).populate({ path: "creator" });
-    return new Response(JSON.stringify(data), { status: 200 });
+    try {
+      const title = new RegExp(params.searchQuery, "i");
+      const host = new RegExp(params.searchQuery, "i");
+      const sort = params.orderBy == "Descending" ? "descending" : "ascending";
+      const filter = params.filterBy;
+      const creator = params.creatorId;
+      let data = [];
+      let dataCount = 0;
+      if (filter == 0) {
+        data = await BriefingSchema.find({ $or: [{ title }, { host }], $and: [{ creator }] }).lte("timestamp", nextWeek).populate({ path: "creator" }).limit(10).skip((params.page - 1) * params.pageLimit).sort({ timestamp: sort });
+        dataCount = await BriefingSchema.countDocuments({ $or: [{ title }, { host }], $and: [{ creator }] }).lte("timestamp", nextWeek);
+      } else if (filter == 1) {
+        data = await BriefingSchema.find({ $or: [{ title }, { host }], $and: [{ creator }] }).gt("timestamp", nextWeek).populate({ path: "creator" }).limit(10).skip((params.page - 1) * params.pageLimit).sort({ timestamp: sort });
+        dataCount = await BriefingSchema.countDocuments({ $or: [{ title }, { host }], $and: [{ creator }] }).gt("timestamp", nextWeek);
+      } else if (filter == 2) {
+        data = await BriefingSchema.find({ $or: [{ title }, { host }], $and: [{ creator }] }).populate({ path: "creator" }).limit(10).skip((params.page - 1) * params.pageLimit).sort({ timestamp: sort });
+        dataCount = await BriefingSchema.countDocuments({ $or: [{ title }, { host }], $and: [{ creator }] });
+      }
+      return new Response(JSON.stringify([data, dataCount]), { status: 200 });
+    } catch (error) {
+      return new Response("Error fetching creator briefings:\n" + error, { status: 500 });
+    }
   }
 });
 

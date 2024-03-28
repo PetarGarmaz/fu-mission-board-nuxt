@@ -1,5 +1,13 @@
 <script setup>
+	import MarkdownIt from 'markdown-it';
+	import MarkdownItAttrs from 'markdown-it-attrs';
+
 	const props = defineProps(['briefing']);
+
+	const handleClick = (briefing) => {
+		const router = useRouter();
+		router.push("/briefings/" + briefing._id);
+	};
 
 	const getDateString = (timestamp) => {
 		const parsedDate = new Date(parseInt(timestamp));
@@ -12,10 +20,15 @@
 		const newTime = parsedDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", timeZoneName: "short" });
 		return newTime;
 	};
+
+	const renderMarkdown = (content) => {
+		const md = new MarkdownIt().use(MarkdownItAttrs)
+		return md.render(content)
+	};
 </script>
 
 <template>
-	<nuxt-link to="/" class="flex flex-col bg-gray-900 my-5 border border-gray-600 rounded-lg transition duration-300 hover:bg-gray-700 hover:-translate-y-1 hover:translate-x-1 hover:drop-shadow-[-5px_5px_2px_rgba(0,0,0,0.5)">
+	<div v-if="briefing" @click="handleClick(briefing)" class="flex flex-col cursor-pointer bg-gray-900 my-5 border border-gray-600 rounded-lg transition duration-300 hover:bg-gray-700 hover:-translate-y-1 hover:translate-x-1 hover:drop-shadow-[-5px_5px_2px_rgba(0,0,0,0.5)">
 		<header class='flex max-lg:flex-col'>
 			<img v-bind:src="briefing.creator.image" alt="Logo" class='object-cover w-16 mx-5 max-lg:mx-auto my-2 max-lg:my-5 rounded-full' />
 			<hr class='lg:hidden max-lg:border-gray-600'/>
@@ -28,10 +41,10 @@
 		</header>
 
 		<hr class='border-gray-600'/>
-		<p class='m-5 text-lg max-lg:text-sm text-gray-200 text-justify italic text-wrap line-clamp-5 max-lg:line-clamp-6'>{{briefing.desc}}</p>
+		<p v-html="renderMarkdown(briefing.desc)" class='m-5 text-lg max-lg:text-sm text-gray-200 text-justify italic text-wrap line-clamp-5 max-lg:line-clamp-6'></p>
 
 		<hr class='border-gray-600'/>
 		<p class='mx-5 my-2 text-2xl max-lg:text-xl text-gray-200 font-bold'>STATUS: {{briefing.status}}</p>
-	</nuxt-link>
+	</div>
 </template>
 

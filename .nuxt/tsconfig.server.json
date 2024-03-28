@@ -51,6 +51,9 @@
       "public/*": [
         "../public/*"
       ],
+      "#mail": [
+        "./file:/D:/Projects/Web%20Dev/fu-mission-board-nuxt/.nuxt/nuxt-mail"
+      ],
       "#auth": [
         "../node_modules/@sidebase/nuxt-auth/dist/runtime/server/services"
       ],
@@ -72,6 +75,7 @@
     "../node_modules/nuxt-mongoose/runtime/server",
     "../node_modules/@samk-dev/nuxt-vcalendar/runtime/server",
     "../node_modules/mobx-vue-lite/nuxt/runtime/server",
+    "../node_modules/nuxt-mail/runtime/server",
     "../node_modules/nuxt/node_modules/@nuxt/devtools/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "./types/nitro.d.ts",
