@@ -4,183 +4,183 @@
     {
       "name": "vite:load-fallback",
       "result": "import { runInAction, makeObservable, observable, makeAutoObservable} from 'mobx';\n\nclass NavbarStore {\n\tdropdown = false;\n\tproviders = null;\n\tsession = null;\n\n\tconstructor () {\n\t\tmakeAutoObservable(this);\n\t}\n\n\tgetSession = async () => {\n\t\tconst { getSession, getProviders } = useAuth();\n\t\tconst sesh = await getSession();\n\t\tconst prov = await getProviders();\n\n\t\tthis.setSession(sesh);\n\t\tthis.setProviders(prov);\n\t};\n\t\n\tsetSession = (sesh) => {\n\t\tthis.session = sesh;\n\t};\n\n\tsetProviders = (prov) => {\n\t\tthis.providers = prov;\n\t};\n\n\ttoggleDropdown = () => {\n\t\tthis.dropdown = !this.dropdown;\n\t};\n};\n\nexport default new NavbarStore();",
-      "start": 1711658794777,
-      "end": 1711658794930,
+      "start": 1711659334855,
+      "end": 1711659335003,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "pre"
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "post"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711658794930,
-      "end": 1711658794930,
+      "start": 1711659335003,
+      "end": 1711659335003,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { useAuth } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuth';\nimport { runInAction, makeObservable, observable, makeAutoObservable} from 'mobx';\n\nclass NavbarStore {\n\tdropdown = false;\n\tproviders = null;\n\tsession = null;\n\n\tconstructor () {\n\t\tmakeAutoObservable(this);\n\t}\n\n\tgetSession = async () => {\n\t\tconst { getSession, getProviders } = useAuth();\n\t\tconst sesh = await getSession();\n\t\tconst prov = await getProviders();\n\n\t\tthis.setSession(sesh);\n\t\tthis.setProviders(prov);\n\t};\n\t\n\tsetSession = (sesh) => {\n\t\tthis.session = sesh;\n\t};\n\n\tsetProviders = (prov) => {\n\t\tthis.providers = prov;\n\t};\n\n\ttoggleDropdown = () => {\n\t\tthis.dropdown = !this.dropdown;\n\t};\n};\n\nexport default new NavbarStore();",
-      "start": 1711658794930,
-      "end": 1711658794931,
+      "start": 1711659335003,
+      "end": 1711659335004,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -194,8 +194,8 @@
     {
       "name": "nuxt:imports-transform",
       "result": "import { useAuth } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuth';\nimport { runInAction, makeObservable, observable, makeAutoObservable} from 'mobx';\n\nclass NavbarStore {\n\tdropdown = false;\n\tproviders = null;\n\tsession = null;\n\n\tconstructor () {\n\t\tmakeAutoObservable(this);\n\t}\n\n\tgetSession = async () => {\n\t\tconst { getSession, getProviders } = useAuth();\n\t\tconst sesh = await getSession();\n\t\tconst prov = await getProviders();\n\n\t\tthis.setSession(sesh);\n\t\tthis.setProviders(prov);\n\t};\n\t\n\tsetSession = (sesh) => {\n\t\tthis.session = sesh;\n\t};\n\n\tsetProviders = (prov) => {\n\t\tthis.providers = prov;\n\t};\n\n\ttoggleDropdown = () => {\n\t\tthis.dropdown = !this.dropdown;\n\t};\n};\n\nexport default new NavbarStore();",
-      "start": 1711658794930,
-      "end": 1711658794931,
+      "start": 1711659335003,
+      "end": 1711659335004,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -208,56 +208,56 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1711658794931,
-      "end": 1711658794931,
+      "start": 1711659335004,
+      "end": 1711659335004,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711658794931,
-      "end": 1711658794931,
+      "start": 1711659335004,
+      "end": 1711659335004,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711658794931,
-      "end": 1711658794931,
+      "start": 1711659335004,
+      "end": 1711659335004,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711658794931,
-      "end": 1711658794931,
+      "start": 1711659335004,
+      "end": 1711659335004,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-template",
-      "start": 1711658794931,
-      "end": 1711658794931,
+      "start": 1711659335004,
+      "end": 1711659335004,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711658794931,
-      "end": 1711658794931,
+      "start": 1711659335004,
+      "end": 1711659335004,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711658794931,
-      "end": 1711658794931,
+      "start": 1711659335004,
+      "end": 1711659335004,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711658794931,
-      "end": 1711658794931,
+      "start": 1711659335004,
+      "end": 1711659335004,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711658794931,
-      "end": 1711658794931,
+      "start": 1711659335004,
+      "end": 1711659335004,
       "order": "normal"
     }
   ]

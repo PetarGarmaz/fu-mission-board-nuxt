@@ -4,57 +4,57 @@
     {
       "name": "vite:load-fallback",
       "result": "<script setup>\r\n\timport MarkdownIt from 'markdown-it';\r\n\timport MarkdownItAttrs from 'markdown-it-attrs';\r\n\r\n\tconst props = defineProps(['briefing']);\r\n\r\n\tconst handleClick = (briefing) => {\r\n\t\tconst router = useRouter();\r\n\t\trouter.push(\"/briefings/\" + briefing._id);\r\n\t};\r\n\r\n\tconst getDateString = (timestamp) => {\r\n\t\tconst parsedDate = new Date(parseInt(timestamp));\r\n\t\tconst newDate = parsedDate.toLocaleDateString('en-uk', { weekday:\"long\", month:\"long\", year:\"numeric\", day:\"numeric\"});\r\n\t\treturn newDate;\r\n\t};\r\n\r\n\tconst getTimeString = (timestamp) => {\r\n\t\tconst parsedDate = new Date(parseInt(timestamp));\r\n\t\tconst newTime = parsedDate.toLocaleTimeString([], { hour: \"2-digit\", minute: \"2-digit\", timeZoneName: \"short\" });\r\n\t\treturn newTime;\r\n\t};\r\n\r\n\tconst renderMarkdown = (content) => {\r\n\t\tconst md = new MarkdownIt().use(MarkdownItAttrs)\r\n\t\treturn md.render(content)\r\n\t};\r\n</script>\r\n\r\n<template>\r\n\t<div v-if=\"briefing\" @click=\"handleClick(briefing)\" class=\"flex flex-col cursor-pointer bg-gray-900 my-5 border border-gray-600 rounded-lg transition duration-300 hover:bg-gray-700 hover:-translate-y-1 hover:translate-x-1 hover:drop-shadow-[-5px_5px_2px_rgba(0,0,0,0.5)\">\r\n\t\t<header class='flex max-lg:flex-col'>\r\n\t\t\t<img v-bind:src=\"briefing.creator.image\" alt=\"Logo\" class='object-cover w-16 mx-5 max-lg:mx-auto my-2 max-lg:my-5 rounded-full' />\r\n\t\t\t<hr class='lg:hidden max-lg:border-gray-600'/>\r\n\t\t\t\r\n\t\t\t<div class='flex flex-col'>\r\n\t\t\t\t<h2 class='text-2xl max-lg:text-xl max-lg:text-center text-gray-200 font-bold lg:tracking-wider my-auto max-lg:my-2 max-lg:mx-5'>{{briefing.title}}</h2>\r\n\t\t\t\t<hr class='lg:hidden max-lg:border-gray-600'/>\r\n\t\t\t\t<p class='text-gray-200 max-lg:text-center text-xl max-lg:text-sm tracking-wider italic my-auto max-lg:my-2 max-lg:mx-5'>Host: {{briefing.host}} ● {{getDateString(briefing.timestamp)}} ● {{getTimeString(briefing.timestamp)}}</p>\r\n\t\t\t</div>\r\n\t\t</header>\r\n\r\n\t\t<hr class='border-gray-600'/>\r\n\t\t<p v-html=\"renderMarkdown(briefing.desc)\" class='m-5 text-lg max-lg:text-sm text-gray-200 text-justify italic text-wrap line-clamp-5 max-lg:line-clamp-6'></p>\r\n\r\n\t\t<hr class='border-gray-600'/>\r\n\t\t<p class='mx-5 my-2 text-2xl max-lg:text-xl text-gray-200 font-bold'>STATUS: {{briefing.status}}</p>\r\n\t</div>\r\n</template>\r\n\r\n",
-      "start": 1711658791504,
-      "end": 1711658791805,
+      "start": 1711659331622,
+      "end": 1711659331809,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711658791805,
-      "end": 1711658791805,
+      "start": 1711659331810,
+      "end": 1711659331810,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711658791805,
-      "end": 1711658791805,
+      "start": 1711659331810,
+      "end": 1711659331810,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711658791805,
-      "end": 1711658791805,
+      "start": 1711659331810,
+      "end": 1711659331810,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711658791805,
-      "end": 1711658791805,
+      "start": 1711659331810,
+      "end": 1711659331810,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711658791805,
-      "end": 1711658791805,
+      "start": 1711659331810,
+      "end": 1711659331810,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711658791805,
-      "end": 1711658791805,
+      "start": 1711659331810,
+      "end": 1711659331810,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711658791805,
-      "end": 1711658791805,
+      "start": 1711659331810,
+      "end": 1711659331810,
       "order": "normal"
     },
     {
       "name": "vite:vue",
       "result": "import { createElementVNode as _createElementVNode, toDisplayString as _toDisplayString, openBlock as _openBlock, createElementBlock as _createElementBlock, createCommentVNode as _createCommentVNode } from \"vue\"\n\nconst _hoisted_1 = { class: \"flex max-lg:flex-col\" }\nconst _hoisted_2 = [\"src\"]\nconst _hoisted_3 = /*#__PURE__*/_createElementVNode(\"hr\", { class: \"lg:hidden max-lg:border-gray-600\" }, null, -1)\nconst _hoisted_4 = { class: \"flex flex-col\" }\nconst _hoisted_5 = { class: \"text-2xl max-lg:text-xl max-lg:text-center text-gray-200 font-bold lg:tracking-wider my-auto max-lg:my-2 max-lg:mx-5\" }\nconst _hoisted_6 = /*#__PURE__*/_createElementVNode(\"hr\", { class: \"lg:hidden max-lg:border-gray-600\" }, null, -1)\nconst _hoisted_7 = { class: \"text-gray-200 max-lg:text-center text-xl max-lg:text-sm tracking-wider italic my-auto max-lg:my-2 max-lg:mx-5\" }\nconst _hoisted_8 = /*#__PURE__*/_createElementVNode(\"hr\", { class: \"border-gray-600\" }, null, -1)\nconst _hoisted_9 = [\"innerHTML\"]\nconst _hoisted_10 = /*#__PURE__*/_createElementVNode(\"hr\", { class: \"border-gray-600\" }, null, -1)\nconst _hoisted_11 = { class: \"mx-5 my-2 text-2xl max-lg:text-xl text-gray-200 font-bold\" }\n\nimport MarkdownIt from 'markdown-it';\r\n\timport MarkdownItAttrs from 'markdown-it-attrs';\r\n\r\n\t\nconst _sfc_main = {\n  __name: 'FeedCard',\n  props: ['briefing'],\n  setup(__props) {\n\r\n\tconst props = __props;\r\n\r\n\tconst handleClick = (briefing) => {\r\n\t\tconst router = useRouter();\r\n\t\trouter.push(\"/briefings/\" + briefing._id);\r\n\t};\r\n\r\n\tconst getDateString = (timestamp) => {\r\n\t\tconst parsedDate = new Date(parseInt(timestamp));\r\n\t\tconst newDate = parsedDate.toLocaleDateString('en-uk', { weekday:\"long\", month:\"long\", year:\"numeric\", day:\"numeric\"});\r\n\t\treturn newDate;\r\n\t};\r\n\r\n\tconst getTimeString = (timestamp) => {\r\n\t\tconst parsedDate = new Date(parseInt(timestamp));\r\n\t\tconst newTime = parsedDate.toLocaleTimeString([], { hour: \"2-digit\", minute: \"2-digit\", timeZoneName: \"short\" });\r\n\t\treturn newTime;\r\n\t};\r\n\r\n\tconst renderMarkdown = (content) => {\r\n\t\tconst md = new MarkdownIt().use(MarkdownItAttrs)\r\n\t\treturn md.render(content)\r\n\t};\r\n\nreturn (_ctx, _cache) => {\n  return (__props.briefing)\n    ? (_openBlock(), _createElementBlock(\"div\", {\n        key: 0,\n        onClick: _cache[0] || (_cache[0] = $event => (handleClick(__props.briefing))),\n        class: \"flex flex-col cursor-pointer bg-gray-900 my-5 border border-gray-600 rounded-lg transition duration-300 hover:bg-gray-700 hover:-translate-y-1 hover:translate-x-1 hover:drop-shadow-[-5px_5px_2px_rgba(0,0,0,0.5)\"\n      }, [\n        _createElementVNode(\"header\", _hoisted_1, [\n          _createElementVNode(\"img\", {\n            src: __props.briefing.creator.image,\n            alt: \"Logo\",\n            class: \"object-cover w-16 mx-5 max-lg:mx-auto my-2 max-lg:my-5 rounded-full\"\n          }, null, 8, _hoisted_2),\n          _hoisted_3,\n          _createElementVNode(\"div\", _hoisted_4, [\n            _createElementVNode(\"h2\", _hoisted_5, _toDisplayString(__props.briefing.title), 1),\n            _hoisted_6,\n            _createElementVNode(\"p\", _hoisted_7, \"Host: \" + _toDisplayString(__props.briefing.host) + \" ● \" + _toDisplayString(getDateString(__props.briefing.timestamp)) + \" ● \" + _toDisplayString(getTimeString(__props.briefing.timestamp)), 1)\n          ])\n        ]),\n        _hoisted_8,\n        _createElementVNode(\"p\", {\n          innerHTML: renderMarkdown(__props.briefing.desc),\n          class: \"m-5 text-lg max-lg:text-sm text-gray-200 text-justify italic text-wrap line-clamp-5 max-lg:line-clamp-6\"\n        }, null, 8, _hoisted_9),\n        _hoisted_10,\n        _createElementVNode(\"p\", _hoisted_11, \"STATUS: \" + _toDisplayString(__props.briefing.status), 1)\n      ]))\n    : _createCommentVNode(\"\", true)\n}\n}\n\n}\n\n\n\nexport default _sfc_main",
-      "start": 1711658791805,
-      "end": 1711658791809,
+      "start": 1711659331810,
+      "end": 1711659331812,
       "order": "normal",
       "sourcemaps": {
         "mappings": ""
@@ -62,105 +62,105 @@
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711658791809,
-      "end": 1711658791809,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711658791809,
-      "end": 1711658791809,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711658791809,
-      "end": 1711658791809,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711658791809,
-      "end": 1711658791809,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711658791809,
-      "end": 1711658791809,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711658791809,
-      "end": 1711658791809,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711658791809,
-      "end": 1711658791809,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711658791809,
-      "end": 1711658791809,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711658791810,
-      "end": 1711658791810,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711658791810,
-      "end": 1711658791810,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711658791810,
-      "end": 1711658791810,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711658791810,
-      "end": 1711658791810,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711658791810,
-      "end": 1711658791810,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711658791810,
-      "end": 1711658791810,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711658791810,
-      "end": 1711658791810,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711658791810,
-      "end": 1711658791810,
+      "start": 1711659331812,
+      "end": 1711659331812,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { useRouter } from '#app/composables/router';\nimport { createElementVNode as _createElementVNode, toDisplayString as _toDisplayString, openBlock as _openBlock, createElementBlock as _createElementBlock, createCommentVNode as _createCommentVNode } from \"vue\"\n\nconst _hoisted_1 = { class: \"flex max-lg:flex-col\" }\nconst _hoisted_2 = [\"src\"]\nconst _hoisted_3 = /*#__PURE__*/_createElementVNode(\"hr\", { class: \"lg:hidden max-lg:border-gray-600\" }, null, -1)\nconst _hoisted_4 = { class: \"flex flex-col\" }\nconst _hoisted_5 = { class: \"text-2xl max-lg:text-xl max-lg:text-center text-gray-200 font-bold lg:tracking-wider my-auto max-lg:my-2 max-lg:mx-5\" }\nconst _hoisted_6 = /*#__PURE__*/_createElementVNode(\"hr\", { class: \"lg:hidden max-lg:border-gray-600\" }, null, -1)\nconst _hoisted_7 = { class: \"text-gray-200 max-lg:text-center text-xl max-lg:text-sm tracking-wider italic my-auto max-lg:my-2 max-lg:mx-5\" }\nconst _hoisted_8 = /*#__PURE__*/_createElementVNode(\"hr\", { class: \"border-gray-600\" }, null, -1)\nconst _hoisted_9 = [\"innerHTML\"]\nconst _hoisted_10 = /*#__PURE__*/_createElementVNode(\"hr\", { class: \"border-gray-600\" }, null, -1)\nconst _hoisted_11 = { class: \"mx-5 my-2 text-2xl max-lg:text-xl text-gray-200 font-bold\" }\n\nimport MarkdownIt from 'markdown-it';\r\n\timport MarkdownItAttrs from 'markdown-it-attrs';\r\n\r\n\t\nconst _sfc_main = {\n  __name: 'FeedCard',\n  props: ['briefing'],\n  setup(__props) {\n\r\n\tconst props = __props;\r\n\r\n\tconst handleClick = (briefing) => {\r\n\t\tconst router = useRouter();\r\n\t\trouter.push(\"/briefings/\" + briefing._id);\r\n\t};\r\n\r\n\tconst getDateString = (timestamp) => {\r\n\t\tconst parsedDate = new Date(parseInt(timestamp));\r\n\t\tconst newDate = parsedDate.toLocaleDateString('en-uk', { weekday:\"long\", month:\"long\", year:\"numeric\", day:\"numeric\"});\r\n\t\treturn newDate;\r\n\t};\r\n\r\n\tconst getTimeString = (timestamp) => {\r\n\t\tconst parsedDate = new Date(parseInt(timestamp));\r\n\t\tconst newTime = parsedDate.toLocaleTimeString([], { hour: \"2-digit\", minute: \"2-digit\", timeZoneName: \"short\" });\r\n\t\treturn newTime;\r\n\t};\r\n\r\n\tconst renderMarkdown = (content) => {\r\n\t\tconst md = new MarkdownIt().use(MarkdownItAttrs)\r\n\t\treturn md.render(content)\r\n\t};\r\n\nreturn (_ctx, _cache) => {\n  return (__props.briefing)\n    ? (_openBlock(), _createElementBlock(\"div\", {\n        key: 0,\n        onClick: _cache[0] || (_cache[0] = $event => (handleClick(__props.briefing))),\n        class: \"flex flex-col cursor-pointer bg-gray-900 my-5 border border-gray-600 rounded-lg transition duration-300 hover:bg-gray-700 hover:-translate-y-1 hover:translate-x-1 hover:drop-shadow-[-5px_5px_2px_rgba(0,0,0,0.5)\"\n      }, [\n        _createElementVNode(\"header\", _hoisted_1, [\n          _createElementVNode(\"img\", {\n            src: __props.briefing.creator.image,\n            alt: \"Logo\",\n            class: \"object-cover w-16 mx-5 max-lg:mx-auto my-2 max-lg:my-5 rounded-full\"\n          }, null, 8, _hoisted_2),\n          _hoisted_3,\n          _createElementVNode(\"div\", _hoisted_4, [\n            _createElementVNode(\"h2\", _hoisted_5, _toDisplayString(__props.briefing.title), 1),\n            _hoisted_6,\n            _createElementVNode(\"p\", _hoisted_7, \"Host: \" + _toDisplayString(__props.briefing.host) + \" ● \" + _toDisplayString(getDateString(__props.briefing.timestamp)) + \" ● \" + _toDisplayString(getTimeString(__props.briefing.timestamp)), 1)\n          ])\n        ]),\n        _hoisted_8,\n        _createElementVNode(\"p\", {\n          innerHTML: renderMarkdown(__props.briefing.desc),\n          class: \"m-5 text-lg max-lg:text-sm text-gray-200 text-justify italic text-wrap line-clamp-5 max-lg:line-clamp-6\"\n        }, null, 8, _hoisted_9),\n        _hoisted_10,\n        _createElementVNode(\"p\", _hoisted_11, \"STATUS: \" + _toDisplayString(__props.briefing.status), 1)\n      ]))\n    : _createCommentVNode(\"\", true)\n}\n}\n\n}\n\n\n\nexport default _sfc_main",
-      "start": 1711658791810,
-      "end": 1711658791811,
+      "start": 1711659331812,
+      "end": 1711659331814,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -173,50 +173,50 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1711658791811,
-      "end": 1711658791811,
+      "start": 1711659331814,
+      "end": 1711659331814,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711658791811,
-      "end": 1711658791811,
+      "start": 1711659331814,
+      "end": 1711659331814,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711658791811,
-      "end": 1711658791811,
+      "start": 1711659331814,
+      "end": 1711659331814,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711658791811,
-      "end": 1711658791811,
+      "start": 1711659331814,
+      "end": 1711659331814,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711658791811,
-      "end": 1711658791811,
+      "start": 1711659331814,
+      "end": 1711659331814,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711658791811,
-      "end": 1711658791811,
+      "start": 1711659331814,
+      "end": 1711659331814,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711658791811,
-      "end": 1711658791812,
+      "start": 1711659331814,
+      "end": 1711659331814,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711658791812,
-      "end": 1711658791812,
+      "start": 1711659331814,
+      "end": 1711659331814,
       "order": "normal"
     }
   ]

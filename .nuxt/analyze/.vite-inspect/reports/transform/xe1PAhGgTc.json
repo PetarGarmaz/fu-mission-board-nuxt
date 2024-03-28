@@ -4,208 +4,208 @@
     {
       "name": "vite:load-fallback",
       "result": "import { parseURL } from \"ufo\";\nexport const isProduction = process.env.NODE_ENV === \"production\";\nexport const getOriginAndPathnameFromURL = (url) => {\n  const { protocol, host, pathname } = parseURL(url);\n  let origin;\n  if (host && protocol) {\n    origin = `${protocol}//${host}`;\n  }\n  const pathname_ = pathname.length > 0 ? pathname : void 0;\n  return {\n    origin,\n    pathname: pathname_\n  };\n};\nexport const useTypedBackendConfig = (runtimeConfig, _type) => {\n  return runtimeConfig.public.auth.provider;\n};\nexport const jsonPointerGet = (obj, pointer) => {\n  const unescape = (str) => str.replace(/~1/g, \"/\").replace(/~0/g, \"~\");\n  const parse = (pointer2) => {\n    if (pointer2 === \"\") {\n      return [];\n    }\n    if (pointer2.charAt(0) !== \"/\") {\n      throw new Error(\"Invalid JSON pointer: \" + pointer2);\n    }\n    return pointer2.substring(1).split(/\\//).map(unescape);\n  };\n  const refTokens = Array.isArray(pointer) ? pointer : parse(pointer);\n  for (let i = 0; i < refTokens.length; ++i) {\n    const tok = refTokens[i];\n    if (!(typeof obj === \"object\" && tok in obj)) {\n      throw new Error(\"Invalid reference token: \" + tok);\n    }\n    obj = obj[tok];\n  }\n  return obj;\n};\n",
-      "start": 1711658790875,
-      "end": 1711658790955,
+      "start": 1711659330978,
+      "end": 1711659331055,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711658790955,
-      "end": 1711658790955,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711658790956,
-      "end": 1711658790956,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711658790956,
-      "end": 1711658790956,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711658790956,
-      "end": 1711658790956,
+      "start": 1711659331055,
+      "end": 1711659331055,
       "order": "normal"
     },
     {
       "name": "vite:define",
       "result": "import { parseURL } from \"ufo\";\nexport const isProduction = true;\nexport const getOriginAndPathnameFromURL = (url) => {\n  const { protocol, host, pathname } = parseURL(url);\n  let origin;\n  if (host && protocol) {\n    origin = `${protocol}//${host}`;\n  }\n  const pathname_ = pathname.length > 0 ? pathname : void 0;\n  return {\n    origin,\n    pathname: pathname_\n  };\n};\nexport const useTypedBackendConfig = (runtimeConfig, _type) => {\n  return runtimeConfig.public.auth.provider;\n};\nexport const jsonPointerGet = (obj, pointer) => {\n  const unescape = (str) => str.replace(/~1/g, \"/\").replace(/~0/g, \"~\");\n  const parse = (pointer2) => {\n    if (pointer2 === \"\") {\n      return [];\n    }\n    if (pointer2.charAt(0) !== \"/\") {\n      throw new Error(\"Invalid JSON pointer: \" + pointer2);\n    }\n    return pointer2.substring(1).split(/\\//).map(unescape);\n  };\n  const refTokens = Array.isArray(pointer) ? pointer : parse(pointer);\n  for (let i = 0; i < refTokens.length; ++i) {\n    const tok = refTokens[i];\n    if (!(typeof obj === \"object\" && tok in obj)) {\n      throw new Error(\"Invalid reference token: \" + tok);\n    }\n    obj = obj[tok];\n  }\n  return obj;\n};\n",
-      "start": 1711658790956,
-      "end": 1711658791235,
+      "start": 1711659331055,
+      "end": 1711659331301,
       "order": "normal",
       "sourcemaps": null
     },
     {
       "name": "vite:css-post",
-      "start": 1711658791235,
-      "end": 1711658791235,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711658791235,
-      "end": 1711658791235,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711658791235,
-      "end": 1711658791235,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711658791235,
-      "end": 1711658791235,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711658791235,
-      "end": 1711658791235,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711658791235,
-      "end": 1711658791235,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711658791235,
-      "end": 1711658791235,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711658791235,
-      "end": 1711658791235,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1711658791235,
-      "end": 1711658791235,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711658791235,
-      "end": 1711658791235,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711658791235,
-      "end": 1711658791236,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711658791236,
-      "end": 1711658791236,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711658791236,
-      "end": 1711658791236,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711658791236,
-      "end": 1711658791236,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711658791236,
-      "end": 1711658791236,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711658791236,
-      "end": 1711658791236,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711658791236,
-      "end": 1711658791236,
+      "start": 1711659331301,
+      "end": 1711659331301,
       "order": "normal"
     }
   ]

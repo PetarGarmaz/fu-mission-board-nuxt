@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict';\n\nconst patternsConfig = require('./patterns.js');\n\nconst defaultOptions = {\n  leftDelimiter: '{',\n  rightDelimiter: '}',\n  allowedAttributes: []\n};\n\nmodule.exports = function attributes(md, options_) {\n  let options = Object.assign({}, defaultOptions);\n  options = Object.assign(options, options_);\n\n  const patterns = patternsConfig(options);\n\n  function curlyAttrs(state) {\n    const tokens = state.tokens;\n\n    for (let i = 0; i < tokens.length; i++) {\n      for (let p = 0; p < patterns.length; p++) {\n        const pattern = patterns[p];\n        let j = null; // position of child with offset 0\n        const match = pattern.tests.every(t => {\n          const res = test(tokens, i, t);\n          if (res.j !== null) { j = res.j; }\n          return res.match;\n        });\n        if (match) {\n          pattern.transform(tokens, i, j);\n          if (pattern.name === 'inline attributes' || pattern.name === 'inline nesting 0') {\n            // retry, may be several inline attributes\n            p--;\n          }\n        }\n      }\n    }\n  }\n\n  md.core.ruler.before('linkify', 'curly_attributes', curlyAttrs);\n};\n\n/**\n * Test if t matches token stream.\n *\n * @param {array} tokens\n * @param {number} i\n * @param {object} t Test to match.\n * @return {object} { match: true|false, j: null|number }\n */\nfunction test(tokens, i, t) {\n  const res = {\n    match: false,\n    j: null  // position of child\n  };\n\n  const ii = t.shift !== undefined\n    ? i + t.shift\n    : t.position;\n\n  if (t.shift !== undefined && ii < 0) {\n    // we should never shift to negative indexes (rolling around to back of array)\n    return res;\n  }\n\n  const token = get(tokens, ii);  // supports negative ii\n\n\n  if (token === undefined) { return res; }\n\n  for (const key of Object.keys(t)) {\n    if (key === 'shift' || key === 'position') { continue; }\n\n    if (token[key] === undefined) { return res; }\n\n    if (key === 'children' && isArrayOfObjects(t.children)) {\n      if (token.children.length === 0) {\n        return res;\n      }\n      let match;\n      const childTests = t.children;\n      const children = token.children;\n      if (childTests.every(tt => tt.position !== undefined)) {\n        // positions instead of shifts, do not loop all children\n        match = childTests.every(tt => test(children, tt.position, tt).match);\n        if (match) {\n          // we may need position of child in transform\n          const j = last(childTests).position;\n          res.j = j >= 0 ? j : children.length + j;\n        }\n      } else {\n        for (let j = 0; j < children.length; j++) {\n          match = childTests.every(tt => test(children, j, tt).match);\n          if (match) {\n            res.j = j;\n            // all tests true, continue with next key of pattern t\n            break;\n          }\n        }\n      }\n\n      if (match === false) { return res; }\n\n      continue;\n    }\n\n    switch (typeof t[key]) {\n    case 'boolean':\n    case 'number':\n    case 'string':\n      if (token[key] !== t[key]) { return res; }\n      break;\n    case 'function':\n      if (!t[key](token[key])) { return res; }\n      break;\n    case 'object':\n      if (isArrayOfFunctions(t[key])) {\n        const r = t[key].every(tt => tt(token[key]));\n        if (r === false) { return res; }\n        break;\n      }\n    // fall through for objects !== arrays of functions\n    default:\n      throw new Error(`Unknown type of pattern test (key: ${key}). Test should be of type boolean, number, string, function or array of functions.`);\n    }\n  }\n\n  // no tests returned false -> all tests returns true\n  res.match = true;\n  return res;\n}\n\nfunction isArrayOfObjects(arr) {\n  return Array.isArray(arr) && arr.length && arr.every(i => typeof i === 'object');\n}\n\nfunction isArrayOfFunctions(arr) {\n  return Array.isArray(arr) && arr.length && arr.every(i => typeof i === 'function');\n}\n\n/**\n * Get n item of array. Supports negative n, where -1 is last\n * element in array.\n * @param {array} arr\n * @param {number} n\n */\nfunction get(arr, n) {\n  return n >= 0 ? arr[n] : arr[arr.length + n];\n}\n\n// get last element of array, safe - returns {} if not found\nfunction last(arr) {\n  return arr.slice(-1)[0] || {};\n}\n",
-      "start": 1711658791309,
-      "end": 1711658791559,
+      "start": 1711659331548,
+      "end": 1711659331629,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711658791559,
-      "end": 1711658791559,
+      "start": 1711659331629,
+      "end": 1711659331629,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/markdown-it-attrs/patterns.js?commonjs-proxy\";\n\n'use strict';\n\nconst patternsConfig = require$$0;\n\nconst defaultOptions = {\n  leftDelimiter: '{',\n  rightDelimiter: '}',\n  allowedAttributes: []\n};\n\nvar markdownItAttrs = function attributes(md, options_) {\n  let options = Object.assign({}, defaultOptions);\n  options = Object.assign(options, options_);\n\n  const patterns = patternsConfig(options);\n\n  function curlyAttrs(state) {\n    const tokens = state.tokens;\n\n    for (let i = 0; i < tokens.length; i++) {\n      for (let p = 0; p < patterns.length; p++) {\n        const pattern = patterns[p];\n        let j = null; // position of child with offset 0\n        const match = pattern.tests.every(t => {\n          const res = test(tokens, i, t);\n          if (res.j !== null) { j = res.j; }\n          return res.match;\n        });\n        if (match) {\n          pattern.transform(tokens, i, j);\n          if (pattern.name === 'inline attributes' || pattern.name === 'inline nesting 0') {\n            // retry, may be several inline attributes\n            p--;\n          }\n        }\n      }\n    }\n  }\n\n  md.core.ruler.before('linkify', 'curly_attributes', curlyAttrs);\n};\n\n/**\n * Test if t matches token stream.\n *\n * @param {array} tokens\n * @param {number} i\n * @param {object} t Test to match.\n * @return {object} { match: true|false, j: null|number }\n */\nfunction test(tokens, i, t) {\n  const res = {\n    match: false,\n    j: null  // position of child\n  };\n\n  const ii = t.shift !== undefined\n    ? i + t.shift\n    : t.position;\n\n  if (t.shift !== undefined && ii < 0) {\n    // we should never shift to negative indexes (rolling around to back of array)\n    return res;\n  }\n\n  const token = get(tokens, ii);  // supports negative ii\n\n\n  if (token === undefined) { return res; }\n\n  for (const key of Object.keys(t)) {\n    if (key === 'shift' || key === 'position') { continue; }\n\n    if (token[key] === undefined) { return res; }\n\n    if (key === 'children' && isArrayOfObjects(t.children)) {\n      if (token.children.length === 0) {\n        return res;\n      }\n      let match;\n      const childTests = t.children;\n      const children = token.children;\n      if (childTests.every(tt => tt.position !== undefined)) {\n        // positions instead of shifts, do not loop all children\n        match = childTests.every(tt => test(children, tt.position, tt).match);\n        if (match) {\n          // we may need position of child in transform\n          const j = last(childTests).position;\n          res.j = j >= 0 ? j : children.length + j;\n        }\n      } else {\n        for (let j = 0; j < children.length; j++) {\n          match = childTests.every(tt => test(children, j, tt).match);\n          if (match) {\n            res.j = j;\n            // all tests true, continue with next key of pattern t\n            break;\n          }\n        }\n      }\n\n      if (match === false) { return res; }\n\n      continue;\n    }\n\n    switch (typeof t[key]) {\n    case 'boolean':\n    case 'number':\n    case 'string':\n      if (token[key] !== t[key]) { return res; }\n      break;\n    case 'function':\n      if (!t[key](token[key])) { return res; }\n      break;\n    case 'object':\n      if (isArrayOfFunctions(t[key])) {\n        const r = t[key].every(tt => tt(token[key]));\n        if (r === false) { return res; }\n        break;\n      }\n    // fall through for objects !== arrays of functions\n    default:\n      throw new Error(`Unknown type of pattern test (key: ${key}). Test should be of type boolean, number, string, function or array of functions.`);\n    }\n  }\n\n  // no tests returned false -> all tests returns true\n  res.match = true;\n  return res;\n}\n\nfunction isArrayOfObjects(arr) {\n  return Array.isArray(arr) && arr.length && arr.every(i => typeof i === 'object');\n}\n\nfunction isArrayOfFunctions(arr) {\n  return Array.isArray(arr) && arr.length && arr.every(i => typeof i === 'function');\n}\n\n/**\n * Get n item of array. Supports negative n, where -1 is last\n * element in array.\n * @param {array} arr\n * @param {number} n\n */\nfunction get(arr, n) {\n  return n >= 0 ? arr[n] : arr[arr.length + n];\n}\n\n// get last element of array, safe - returns {} if not found\nfunction last(arr) {\n  return arr.slice(-1)[0] || {};\n}\n\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(markdownItAttrs);\nexport { markdownItAttrs as __moduleExports };",
-      "start": 1711658791559,
-      "end": 1711658791994,
+      "start": 1711659331629,
+      "end": 1711659332053,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -145,74 +145,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711658791994,
-      "end": 1711658791994,
+      "start": 1711659332053,
+      "end": 1711659332053,
       "order": "normal"
     }
   ]
