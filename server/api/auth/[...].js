@@ -2,6 +2,7 @@ import { NuxtAuthHandler } from '#auth'
 import DiscordProvider from 'next-auth/providers/discord';
 
 const handler = NuxtAuthHandler({
+	secret: process.env.AUTH_SECRET,
 	providers: [
 		DiscordProvider.default({
 			clientId: process.env.DISCORD_CLIENT_ID,
