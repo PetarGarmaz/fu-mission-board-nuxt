@@ -4,185 +4,185 @@
     {
       "name": "vite:load-fallback",
       "result": "import { getHeader } from \"h3\";\nimport authMiddleware from \"./middleware/auth.mjs\";\nimport { addRouteMiddleware, defineNuxtPlugin, useRuntimeConfig, useAuth, useAuthState } from \"#imports\";\nexport default defineNuxtPlugin(async (nuxtApp) => {\n  const { data, lastRefreshedAt } = useAuthState();\n  const { getSession } = useAuth();\n  const runtimeConfig = useRuntimeConfig().public.auth;\n  let nitroPrerender = false;\n  if (nuxtApp.ssrContext) {\n    nitroPrerender = getHeader(nuxtApp.ssrContext.event, \"x-nitro-prerender\") !== void 0;\n  }\n  if (typeof data.value === \"undefined\" && !nitroPrerender) {\n    await getSession();\n  }\n  const { enableRefreshOnWindowFocus, enableRefreshPeriodically } = runtimeConfig.session;\n  const visibilityHandler = () => {\n    if (enableRefreshOnWindowFocus && document.visibilityState === \"visible\") {\n      getSession();\n    }\n  };\n  let refetchIntervalTimer;\n  let refreshTokenIntervalTimer;\n  nuxtApp.hook(\"app:mounted\", () => {\n    document.addEventListener(\"visibilitychange\", visibilityHandler, false);\n    if (enableRefreshPeriodically !== false) {\n      const intervalTime = enableRefreshPeriodically === true ? 1e3 : enableRefreshPeriodically;\n      refetchIntervalTimer = setInterval(() => {\n        if (data.value) {\n          getSession();\n        }\n      }, intervalTime);\n    }\n    if (runtimeConfig.provider.type === \"refresh\") {\n      const intervalTime = runtimeConfig.provider.token.maxAgeInSeconds * 1e3;\n      const { refresh, refreshToken } = useAuth();\n      refreshTokenIntervalTimer = setInterval(() => {\n        if (refreshToken.value) {\n          refresh();\n        }\n      }, intervalTime);\n    }\n  });\n  const _unmount = nuxtApp.vueApp.unmount;\n  nuxtApp.vueApp.unmount = function() {\n    document.removeEventListener(\"visibilitychange\", visibilityHandler, false);\n    clearInterval(refetchIntervalTimer);\n    if (refreshTokenIntervalTimer) {\n      clearInterval(refreshTokenIntervalTimer);\n    }\n    lastRefreshedAt.value = void 0;\n    data.value = void 0;\n    _unmount();\n  };\n  const { globalAppMiddleware } = useRuntimeConfig().public.auth;\n  if (globalAppMiddleware === true || globalAppMiddleware.isEnabled) {\n    addRouteMiddleware(\"auth\", authMiddleware, {\n      global: true\n    });\n  }\n});\n",
-      "start": 1711659334539,
-      "end": 1711659334694,
+      "start": 1711660239173,
+      "end": 1711660239277,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "pre"
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659334694,
-      "end": 1711659334694,
+      "start": 1711660239277,
+      "end": 1711660239277,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659334694,
-      "end": 1711659334695,
+      "start": 1711660239277,
+      "end": 1711660239278,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659334694,
-      "end": 1711659334695,
+      "start": 1711660239277,
+      "end": 1711660239278,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659334695,
-      "end": 1711659334695,
+      "start": 1711660239278,
+      "end": 1711660239278,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659334695,
-      "end": 1711659334695,
+      "start": 1711660239278,
+      "end": 1711660239278,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659334695,
-      "end": 1711659334695,
+      "start": 1711660239278,
+      "end": 1711660239278,
       "order": "normal"
     },
     {
       "name": "vite:define",
       "result": "import { getHeader } from \"h3\";\nimport authMiddleware from \"./middleware/auth.mjs\";\nimport { addRouteMiddleware, defineNuxtPlugin, useRuntimeConfig, useAuth, useAuthState } from \"#imports\";\nexport default defineNuxtPlugin(async (nuxtApp) => {\n  const { data, lastRefreshedAt } = useAuthState();\n  const { getSession } = useAuth();\n  const runtimeConfig = useRuntimeConfig().public.auth;\n  let nitroPrerender = false;\n  if (nuxtApp.ssrContext) {\n    nitroPrerender = getHeader(nuxtApp.ssrContext.event, \"x-nitro-prerender\") !== void 0;\n  }\n  if (typeof data.value === \"undefined\" && !nitroPrerender) {\n    await getSession();\n  }\n  const { enableRefreshOnWindowFocus, enableRefreshPeriodically } = runtimeConfig.session;\n  const visibilityHandler = () => {\n    if (enableRefreshOnWindowFocus && (void 0).visibilityState === \"visible\") {\n      getSession();\n    }\n  };\n  let refetchIntervalTimer;\n  let refreshTokenIntervalTimer;\n  nuxtApp.hook(\"app:mounted\", () => {\n    (void 0).addEventListener(\"visibilitychange\", visibilityHandler, false);\n    if (enableRefreshPeriodically !== false) {\n      const intervalTime = enableRefreshPeriodically === true ? 1e3 : enableRefreshPeriodically;\n      refetchIntervalTimer = setInterval(() => {\n        if (data.value) {\n          getSession();\n        }\n      }, intervalTime);\n    }\n    if (runtimeConfig.provider.type === \"refresh\") {\n      const intervalTime = runtimeConfig.provider.token.maxAgeInSeconds * 1e3;\n      const { refresh, refreshToken } = useAuth();\n      refreshTokenIntervalTimer = setInterval(() => {\n        if (refreshToken.value) {\n          refresh();\n        }\n      }, intervalTime);\n    }\n  });\n  const _unmount = nuxtApp.vueApp.unmount;\n  nuxtApp.vueApp.unmount = function() {\n    (void 0).removeEventListener(\"visibilitychange\", visibilityHandler, false);\n    clearInterval(refetchIntervalTimer);\n    if (refreshTokenIntervalTimer) {\n      clearInterval(refreshTokenIntervalTimer);\n    }\n    lastRefreshedAt.value = void 0;\n    data.value = void 0;\n    _unmount();\n  };\n  const { globalAppMiddleware } = useRuntimeConfig().public.auth;\n  if (globalAppMiddleware === true || globalAppMiddleware.isEnabled) {\n    addRouteMiddleware(\"auth\", authMiddleware, {\n      global: true\n    });\n  }\n});\n",
-      "start": 1711659334695,
-      "end": 1711659334718,
+      "start": 1711660239278,
+      "end": 1711660239340,
       "order": "normal",
       "sourcemaps": "{\n  \"version\": 3,\n  \"sources\": [\"D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/plugin.mjs\"],\n  \"sourcesContent\": [\"import { getHeader } from \\\"h3\\\";\\nimport authMiddleware from \\\"./middleware/auth.mjs\\\";\\nimport { addRouteMiddleware, defineNuxtPlugin, useRuntimeConfig, useAuth, useAuthState } from \\\"#imports\\\";\\nexport default defineNuxtPlugin(async (nuxtApp) => {\\n  const { data, lastRefreshedAt } = useAuthState();\\n  const { getSession } = useAuth();\\n  const runtimeConfig = useRuntimeConfig().public.auth;\\n  let nitroPrerender = false;\\n  if (nuxtApp.ssrContext) {\\n    nitroPrerender = getHeader(nuxtApp.ssrContext.event, \\\"x-nitro-prerender\\\") !== void 0;\\n  }\\n  if (typeof data.value === \\\"undefined\\\" && !nitroPrerender) {\\n    await getSession();\\n  }\\n  const { enableRefreshOnWindowFocus, enableRefreshPeriodically } = runtimeConfig.session;\\n  const visibilityHandler = () => {\\n    if (enableRefreshOnWindowFocus && document.visibilityState === \\\"visible\\\") {\\n      getSession();\\n    }\\n  };\\n  let refetchIntervalTimer;\\n  let refreshTokenIntervalTimer;\\n  nuxtApp.hook(\\\"app:mounted\\\", () => {\\n    document.addEventListener(\\\"visibilitychange\\\", visibilityHandler, false);\\n    if (enableRefreshPeriodically !== false) {\\n      const intervalTime = enableRefreshPeriodically === true ? 1e3 : enableRefreshPeriodically;\\n      refetchIntervalTimer = setInterval(() => {\\n        if (data.value) {\\n          getSession();\\n        }\\n      }, intervalTime);\\n    }\\n    if (runtimeConfig.provider.type === \\\"refresh\\\") {\\n      const intervalTime = runtimeConfig.provider.token.maxAgeInSeconds * 1e3;\\n      const { refresh, refreshToken } = useAuth();\\n      refreshTokenIntervalTimer = setInterval(() => {\\n        if (refreshToken.value) {\\n          refresh();\\n        }\\n      }, intervalTime);\\n    }\\n  });\\n  const _unmount = nuxtApp.vueApp.unmount;\\n  nuxtApp.vueApp.unmount = function() {\\n    document.removeEventListener(\\\"visibilitychange\\\", visibilityHandler, false);\\n    clearInterval(refetchIntervalTimer);\\n    if (refreshTokenIntervalTimer) {\\n      clearInterval(refreshTokenIntervalTimer);\\n    }\\n    lastRefreshedAt.value = void 0;\\n    data.value = void 0;\\n    _unmount();\\n  };\\n  const { globalAppMiddleware } = useRuntimeConfig().public.auth;\\n  if (globalAppMiddleware === true || globalAppMiddleware.isEnabled) {\\n    addRouteMiddleware(\\\"auth\\\", authMiddleware, {\\n      global: true\\n    });\\n  }\\n});\\n\"],\n  \"mappings\": \"AAAA,SAAS,iBAAiB;AAC1B,OAAO,oBAAoB;AAC3B,SAAS,oBAAoB,kBAAkB,kBAAkB,SAAS,oBAAoB;AAC9F,eAAe,iBAAiB,OAAO,YAAY;AACjD,QAAM,EAAE,MAAM,gBAAgB,IAAI,aAAa;AAC/C,QAAM,EAAE,WAAW,IAAI,QAAQ;AAC/B,QAAM,gBAAgB,iBAAiB,EAAE,OAAO;AAChD,MAAI,iBAAiB;AACrB,MAAI,QAAQ,YAAY;AACtB,qBAAiB,UAAU,QAAQ,WAAW,OAAO,mBAAmB,MAAM;AAAA,EAChF;AACA,MAAI,OAAO,KAAK,UAAU,eAAe,CAAC,gBAAgB;AACxD,UAAM,WAAW;AAAA,EACnB;AACA,QAAM,EAAE,4BAA4B,0BAA0B,IAAI,cAAc;AAChF,QAAM,oBAAoB,MAAM;AAC9B,QAAI,8BAA8B,SAAS,oBAAoB,WAAW;AACxE,iBAAW;AAAA,IACb;AAAA,EACF;AACA,MAAI;AACJ,MAAI;AACJ,UAAQ,KAAK,eAAe,MAAM;AAChC,aAAS,iBAAiB,oBAAoB,mBAAmB,KAAK;AACtE,QAAI,8BAA8B,OAAO;AACvC,YAAM,eAAe,8BAA8B,OAAO,MAAM;AAChE,6BAAuB,YAAY,MAAM;AACvC,YAAI,KAAK,OAAO;AACd,qBAAW;AAAA,QACb;AAAA,MACF,GAAG,YAAY;AAAA,IACjB;AACA,QAAI,cAAc,SAAS,SAAS,WAAW;AAC7C,YAAM,eAAe,cAAc,SAAS,MAAM,kBAAkB;AACpE,YAAM,EAAE,SAAS,aAAa,IAAI,QAAQ;AAC1C,kCAA4B,YAAY,MAAM;AAC5C,YAAI,aAAa,OAAO;AACtB,kBAAQ;AAAA,QACV;AAAA,MACF,GAAG,YAAY;AAAA,IACjB;AAAA,EACF,CAAC;AACD,QAAM,WAAW,QAAQ,OAAO;AAChC,UAAQ,OAAO,UAAU,WAAW;AAClC,aAAS,oBAAoB,oBAAoB,mBAAmB,KAAK;AACzE,kBAAc,oBAAoB;AAClC,QAAI,2BAA2B;AAC7B,oBAAc,yBAAyB;AAAA,IACzC;AACA,oBAAgB,QAAQ;AACxB,SAAK,QAAQ;AACb,aAAS;AAAA,EACX;AACA,QAAM,EAAE,oBAAoB,IAAI,iBAAiB,EAAE,OAAO;AAC1D,MAAI,wBAAwB,QAAQ,oBAAoB,WAAW;AACjE,uBAAmB,QAAQ,gBAAgB;AAAA,MACzC,QAAQ;AAAA,IACV,CAAC;AAAA,EACH;AACF,CAAC;\",\n  \"names\": []\n}\n"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659334718,
-      "end": 1711659334718,
+      "start": 1711660239340,
+      "end": 1711660239340,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659334718,
-      "end": 1711659334718,
+      "start": 1711660239340,
+      "end": 1711660239340,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659334718,
-      "end": 1711659334718,
+      "start": 1711660239340,
+      "end": 1711660239340,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659334718,
-      "end": 1711659334718,
+      "start": 1711660239340,
+      "end": 1711660239340,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659334718,
-      "end": 1711659334719,
+      "start": 1711660239340,
+      "end": 1711660239341,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659334719,
-      "end": 1711659334719,
+      "start": 1711660239341,
+      "end": 1711660239341,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659334719,
-      "end": 1711659334719,
+      "start": 1711660239341,
+      "end": 1711660239341,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659334719,
-      "end": 1711659334719,
+      "start": 1711660239341,
+      "end": 1711660239341,
       "order": "post"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659334719,
-      "end": 1711659334719,
+      "start": 1711660239341,
+      "end": 1711660239341,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { addRouteMiddleware } from '#app/composables/router';\nimport { defineNuxtPlugin, useRuntimeConfig } from '#app/nuxt';\nimport { useAuth } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuth';\nimport { useAuthState } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuthState';\nimport { getHeader } from \"h3\";\nimport authMiddleware from \"./middleware/auth.mjs\";\nexport default defineNuxtPlugin(async (nuxtApp) => {\n  const { data, lastRefreshedAt } = useAuthState();\n  const { getSession } = useAuth();\n  const runtimeConfig = useRuntimeConfig().public.auth;\n  let nitroPrerender = false;\n  if (nuxtApp.ssrContext) {\n    nitroPrerender = getHeader(nuxtApp.ssrContext.event, \"x-nitro-prerender\") !== void 0;\n  }\n  if (typeof data.value === \"undefined\" && !nitroPrerender) {\n    await getSession();\n  }\n  const { enableRefreshOnWindowFocus, enableRefreshPeriodically } = runtimeConfig.session;\n  const visibilityHandler = () => {\n    if (enableRefreshOnWindowFocus && (void 0).visibilityState === \"visible\") {\n      getSession();\n    }\n  };\n  let refetchIntervalTimer;\n  let refreshTokenIntervalTimer;\n  nuxtApp.hook(\"app:mounted\", () => {\n    (void 0).addEventListener(\"visibilitychange\", visibilityHandler, false);\n    if (enableRefreshPeriodically !== false) {\n      const intervalTime = enableRefreshPeriodically === true ? 1e3 : enableRefreshPeriodically;\n      refetchIntervalTimer = setInterval(() => {\n        if (data.value) {\n          getSession();\n        }\n      }, intervalTime);\n    }\n    if (runtimeConfig.provider.type === \"refresh\") {\n      const intervalTime = runtimeConfig.provider.token.maxAgeInSeconds * 1e3;\n      const { refresh, refreshToken } = useAuth();\n      refreshTokenIntervalTimer = setInterval(() => {\n        if (refreshToken.value) {\n          refresh();\n        }\n      }, intervalTime);\n    }\n  });\n  const _unmount = nuxtApp.vueApp.unmount;\n  nuxtApp.vueApp.unmount = function() {\n    (void 0).removeEventListener(\"visibilitychange\", visibilityHandler, false);\n    clearInterval(refetchIntervalTimer);\n    if (refreshTokenIntervalTimer) {\n      clearInterval(refreshTokenIntervalTimer);\n    }\n    lastRefreshedAt.value = void 0;\n    data.value = void 0;\n    _unmount();\n  };\n  const { globalAppMiddleware } = useRuntimeConfig().public.auth;\n  if (globalAppMiddleware === true || globalAppMiddleware.isEnabled) {\n    addRouteMiddleware(\"auth\", authMiddleware, {\n      global: true\n    });\n  }\n});\n",
-      "start": 1711659334719,
-      "end": 1711659334722,
+      "start": 1711660239341,
+      "end": 1711660239345,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -196,8 +196,8 @@
     {
       "name": "nuxt:imports-transform",
       "result": "import { addRouteMiddleware } from '#app/composables/router';\nimport { defineNuxtPlugin, useRuntimeConfig } from '#app/nuxt';\nimport { useAuth } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuth';\nimport { useAuthState } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuthState';\nimport { getHeader } from \"h3\";\nimport authMiddleware from \"./middleware/auth.mjs\";\nexport default defineNuxtPlugin(async (nuxtApp) => {\n  const { data, lastRefreshedAt } = useAuthState();\n  const { getSession } = useAuth();\n  const runtimeConfig = useRuntimeConfig().public.auth;\n  let nitroPrerender = false;\n  if (nuxtApp.ssrContext) {\n    nitroPrerender = getHeader(nuxtApp.ssrContext.event, \"x-nitro-prerender\") !== void 0;\n  }\n  if (typeof data.value === \"undefined\" && !nitroPrerender) {\n    await getSession();\n  }\n  const { enableRefreshOnWindowFocus, enableRefreshPeriodically } = runtimeConfig.session;\n  const visibilityHandler = () => {\n    if (enableRefreshOnWindowFocus && (void 0).visibilityState === \"visible\") {\n      getSession();\n    }\n  };\n  let refetchIntervalTimer;\n  let refreshTokenIntervalTimer;\n  nuxtApp.hook(\"app:mounted\", () => {\n    (void 0).addEventListener(\"visibilitychange\", visibilityHandler, false);\n    if (enableRefreshPeriodically !== false) {\n      const intervalTime = enableRefreshPeriodically === true ? 1e3 : enableRefreshPeriodically;\n      refetchIntervalTimer = setInterval(() => {\n        if (data.value) {\n          getSession();\n        }\n      }, intervalTime);\n    }\n    if (runtimeConfig.provider.type === \"refresh\") {\n      const intervalTime = runtimeConfig.provider.token.maxAgeInSeconds * 1e3;\n      const { refresh, refreshToken } = useAuth();\n      refreshTokenIntervalTimer = setInterval(() => {\n        if (refreshToken.value) {\n          refresh();\n        }\n      }, intervalTime);\n    }\n  });\n  const _unmount = nuxtApp.vueApp.unmount;\n  nuxtApp.vueApp.unmount = function() {\n    (void 0).removeEventListener(\"visibilitychange\", visibilityHandler, false);\n    clearInterval(refetchIntervalTimer);\n    if (refreshTokenIntervalTimer) {\n      clearInterval(refreshTokenIntervalTimer);\n    }\n    lastRefreshedAt.value = void 0;\n    data.value = void 0;\n    _unmount();\n  };\n  const { globalAppMiddleware } = useRuntimeConfig().public.auth;\n  if (globalAppMiddleware === true || globalAppMiddleware.isEnabled) {\n    addRouteMiddleware(\"auth\", authMiddleware, {\n      global: true\n    });\n  }\n});\n",
-      "start": 1711659334719,
-      "end": 1711659334722,
+      "start": 1711660239341,
+      "end": 1711660239345,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -211,8 +211,8 @@
     {
       "name": "unctx:transform",
       "result": "/* _processed_nuxt_unctx_transform */\nimport { executeAsync as __executeAsync } from \"D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/unctx/dist/index.mjs\";import { addRouteMiddleware } from '#app/composables/router';\nimport { defineNuxtPlugin, useRuntimeConfig } from '#app/nuxt';\nimport { useAuth } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuth';\nimport { useAuthState } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuthState';\nimport { getHeader } from \"h3\";\nimport authMiddleware from \"./middleware/auth.mjs\";\nexport default defineNuxtPlugin(async (nuxtApp) => {let __temp, __restore;\n  const { data, lastRefreshedAt } = useAuthState();\n  const { getSession } = useAuth();\n  const runtimeConfig = useRuntimeConfig().public.auth;\n  let nitroPrerender = false;\n  if (nuxtApp.ssrContext) {\n    nitroPrerender = getHeader(nuxtApp.ssrContext.event, \"x-nitro-prerender\") !== void 0;\n  }\n  if (typeof data.value === \"undefined\" && !nitroPrerender) {\n    ;(([__temp,__restore]=__executeAsync(()=>getSession())),await __temp,__restore());;\n  }\n  const { enableRefreshOnWindowFocus, enableRefreshPeriodically } = runtimeConfig.session;\n  const visibilityHandler = () => {\n    if (enableRefreshOnWindowFocus && (void 0).visibilityState === \"visible\") {\n      getSession();\n    }\n  };\n  let refetchIntervalTimer;\n  let refreshTokenIntervalTimer;\n  nuxtApp.hook(\"app:mounted\", () => {\n    (void 0).addEventListener(\"visibilitychange\", visibilityHandler, false);\n    if (enableRefreshPeriodically !== false) {\n      const intervalTime = enableRefreshPeriodically === true ? 1e3 : enableRefreshPeriodically;\n      refetchIntervalTimer = setInterval(() => {\n        if (data.value) {\n          getSession();\n        }\n      }, intervalTime);\n    }\n    if (runtimeConfig.provider.type === \"refresh\") {\n      const intervalTime = runtimeConfig.provider.token.maxAgeInSeconds * 1e3;\n      const { refresh, refreshToken } = useAuth();\n      refreshTokenIntervalTimer = setInterval(() => {\n        if (refreshToken.value) {\n          refresh();\n        }\n      }, intervalTime);\n    }\n  });\n  const _unmount = nuxtApp.vueApp.unmount;\n  nuxtApp.vueApp.unmount = function() {\n    (void 0).removeEventListener(\"visibilitychange\", visibilityHandler, false);\n    clearInterval(refetchIntervalTimer);\n    if (refreshTokenIntervalTimer) {\n      clearInterval(refreshTokenIntervalTimer);\n    }\n    lastRefreshedAt.value = void 0;\n    data.value = void 0;\n    _unmount();\n  };\n  const { globalAppMiddleware } = useRuntimeConfig().public.auth;\n  if (globalAppMiddleware === true || globalAppMiddleware.isEnabled) {\n    addRouteMiddleware(\"auth\", authMiddleware, {\n      global: true\n    });\n  }\n},1);\n",
-      "start": 1711659334722,
-      "end": 1711659334723,
+      "start": 1711660239345,
+      "end": 1711660239346,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -226,8 +226,8 @@
     {
       "name": "unctx:transform",
       "result": "/* _processed_nuxt_unctx_transform */\nimport { executeAsync as __executeAsync } from \"D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/unctx/dist/index.mjs\";import { addRouteMiddleware } from '#app/composables/router';\nimport { defineNuxtPlugin, useRuntimeConfig } from '#app/nuxt';\nimport { useAuth } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuth';\nimport { useAuthState } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuthState';\nimport { getHeader } from \"h3\";\nimport authMiddleware from \"./middleware/auth.mjs\";\nexport default defineNuxtPlugin(async (nuxtApp) => {let __temp, __restore;\n  const { data, lastRefreshedAt } = useAuthState();\n  const { getSession } = useAuth();\n  const runtimeConfig = useRuntimeConfig().public.auth;\n  let nitroPrerender = false;\n  if (nuxtApp.ssrContext) {\n    nitroPrerender = getHeader(nuxtApp.ssrContext.event, \"x-nitro-prerender\") !== void 0;\n  }\n  if (typeof data.value === \"undefined\" && !nitroPrerender) {\n    ;(([__temp,__restore]=__executeAsync(()=>getSession())),await __temp,__restore());;\n  }\n  const { enableRefreshOnWindowFocus, enableRefreshPeriodically } = runtimeConfig.session;\n  const visibilityHandler = () => {\n    if (enableRefreshOnWindowFocus && (void 0).visibilityState === \"visible\") {\n      getSession();\n    }\n  };\n  let refetchIntervalTimer;\n  let refreshTokenIntervalTimer;\n  nuxtApp.hook(\"app:mounted\", () => {\n    (void 0).addEventListener(\"visibilitychange\", visibilityHandler, false);\n    if (enableRefreshPeriodically !== false) {\n      const intervalTime = enableRefreshPeriodically === true ? 1e3 : enableRefreshPeriodically;\n      refetchIntervalTimer = setInterval(() => {\n        if (data.value) {\n          getSession();\n        }\n      }, intervalTime);\n    }\n    if (runtimeConfig.provider.type === \"refresh\") {\n      const intervalTime = runtimeConfig.provider.token.maxAgeInSeconds * 1e3;\n      const { refresh, refreshToken } = useAuth();\n      refreshTokenIntervalTimer = setInterval(() => {\n        if (refreshToken.value) {\n          refresh();\n        }\n      }, intervalTime);\n    }\n  });\n  const _unmount = nuxtApp.vueApp.unmount;\n  nuxtApp.vueApp.unmount = function() {\n    (void 0).removeEventListener(\"visibilitychange\", visibilityHandler, false);\n    clearInterval(refetchIntervalTimer);\n    if (refreshTokenIntervalTimer) {\n      clearInterval(refreshTokenIntervalTimer);\n    }\n    lastRefreshedAt.value = void 0;\n    data.value = void 0;\n    _unmount();\n  };\n  const { globalAppMiddleware } = useRuntimeConfig().public.auth;\n  if (globalAppMiddleware === true || globalAppMiddleware.isEnabled) {\n    addRouteMiddleware(\"auth\", authMiddleware, {\n      global: true\n    });\n  }\n},1);\n",
-      "start": 1711659334722,
-      "end": 1711659334723,
+      "start": 1711660239345,
+      "end": 1711660239346,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -240,44 +240,44 @@
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659334723,
-      "end": 1711659334723,
+      "start": 1711660239346,
+      "end": 1711660239346,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659334723,
-      "end": 1711659334723,
+      "start": 1711660239346,
+      "end": 1711660239346,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-template",
-      "start": 1711659334723,
-      "end": 1711659334723,
+      "start": 1711660239346,
+      "end": 1711660239346,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659334723,
-      "end": 1711659334723,
+      "start": 1711660239346,
+      "end": 1711660239346,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659334723,
-      "end": 1711659334723,
+      "start": 1711660239347,
+      "end": 1711660239347,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659334723,
-      "end": 1711659334723,
+      "start": 1711660239347,
+      "end": 1711660239347,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659334724,
-      "end": 1711659334724,
+      "start": 1711660239348,
+      "end": 1711660239348,
       "order": "normal"
     }
   ]

@@ -4,206 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "import { compareAsc } from \"./compareAsc.mjs\";\nimport { differenceInCalendarMonths } from \"./differenceInCalendarMonths.mjs\";\nimport { isLastDayOfMonth } from \"./isLastDayOfMonth.mjs\";\nimport { toDate } from \"./toDate.mjs\";\n\n/**\n * @name differenceInMonths\n * @category Month Helpers\n * @summary Get the number of full months between the given dates.\n *\n * @description\n * Get the number of full months between the given dates using trunc as a default rounding method.\n *\n * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).\n *\n * @param dateLeft - The later date\n * @param dateRight - The earlier date\n *\n * @returns The number of full months\n *\n * @example\n * // How many full months are between 31 January 2014 and 1 September 2014?\n * const result = differenceInMonths(new Date(2014, 8, 1), new Date(2014, 0, 31))\n * //=> 7\n */\nexport function differenceInMonths(dateLeft, dateRight) {\n  const _dateLeft = toDate(dateLeft);\n  const _dateRight = toDate(dateRight);\n\n  const sign = compareAsc(_dateLeft, _dateRight);\n  const difference = Math.abs(\n    differenceInCalendarMonths(_dateLeft, _dateRight),\n  );\n  let result;\n\n  // Check for the difference of less than month\n  if (difference < 1) {\n    result = 0;\n  } else {\n    if (_dateLeft.getMonth() === 1 && _dateLeft.getDate() > 27) {\n      // This will check if the date is end of Feb and assign a higher end of month date\n      // to compare it with Jan\n      _dateLeft.setDate(30);\n    }\n\n    _dateLeft.setMonth(_dateLeft.getMonth() - sign * difference);\n\n    // Math.abs(diff in full months - diff in calendar months) === 1 if last calendar month is not full\n    // If so, result must be decreased by 1 in absolute value\n    let isLastMonthNotFull = compareAsc(_dateLeft, _dateRight) === -sign;\n\n    // Check for cases of one full calendar month\n    if (\n      isLastDayOfMonth(toDate(dateLeft)) &&\n      difference === 1 &&\n      compareAsc(dateLeft, _dateRight) === 1\n    ) {\n      isLastMonthNotFull = false;\n    }\n\n    result = sign * (difference - Number(isLastMonthNotFull));\n  }\n\n  // Prevent negative zero\n  return result === 0 ? 0 : result;\n}\n\n// Fallback for modularized imports:\nexport default differenceInMonths;\n",
-      "start": 1711659332122,
-      "end": 1711659332145,
+      "start": 1711660236807,
+      "end": 1711660236843,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659332145,
-      "end": 1711659332145,
+      "start": 1711660236843,
+      "end": 1711660236843,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659332146,
-      "end": 1711659332146,
+      "start": 1711660236844,
+      "end": 1711660236844,
       "order": "normal"
     }
   ]

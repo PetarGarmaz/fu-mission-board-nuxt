@@ -4,206 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "import { addDays } from \"./addDays.mjs\";\nimport { differenceInCalendarDays } from \"./differenceInCalendarDays.mjs\";\nimport { isSameDay } from \"./isSameDay.mjs\";\nimport { isValid } from \"./isValid.mjs\";\nimport { isWeekend } from \"./isWeekend.mjs\";\nimport { toDate } from \"./toDate.mjs\";\n\n/**\n * @name differenceInBusinessDays\n * @category Day Helpers\n * @summary Get the number of business days between the given dates.\n *\n * @description\n * Get the number of business day periods between the given dates.\n * Business days being days that arent in the weekend.\n * Like `differenceInCalendarDays`, the function removes the times from\n * the dates before calculating the difference.\n *\n * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).\n *\n * @param dateLeft - The later date\n * @param dateRight - The earlier date\n *\n * @returns The number of business days\n *\n * @example\n * // How many business days are between\n * // 10 January 2014 and 20 July 2014?\n * const result = differenceInBusinessDays(\n *   new Date(2014, 6, 20),\n *   new Date(2014, 0, 10)\n * )\n * //=> 136\n *\n * // How many business days are between\n * // 30 November 2021 and 1 November 2021?\n * const result = differenceInBusinessDays(\n *   new Date(2021, 10, 30),\n *   new Date(2021, 10, 1)\n * )\n * //=> 21\n *\n * // How many business days are between\n * // 1 November 2021 and 1 December 2021?\n * const result = differenceInBusinessDays(\n *   new Date(2021, 10, 1),\n *   new Date(2021, 11, 1)\n * )\n * //=> -22\n *\n * // How many business days are between\n * // 1 November 2021 and 1 November 2021 ?\n * const result = differenceInBusinessDays(\n *   new Date(2021, 10, 1),\n *   new Date(2021, 10, 1)\n * )\n * //=> 0\n */\nexport function differenceInBusinessDays(dateLeft, dateRight) {\n  const _dateLeft = toDate(dateLeft);\n  let _dateRight = toDate(dateRight);\n\n  if (!isValid(_dateLeft) || !isValid(_dateRight)) return NaN;\n\n  const calendarDifference = differenceInCalendarDays(_dateLeft, _dateRight);\n  const sign = calendarDifference < 0 ? -1 : 1;\n\n  const weeks = Math.trunc(calendarDifference / 7);\n\n  let result = weeks * 5;\n  _dateRight = addDays(_dateRight, weeks * 7);\n\n  // the loop below will run at most 6 times to account for the remaining days that don't makeup a full week\n  while (!isSameDay(_dateLeft, _dateRight)) {\n    // sign is used to account for both negative and positive differences\n    result += isWeekend(_dateRight) ? 0 : sign;\n    _dateRight = addDays(_dateRight, sign);\n  }\n\n  // Prevent negative zero\n  return result === 0 ? 0 : result;\n}\n\n// Fallback for modularized imports:\nexport default differenceInBusinessDays;\n",
-      "start": 1711659332093,
-      "end": 1711659332126,
+      "start": 1711660236778,
+      "end": 1711660236810,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236810,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236810,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659332126,
-      "end": 1711659332126,
+      "start": 1711660236811,
+      "end": 1711660236811,
       "order": "normal"
     }
   ]

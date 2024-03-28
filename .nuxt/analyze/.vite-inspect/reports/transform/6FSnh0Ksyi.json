@@ -4,161 +4,161 @@
     {
       "name": "vite:load-fallback",
       "result": "import { joinURL } from \"ufo\";\nimport getURL from \"requrl\";\nimport { sendRedirect } from \"h3\";\nimport { useRequestEvent, useNuxtApp, abortNavigation, useAuthState } from \"#imports\";\nexport const getRequestURL = (includePath = true) => getURL(useRequestEvent()?.node.req, includePath);\nexport const joinPathToApiURL = (path) => joinURL(useAuthState()._internal.baseURL, path);\nexport const navigateToAuthPages = (href) => {\n  const nuxtApp = useNuxtApp();\n  if (process.server) {\n    if (nuxtApp.ssrContext && nuxtApp.ssrContext.event) {\n      return nuxtApp.callHook(\"app:redirected\").then(() => {\n        sendRedirect(nuxtApp.ssrContext.event, href, 302);\n        abortNavigation();\n      });\n    }\n  }\n  window.location.href = href;\n  if (href.includes(\"#\")) {\n    window.location.reload();\n  }\n  const router = nuxtApp.$router;\n  const waitForNavigationWithFallbackToRouter = new Promise((resolve) => setTimeout(resolve, 60 * 1e3)).then(() => router.push(href));\n  return waitForNavigationWithFallbackToRouter;\n};\nexport const determineCallbackUrl = (authConfig, getOriginalTargetPath) => {\n  const authConfigCallbackUrl = authConfig.globalAppMiddleware?.addDefaultCallbackUrl;\n  if (typeof authConfigCallbackUrl !== \"undefined\") {\n    if (typeof authConfigCallbackUrl === \"string\") {\n      return authConfigCallbackUrl;\n    }\n    if (typeof authConfigCallbackUrl === \"boolean\") {\n      if (authConfigCallbackUrl) {\n        return getOriginalTargetPath();\n      }\n    }\n  } else if (authConfig.globalAppMiddleware === true) {\n    return getOriginalTargetPath();\n  }\n};\n",
-      "start": 1711659330975,
-      "end": 1711659331052,
+      "start": 1711660235698,
+      "end": 1711660235777,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659331052,
-      "end": 1711659331052,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659331052,
-      "end": 1711659331052,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659331052,
-      "end": 1711659331052,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659331052,
-      "end": 1711659331052,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659331052,
-      "end": 1711659331052,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659331053,
-      "end": 1711659331053,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659331053,
-      "end": 1711659331053,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659331053,
-      "end": 1711659331053,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659331053,
-      "end": 1711659331053,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659331053,
-      "end": 1711659331053,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659331053,
-      "end": 1711659331053,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659331053,
-      "end": 1711659331053,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659331053,
-      "end": 1711659331053,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659331053,
-      "end": 1711659331053,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659331053,
-      "end": 1711659331053,
+      "start": 1711660235778,
+      "end": 1711660235778,
       "order": "normal"
     },
     {
       "name": "vite:define",
       "result": "import { joinURL } from \"ufo\";\nimport getURL from \"requrl\";\nimport { sendRedirect } from \"h3\";\nimport { useRequestEvent, useNuxtApp, abortNavigation, useAuthState } from \"#imports\";\nexport const getRequestURL = (includePath = true) => getURL(useRequestEvent()?.node.req, includePath);\nexport const joinPathToApiURL = (path) => joinURL(useAuthState()._internal.baseURL, path);\nexport const navigateToAuthPages = (href) => {\n  const nuxtApp = useNuxtApp();\n  if (false) {\n    if (nuxtApp.ssrContext && nuxtApp.ssrContext.event) {\n      return nuxtApp.callHook(\"app:redirected\").then(() => {\n        sendRedirect(nuxtApp.ssrContext.event, href, 302);\n        abortNavigation();\n      });\n    }\n  }\n  window.location.href = href;\n  if (href.includes(\"#\")) {\n    window.location.reload();\n  }\n  const router = nuxtApp.$router;\n  const waitForNavigationWithFallbackToRouter = new Promise((resolve) => setTimeout(resolve, 60 * 1e3)).then(() => router.push(href));\n  return waitForNavigationWithFallbackToRouter;\n};\nexport const determineCallbackUrl = (authConfig, getOriginalTargetPath) => {\n  const authConfigCallbackUrl = authConfig.globalAppMiddleware?.addDefaultCallbackUrl;\n  if (typeof authConfigCallbackUrl !== \"undefined\") {\n    if (typeof authConfigCallbackUrl === \"string\") {\n      return authConfigCallbackUrl;\n    }\n    if (typeof authConfigCallbackUrl === \"boolean\") {\n      if (authConfigCallbackUrl) {\n        return getOriginalTargetPath();\n      }\n    }\n  } else if (authConfig.globalAppMiddleware === true) {\n    return getOriginalTargetPath();\n  }\n};\n",
-      "start": 1711659331053,
-      "end": 1711659331208,
+      "start": 1711660235778,
+      "end": 1711660235916,
       "order": "normal",
       "sourcemaps": null
     },
     {
       "name": "vite:css-post",
-      "start": 1711659331208,
-      "end": 1711659331208,
+      "start": 1711660235916,
+      "end": 1711660235916,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659331208,
-      "end": 1711659331208,
+      "start": 1711660235916,
+      "end": 1711660235916,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659331208,
-      "end": 1711659331208,
+      "start": 1711660235916,
+      "end": 1711660235916,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659331208,
-      "end": 1711659331208,
+      "start": 1711660235916,
+      "end": 1711660235917,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659331208,
-      "end": 1711659331208,
+      "start": 1711660235917,
+      "end": 1711660235917,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659331208,
-      "end": 1711659331208,
+      "start": 1711660235917,
+      "end": 1711660235917,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659331208,
-      "end": 1711659331209,
+      "start": 1711660235917,
+      "end": 1711660235917,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659331209,
-      "end": 1711659331245,
+      "start": 1711660235917,
+      "end": 1711660235947,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { useRequestEvent } from '#app/composables/ssr';\nimport { useNuxtApp } from '#app/nuxt';\nimport { abortNavigation } from '#app/composables/router';\nimport { useAuthState } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuthState';\nimport { joinURL } from \"ufo\";\nimport getURL from \"requrl\";\nimport { sendRedirect } from \"h3\";\nexport const getRequestURL = (includePath = true) => getURL(useRequestEvent()?.node.req, includePath);\nexport const joinPathToApiURL = (path) => joinURL(useAuthState()._internal.baseURL, path);\nexport const navigateToAuthPages = (href) => {\n  const nuxtApp = useNuxtApp();\n  if (false) {\n    if (nuxtApp.ssrContext && nuxtApp.ssrContext.event) {\n      return nuxtApp.callHook(\"app:redirected\").then(() => {\n        sendRedirect(nuxtApp.ssrContext.event, href, 302);\n        abortNavigation();\n      });\n    }\n  }\n  window.location.href = href;\n  if (href.includes(\"#\")) {\n    window.location.reload();\n  }\n  const router = nuxtApp.$router;\n  const waitForNavigationWithFallbackToRouter = new Promise((resolve) => setTimeout(resolve, 60 * 1e3)).then(() => router.push(href));\n  return waitForNavigationWithFallbackToRouter;\n};\nexport const determineCallbackUrl = (authConfig, getOriginalTargetPath) => {\n  const authConfigCallbackUrl = authConfig.globalAppMiddleware?.addDefaultCallbackUrl;\n  if (typeof authConfigCallbackUrl !== \"undefined\") {\n    if (typeof authConfigCallbackUrl === \"string\") {\n      return authConfigCallbackUrl;\n    }\n    if (typeof authConfigCallbackUrl === \"boolean\") {\n      if (authConfigCallbackUrl) {\n        return getOriginalTargetPath();\n      }\n    }\n  } else if (authConfig.globalAppMiddleware === true) {\n    return getOriginalTargetPath();\n  }\n};\n",
-      "start": 1711659331246,
-      "end": 1711659331247,
+      "start": 1711660235947,
+      "end": 1711660235948,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -171,50 +171,50 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1711659331247,
-      "end": 1711659331247,
+      "start": 1711660235948,
+      "end": 1711660235948,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659331247,
-      "end": 1711659331247,
+      "start": 1711660235948,
+      "end": 1711660235948,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659331247,
-      "end": 1711659331247,
+      "start": 1711660235948,
+      "end": 1711660235948,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659331247,
-      "end": 1711659331247,
+      "start": 1711660235948,
+      "end": 1711660235948,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659331247,
-      "end": 1711659331247,
+      "start": 1711660235948,
+      "end": 1711660235948,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659331247,
-      "end": 1711659331248,
+      "start": 1711660235948,
+      "end": 1711660235948,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659331248,
-      "end": 1711659331248,
+      "start": 1711660235948,
+      "end": 1711660235948,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659331248,
-      "end": 1711659331248,
+      "start": 1711660235948,
+      "end": 1711660235948,
       "order": "normal"
     }
   ]

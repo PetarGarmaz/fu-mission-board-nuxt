@@ -4,57 +4,57 @@
     {
       "name": "vite:load-fallback",
       "result": "<script setup>\n\timport { Observer } from 'mobx-vue-lite';\n\timport briefingStore from \"../src/stores/BriefingStore\";\n\timport sortStore from \"../src/stores/SortStore\";\n\n\tconst props = defineProps(['type', \"profileId\"]);\n</script>\n\n<template>\n\t<Observer>\n\t\t<section class='flex flex-wrap max-sm:flex-col'>\n\t\t\t<input placeholder=\"Mission title, description, host...\" :value=\"briefingStore.query\" @input=\"event => briefingStore.setQuery(event.target.value)\" @keyup.enter=\"briefingStore.getBriefings(type, profileId)\" class=\"mx-5 my-5 sm:w-full text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-600 rounded-lg transition duration-300 p-1\"/>\t\n\t\n\t\t\t<div class='flex my-5 w-6/12 select-none max-lg:w-full'>\n\t\t\t\t<div class=\"flex flex-col mx-5 w-full\">\n\t\t\t\t\t<p class='my-auto py-1 text-gray-200 tracking-wider lg:text-lg'>Filter missions:</p>\n\t\t\t\t\t<div @click=\"sortStore.toggleFilterDropdown()\" class='flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer'>\n\t\t\t\t\t\t<div class='flex flex-col'>\n\t\t\t\t\t\t\t<p class='m-auto ml-4 text-gray-200 tracking-wider lg:text-lg'>{{briefingStore.filter}}</p>\n\t\t\t\t\t\t\t<div v-if=\"sortStore.filterDropdown\" class=\"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\">\n\t\t\t\t\t\t\t\t<button v-for=\"(item, index) in ['Present & Past Missions', 'Future Missions', 'All Missions']\" type=\"button\" @click=\"briefingStore.setFilterType(index, type, profileId)\" class='text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300'>{{item}}</button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p class=\"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\" :class=\"sortStore.filterDropdown && 'rotate-180'\">▼</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\n\t\t\t<div class='flex my-5 w-6/12 select-none max-lg:w-full'>\n\t\t\t\t<div class=\"flex flex-col mx-5 w-full\">\n\t\t\t\t\t<p class='my-auto py-1 text-gray-200 tracking-wider lg:text-lg'>Order by:</p>\n\t\t\t\t\t<div @click=\"sortStore.toggleOrderDropdown()\" class='flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer'>\n\t\t\t\t\t\t<div class='flex flex-col'>\n\t\t\t\t\t\t\t<p class='m-auto ml-4 text-gray-200 tracking-wider lg:text-lg'>{{briefingStore.order}}</p>\n\t\t\t\t\t\t\t<div v-if=\"sortStore.orderDropdown\" class=\"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\">\n\t\t\t\t\t\t\t\t<button type=\"button\" v-for=\"item in ['Ascending', 'Descending']\" @click=\"briefingStore.setOrder(item, type, profileId)\" class=\"text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300\">{{item}}</button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p class=\"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\" :class=\"sortStore.orderDropdown && 'rotate-180'\">▼</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</section>\n\t</Observer>\n</template>\n",
-      "start": 1711659331621,
-      "end": 1711659331804,
+      "start": 1711660236369,
+      "end": 1711660236525,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659331804,
-      "end": 1711659331804,
+      "start": 1711660236525,
+      "end": 1711660236525,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659331804,
-      "end": 1711659331804,
+      "start": 1711660236525,
+      "end": 1711660236525,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659331804,
-      "end": 1711659331804,
+      "start": 1711660236525,
+      "end": 1711660236525,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659331804,
-      "end": 1711659331804,
+      "start": 1711660236525,
+      "end": 1711660236525,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659331804,
-      "end": 1711659331804,
+      "start": 1711660236525,
+      "end": 1711660236525,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659331804,
-      "end": 1711659331804,
+      "start": 1711660236525,
+      "end": 1711660236525,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659331804,
-      "end": 1711659331804,
+      "start": 1711660236525,
+      "end": 1711660236525,
       "order": "normal"
     },
     {
       "name": "vite:vue",
       "result": "import { unref as _unref, withKeys as _withKeys, createElementVNode as _createElementVNode, toDisplayString as _toDisplayString, renderList as _renderList, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock, createCommentVNode as _createCommentVNode, normalizeClass as _normalizeClass, withCtx as _withCtx, createBlock as _createBlock } from \"vue\"\n\nconst _hoisted_1 = { class: \"flex flex-wrap max-sm:flex-col\" }\nconst _hoisted_2 = [\"value\"]\nconst _hoisted_3 = { class: \"flex my-5 w-6/12 select-none max-lg:w-full\" }\nconst _hoisted_4 = { class: \"flex flex-col mx-5 w-full\" }\nconst _hoisted_5 = /*#__PURE__*/_createElementVNode(\"p\", { class: \"my-auto py-1 text-gray-200 tracking-wider lg:text-lg\" }, \"Filter missions:\", -1)\nconst _hoisted_6 = { class: \"flex flex-col\" }\nconst _hoisted_7 = { class: \"m-auto ml-4 text-gray-200 tracking-wider lg:text-lg\" }\nconst _hoisted_8 = {\n  key: 0,\n  class: \"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\"\n}\nconst _hoisted_9 = [\"onClick\"]\nconst _hoisted_10 = { class: \"flex my-5 w-6/12 select-none max-lg:w-full\" }\nconst _hoisted_11 = { class: \"flex flex-col mx-5 w-full\" }\nconst _hoisted_12 = /*#__PURE__*/_createElementVNode(\"p\", { class: \"my-auto py-1 text-gray-200 tracking-wider lg:text-lg\" }, \"Order by:\", -1)\nconst _hoisted_13 = { class: \"flex flex-col\" }\nconst _hoisted_14 = { class: \"m-auto ml-4 text-gray-200 tracking-wider lg:text-lg\" }\nconst _hoisted_15 = {\n  key: 0,\n  class: \"absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40\"\n}\nconst _hoisted_16 = [\"onClick\"]\n\nimport { Observer } from 'mobx-vue-lite';\n\timport briefingStore from \"../src/stores/BriefingStore\";\n\timport sortStore from \"../src/stores/SortStore\";\n\n\t\nconst _sfc_main = {\n  __name: 'SortBar',\n  props: ['type', \"profileId\"],\n  setup(__props) {\n\n\tconst props = __props;\n\nreturn (_ctx, _cache) => {\n  return (_openBlock(), _createBlock(_unref(Observer), null, {\n    default: _withCtx(() => [\n      _createElementVNode(\"section\", _hoisted_1, [\n        _createElementVNode(\"input\", {\n          placeholder: \"Mission title, description, host...\",\n          value: _unref(briefingStore).query,\n          onInput: _cache[0] || (_cache[0] = event => _unref(briefingStore).setQuery(event.target.value)),\n          onKeyup: _cache[1] || (_cache[1] = _withKeys($event => (_unref(briefingStore).getBriefings(__props.type, __props.profileId)), [\"enter\"])),\n          class: \"mx-5 my-5 sm:w-full text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-600 rounded-lg transition duration-300 p-1\"\n        }, null, 40, _hoisted_2),\n        _createElementVNode(\"div\", _hoisted_3, [\n          _createElementVNode(\"div\", _hoisted_4, [\n            _hoisted_5,\n            _createElementVNode(\"div\", {\n              onClick: _cache[2] || (_cache[2] = $event => (_unref(sortStore).toggleFilterDropdown())),\n              class: \"flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer\"\n            }, [\n              _createElementVNode(\"div\", _hoisted_6, [\n                _createElementVNode(\"p\", _hoisted_7, _toDisplayString(_unref(briefingStore).filter), 1),\n                (_unref(sortStore).filterDropdown)\n                  ? (_openBlock(), _createElementBlock(\"div\", _hoisted_8, [\n                      (_openBlock(), _createElementBlock(_Fragment, null, _renderList(['Present & Past Missions', 'Future Missions', 'All Missions'], (item, index) => {\n                        return _createElementVNode(\"button\", {\n                          type: \"button\",\n                          onClick: $event => (_unref(briefingStore).setFilterType(index, __props.type, __props.profileId)),\n                          class: \"text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300\"\n                        }, _toDisplayString(item), 9, _hoisted_9)\n                      }), 64))\n                    ]))\n                  : _createCommentVNode(\"\", true)\n              ]),\n              _createElementVNode(\"p\", {\n                class: _normalizeClass([\"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\", _unref(sortStore).filterDropdown && 'rotate-180'])\n              }, \"▼\", 2)\n            ])\n          ])\n        ]),\n        _createElementVNode(\"div\", _hoisted_10, [\n          _createElementVNode(\"div\", _hoisted_11, [\n            _hoisted_12,\n            _createElementVNode(\"div\", {\n              onClick: _cache[3] || (_cache[3] = $event => (_unref(sortStore).toggleOrderDropdown())),\n              class: \"flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer\"\n            }, [\n              _createElementVNode(\"div\", _hoisted_13, [\n                _createElementVNode(\"p\", _hoisted_14, _toDisplayString(_unref(briefingStore).order), 1),\n                (_unref(sortStore).orderDropdown)\n                  ? (_openBlock(), _createElementBlock(\"div\", _hoisted_15, [\n                      (_openBlock(), _createElementBlock(_Fragment, null, _renderList(['Ascending', 'Descending'], (item) => {\n                        return _createElementVNode(\"button\", {\n                          type: \"button\",\n                          onClick: $event => (_unref(briefingStore).setOrder(item, __props.type, __props.profileId)),\n                          class: \"text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300\"\n                        }, _toDisplayString(item), 9, _hoisted_16)\n                      }), 64))\n                    ]))\n                  : _createCommentVNode(\"\", true)\n              ]),\n              _createElementVNode(\"p\", {\n                class: _normalizeClass([\"m-auto mr-4 text-gray-200 tracking-wider text-xl transition duration-300\", _unref(sortStore).orderDropdown && 'rotate-180'])\n              }, \"▼\", 2)\n            ])\n          ])\n        ])\n      ])\n    ]),\n    _: 1\n  }))\n}\n}\n\n}\n\n\n\nexport default _sfc_main",
-      "start": 1711659331804,
-      "end": 1711659331808,
+      "start": 1711660236525,
+      "end": 1711660236530,
       "order": "normal",
       "sourcemaps": {
         "mappings": ""
@@ -62,152 +62,152 @@
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659331808,
-      "end": 1711659331808,
+      "start": 1711660236530,
+      "end": 1711660236530,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1711659331808,
-      "end": 1711659331809,
+      "start": 1711660236530,
+      "end": 1711660236532,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711659331809,
-      "end": 1711659331809,
+      "start": 1711660236532,
+      "end": 1711660236532,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659331809,
-      "end": 1711659331809,
+      "start": 1711660236532,
+      "end": 1711660236532,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659331809,
-      "end": 1711659331809,
+      "start": 1711660236532,
+      "end": 1711660236532,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659331809,
-      "end": 1711659331809,
+      "start": 1711660236532,
+      "end": 1711660236532,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659331809,
-      "end": 1711659331809,
+      "start": 1711660236532,
+      "end": 1711660236532,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659331809,
-      "end": 1711659331809,
+      "start": 1711660236532,
+      "end": 1711660236532,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659331809,
-      "end": 1711659331809,
+      "start": 1711660236532,
+      "end": 1711660236532,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659331809,
-      "end": 1711659331809,
+      "start": 1711660236532,
+      "end": 1711660236532,
       "order": "normal"
     }
   ]

@@ -4,206 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "// Block quotes\n\nimport { isSpace } from '../common/utils.mjs'\n\nexport default function blockquote (state, startLine, endLine, silent) {\n  let pos = state.bMarks[startLine] + state.tShift[startLine]\n  let max = state.eMarks[startLine]\n\n  const oldLineMax = state.lineMax\n\n  // if it's indented more than 3 spaces, it should be a code block\n  if (state.sCount[startLine] - state.blkIndent >= 4) { return false }\n\n  // check the block quote marker\n  if (state.src.charCodeAt(pos) !== 0x3E/* > */) { return false }\n\n  // we know that it's going to be a valid blockquote,\n  // so no point trying to find the end of it in silent mode\n  if (silent) { return true }\n\n  const oldBMarks  = []\n  const oldBSCount = []\n  const oldSCount  = []\n  const oldTShift  = []\n\n  const terminatorRules = state.md.block.ruler.getRules('blockquote')\n\n  const oldParentType = state.parentType\n  state.parentType = 'blockquote'\n  let lastLineEmpty = false\n  let nextLine\n\n  // Search the end of the block\n  //\n  // Block ends with either:\n  //  1. an empty line outside:\n  //     ```\n  //     > test\n  //\n  //     ```\n  //  2. an empty line inside:\n  //     ```\n  //     >\n  //     test\n  //     ```\n  //  3. another tag:\n  //     ```\n  //     > test\n  //      - - -\n  //     ```\n  for (nextLine = startLine; nextLine < endLine; nextLine++) {\n    // check if it's outdented, i.e. it's inside list item and indented\n    // less than said list item:\n    //\n    // ```\n    // 1. anything\n    //    > current blockquote\n    // 2. checking this line\n    // ```\n    const isOutdented = state.sCount[nextLine] < state.blkIndent\n\n    pos = state.bMarks[nextLine] + state.tShift[nextLine]\n    max = state.eMarks[nextLine]\n\n    if (pos >= max) {\n      // Case 1: line is not inside the blockquote, and this line is empty.\n      break\n    }\n\n    if (state.src.charCodeAt(pos++) === 0x3E/* > */ && !isOutdented) {\n      // This line is inside the blockquote.\n\n      // set offset past spaces and \">\"\n      let initial = state.sCount[nextLine] + 1\n      let spaceAfterMarker\n      let adjustTab\n\n      // skip one optional space after '>'\n      if (state.src.charCodeAt(pos) === 0x20 /* space */) {\n        // ' >   test '\n        //     ^ -- position start of line here:\n        pos++\n        initial++\n        adjustTab = false\n        spaceAfterMarker = true\n      } else if (state.src.charCodeAt(pos) === 0x09 /* tab */) {\n        spaceAfterMarker = true\n\n        if ((state.bsCount[nextLine] + initial) % 4 === 3) {\n          // '  >\\t  test '\n          //       ^ -- position start of line here (tab has width===1)\n          pos++\n          initial++\n          adjustTab = false\n        } else {\n          // ' >\\t  test '\n          //    ^ -- position start of line here + shift bsCount slightly\n          //         to make extra space appear\n          adjustTab = true\n        }\n      } else {\n        spaceAfterMarker = false\n      }\n\n      let offset = initial\n      oldBMarks.push(state.bMarks[nextLine])\n      state.bMarks[nextLine] = pos\n\n      while (pos < max) {\n        const ch = state.src.charCodeAt(pos)\n\n        if (isSpace(ch)) {\n          if (ch === 0x09) {\n            offset += 4 - (offset + state.bsCount[nextLine] + (adjustTab ? 1 : 0)) % 4\n          } else {\n            offset++\n          }\n        } else {\n          break\n        }\n\n        pos++\n      }\n\n      lastLineEmpty = pos >= max\n\n      oldBSCount.push(state.bsCount[nextLine])\n      state.bsCount[nextLine] = state.sCount[nextLine] + 1 + (spaceAfterMarker ? 1 : 0)\n\n      oldSCount.push(state.sCount[nextLine])\n      state.sCount[nextLine] = offset - initial\n\n      oldTShift.push(state.tShift[nextLine])\n      state.tShift[nextLine] = pos - state.bMarks[nextLine]\n      continue\n    }\n\n    // Case 2: line is not inside the blockquote, and the last line was empty.\n    if (lastLineEmpty) { break }\n\n    // Case 3: another tag found.\n    let terminate = false\n    for (let i = 0, l = terminatorRules.length; i < l; i++) {\n      if (terminatorRules[i](state, nextLine, endLine, true)) {\n        terminate = true\n        break\n      }\n    }\n\n    if (terminate) {\n      // Quirk to enforce \"hard termination mode\" for paragraphs;\n      // normally if you call `tokenize(state, startLine, nextLine)`,\n      // paragraphs will look below nextLine for paragraph continuation,\n      // but if blockquote is terminated by another tag, they shouldn't\n      state.lineMax = nextLine\n\n      if (state.blkIndent !== 0) {\n        // state.blkIndent was non-zero, we now set it to zero,\n        // so we need to re-calculate all offsets to appear as\n        // if indent wasn't changed\n        oldBMarks.push(state.bMarks[nextLine])\n        oldBSCount.push(state.bsCount[nextLine])\n        oldTShift.push(state.tShift[nextLine])\n        oldSCount.push(state.sCount[nextLine])\n        state.sCount[nextLine] -= state.blkIndent\n      }\n\n      break\n    }\n\n    oldBMarks.push(state.bMarks[nextLine])\n    oldBSCount.push(state.bsCount[nextLine])\n    oldTShift.push(state.tShift[nextLine])\n    oldSCount.push(state.sCount[nextLine])\n\n    // A negative indentation means that this is a paragraph continuation\n    //\n    state.sCount[nextLine] = -1\n  }\n\n  const oldIndent = state.blkIndent\n  state.blkIndent = 0\n\n  const token_o  = state.push('blockquote_open', 'blockquote', 1)\n  token_o.markup = '>'\n  const lines = [startLine, 0]\n  token_o.map    = lines\n\n  state.md.block.tokenize(state, startLine, nextLine)\n\n  const token_c  = state.push('blockquote_close', 'blockquote', -1)\n  token_c.markup = '>'\n\n  state.lineMax = oldLineMax\n  state.parentType = oldParentType\n  lines[1] = state.line\n\n  // Restore original tShift; this might not be necessary since the parser\n  // has already been here, but just to make sure we can do that.\n  for (let i = 0; i < oldTShift.length; i++) {\n    state.bMarks[i + startLine] = oldBMarks[i]\n    state.tShift[i + startLine] = oldTShift[i]\n    state.sCount[i + startLine] = oldSCount[i]\n    state.bsCount[i + startLine] = oldBSCount[i]\n  }\n  state.blkIndent = oldIndent\n\n  return true\n}\n",
-      "start": 1711659332381,
-      "end": 1711659332404,
+      "start": 1711660237062,
+      "end": 1711660237084,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659332404,
-      "end": 1711659332404,
+      "start": 1711660237085,
+      "end": 1711660237085,
       "order": "normal"
     }
   ]

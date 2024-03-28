@@ -4,206 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "// fences (``` lang, ~~~ lang)\n\nexport default function fence (state, startLine, endLine, silent) {\n  let pos = state.bMarks[startLine] + state.tShift[startLine]\n  let max = state.eMarks[startLine]\n\n  // if it's indented more than 3 spaces, it should be a code block\n  if (state.sCount[startLine] - state.blkIndent >= 4) { return false }\n\n  if (pos + 3 > max) { return false }\n\n  const marker = state.src.charCodeAt(pos)\n\n  if (marker !== 0x7E/* ~ */ && marker !== 0x60 /* ` */) {\n    return false\n  }\n\n  // scan marker length\n  let mem = pos\n  pos = state.skipChars(pos, marker)\n\n  let len = pos - mem\n\n  if (len < 3) { return false }\n\n  const markup = state.src.slice(mem, pos)\n  const params = state.src.slice(pos, max)\n\n  if (marker === 0x60 /* ` */) {\n    if (params.indexOf(String.fromCharCode(marker)) >= 0) {\n      return false\n    }\n  }\n\n  // Since start is found, we can report success here in validation mode\n  if (silent) { return true }\n\n  // search end of block\n  let nextLine = startLine\n  let haveEndMarker = false\n\n  for (;;) {\n    nextLine++\n    if (nextLine >= endLine) {\n      // unclosed block should be autoclosed by end of document.\n      // also block seems to be autoclosed by end of parent\n      break\n    }\n\n    pos = mem = state.bMarks[nextLine] + state.tShift[nextLine]\n    max = state.eMarks[nextLine]\n\n    if (pos < max && state.sCount[nextLine] < state.blkIndent) {\n      // non-empty line with negative indent should stop the list:\n      // - ```\n      //  test\n      break\n    }\n\n    if (state.src.charCodeAt(pos) !== marker) { continue }\n\n    if (state.sCount[nextLine] - state.blkIndent >= 4) {\n      // closing fence should be indented less than 4 spaces\n      continue\n    }\n\n    pos = state.skipChars(pos, marker)\n\n    // closing code fence must be at least as long as the opening one\n    if (pos - mem < len) { continue }\n\n    // make sure tail has spaces only\n    pos = state.skipSpaces(pos)\n\n    if (pos < max) { continue }\n\n    haveEndMarker = true\n    // found!\n    break\n  }\n\n  // If a fence has heading spaces, they should be removed from its inner block\n  len = state.sCount[startLine]\n\n  state.line = nextLine + (haveEndMarker ? 1 : 0)\n\n  const token   = state.push('fence', 'code', 0)\n  token.info    = params\n  token.content = state.getLines(startLine + 1, nextLine, len, true)\n  token.markup  = markup\n  token.map     = [startLine, state.line]\n\n  return true\n}\n",
-      "start": 1711659332380,
-      "end": 1711659332403,
+      "start": 1711660237061,
+      "end": 1711660237084,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659332403,
-      "end": 1711659332403,
+      "start": 1711660237084,
+      "end": 1711660237084,
       "order": "normal"
     }
   ]

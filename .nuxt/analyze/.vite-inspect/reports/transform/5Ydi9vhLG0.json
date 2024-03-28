@@ -4,57 +4,57 @@
     {
       "name": "vite:load-fallback",
       "result": "<script setup>\r\n\timport { ref } from \"vue\";\r\n\timport FormComp from '../src/components/FormComp.vue';\r\n\timport formStore from \"../src/stores/FormStore\";\r\n\timport navbarStore from \"../src/stores/NavbarStore\";\r\n\timport { Observer } from 'mobx-vue-lite';\r\n\r\n\tconst router = useRouter();\r\n\tconst briefingId = router.currentRoute._value.query.id;\r\n\r\n\tformStore.setType(\"Edit\");\r\n\r\n\t\r\n</script>\r\n\r\n<template>\r\n\t<Observer>\r\n\t\t<div class=\"w-full flex-center flex-col\">\r\n\t\t\t<section class=\"flex\">\r\n\t\t\t\t<div class=\"flex flex-col w-9/12 mx-auto max-lg:w-11/12\">\r\n\t\t\t\t\t<header class=\"flex flex-col bg-gray-900 mt-10 border border-gray-600 rounded-lg\">\r\n\t\t\t\t\t\t<h1 class='text-5xl text-gray-200 font-bold tracking-widest text-center my-4 max-lg:text-3xl max-lg:tracking-normal'>{{formStore.type.toUpperCase()}} BRIEFING</h1>\r\n\t\t\t\t\t\t<hr class='border-gray-600'/>\r\n\t\t\t\t\t\t<p class='text-gray-200 text-center max-lg:text-sm tracking-wider italic my-4 mx-4'>{{formStore.type == \"Create\" ? \"Create a briefing for an upcoming mission.\" : \"Edit an existing mission briefing.\"}}</p>\r\n\t\t\t\t\t</header>\r\n\r\n\t\t\t\t\t<FormComp v-if=\"navbarStore.session?.accessToken\" v-bind:briefingId=\"briefingId\"/>\r\n\t\t\t\t</div>\r\n\t\t\t</section>\t\t\r\n\t\t</div>\r\n\t</Observer>\r\n</template>\r\n",
-      "start": 1711659330440,
-      "end": 1711659330877,
+      "start": 1711660235202,
+      "end": 1711660235621,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659330877,
-      "end": 1711659330877,
+      "start": 1711660235621,
+      "end": 1711660235621,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659330877,
-      "end": 1711659330877,
+      "start": 1711660235621,
+      "end": 1711660235621,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235621,
+      "end": 1711660235621,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235621,
+      "end": 1711660235621,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235621,
+      "end": 1711660235621,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235621,
+      "end": 1711660235621,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235621,
+      "end": 1711660235621,
       "order": "normal"
     },
     {
       "name": "vite:vue",
       "result": "import { unref as _unref, toDisplayString as _toDisplayString, createElementVNode as _createElementVNode, openBlock as _openBlock, createBlock as _createBlock, createCommentVNode as _createCommentVNode, withCtx as _withCtx } from \"vue\"\n\nconst _hoisted_1 = { class: \"w-full flex-center flex-col\" }\nconst _hoisted_2 = { class: \"flex\" }\nconst _hoisted_3 = { class: \"flex flex-col w-9/12 mx-auto max-lg:w-11/12\" }\nconst _hoisted_4 = { class: \"flex flex-col bg-gray-900 mt-10 border border-gray-600 rounded-lg\" }\nconst _hoisted_5 = { class: \"text-5xl text-gray-200 font-bold tracking-widest text-center my-4 max-lg:text-3xl max-lg:tracking-normal\" }\nconst _hoisted_6 = /*#__PURE__*/_createElementVNode(\"hr\", { class: \"border-gray-600\" }, null, -1)\nconst _hoisted_7 = { class: \"text-gray-200 text-center max-lg:text-sm tracking-wider italic my-4 mx-4\" }\n\nimport { ref } from \"vue\";\r\n\timport FormComp from '../src/components/FormComp.vue';\r\n\timport formStore from \"../src/stores/FormStore\";\r\n\timport navbarStore from \"../src/stores/NavbarStore\";\r\n\timport { Observer } from 'mobx-vue-lite';\r\n\r\n\t\nconst _sfc_main = {\n  __name: 'index',\n  setup(__props) {\n\r\n\tconst router = useRouter();\r\n\tconst briefingId = router.currentRoute._value.query.id;\r\n\r\n\tformStore.setType(\"Edit\");\r\n\r\n\t\r\n\nreturn (_ctx, _cache) => {\n  return (_openBlock(), _createBlock(_unref(Observer), null, {\n    default: _withCtx(() => [\n      _createElementVNode(\"div\", _hoisted_1, [\n        _createElementVNode(\"section\", _hoisted_2, [\n          _createElementVNode(\"div\", _hoisted_3, [\n            _createElementVNode(\"header\", _hoisted_4, [\n              _createElementVNode(\"h1\", _hoisted_5, _toDisplayString(_unref(formStore).type.toUpperCase()) + \" BRIEFING\", 1),\n              _hoisted_6,\n              _createElementVNode(\"p\", _hoisted_7, _toDisplayString(_unref(formStore).type == \"Create\" ? \"Create a briefing for an upcoming mission.\" : \"Edit an existing mission briefing.\"), 1)\n            ]),\n            (_unref(navbarStore).session?.accessToken)\n              ? (_openBlock(), _createBlock(FormComp, {\n                  key: 0,\n                  briefingId: _unref(briefingId)\n                }, null, 8, [\"briefingId\"]))\n              : _createCommentVNode(\"\", true)\n          ])\n        ])\n      ])\n    ]),\n    _: 1\n  }))\n}\n}\n\n}\n\n\n\nexport default _sfc_main",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235621,
+      "end": 1711660235622,
       "order": "normal",
       "sourcemaps": {
         "mappings": ""
@@ -62,105 +62,105 @@
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659330878,
-      "end": 1711659330878,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711659330879,
-      "end": 1711659330879,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659330879,
-      "end": 1711659330879,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659330879,
-      "end": 1711659330879,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659330879,
-      "end": 1711659330879,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659330879,
-      "end": 1711659330879,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659330879,
-      "end": 1711659330879,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659330879,
-      "end": 1711659330879,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659330879,
-      "end": 1711659330879,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659330879,
-      "end": 1711659330879,
+      "start": 1711660235622,
+      "end": 1711660235622,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { useRouter } from '#app/composables/router';\nimport { unref as _unref, toDisplayString as _toDisplayString, createElementVNode as _createElementVNode, openBlock as _openBlock, createBlock as _createBlock, createCommentVNode as _createCommentVNode, withCtx as _withCtx } from \"vue\"\n\nconst _hoisted_1 = { class: \"w-full flex-center flex-col\" }\nconst _hoisted_2 = { class: \"flex\" }\nconst _hoisted_3 = { class: \"flex flex-col w-9/12 mx-auto max-lg:w-11/12\" }\nconst _hoisted_4 = { class: \"flex flex-col bg-gray-900 mt-10 border border-gray-600 rounded-lg\" }\nconst _hoisted_5 = { class: \"text-5xl text-gray-200 font-bold tracking-widest text-center my-4 max-lg:text-3xl max-lg:tracking-normal\" }\nconst _hoisted_6 = /*#__PURE__*/_createElementVNode(\"hr\", { class: \"border-gray-600\" }, null, -1)\nconst _hoisted_7 = { class: \"text-gray-200 text-center max-lg:text-sm tracking-wider italic my-4 mx-4\" }\n\nimport { ref } from \"vue\";\r\n\timport FormComp from '../src/components/FormComp.vue';\r\n\timport formStore from \"../src/stores/FormStore\";\r\n\timport navbarStore from \"../src/stores/NavbarStore\";\r\n\timport { Observer } from 'mobx-vue-lite';\r\n\r\n\t\nconst _sfc_main = {\n  __name: 'index',\n  setup(__props) {\n\r\n\tconst router = useRouter();\r\n\tconst briefingId = router.currentRoute._value.query.id;\r\n\r\n\tformStore.setType(\"Edit\");\r\n\r\n\t\r\n\nreturn (_ctx, _cache) => {\n  return (_openBlock(), _createBlock(_unref(Observer), null, {\n    default: _withCtx(() => [\n      _createElementVNode(\"div\", _hoisted_1, [\n        _createElementVNode(\"section\", _hoisted_2, [\n          _createElementVNode(\"div\", _hoisted_3, [\n            _createElementVNode(\"header\", _hoisted_4, [\n              _createElementVNode(\"h1\", _hoisted_5, _toDisplayString(_unref(formStore).type.toUpperCase()) + \" BRIEFING\", 1),\n              _hoisted_6,\n              _createElementVNode(\"p\", _hoisted_7, _toDisplayString(_unref(formStore).type == \"Create\" ? \"Create a briefing for an upcoming mission.\" : \"Edit an existing mission briefing.\"), 1)\n            ]),\n            (_unref(navbarStore).session?.accessToken)\n              ? (_openBlock(), _createBlock(FormComp, {\n                  key: 0,\n                  briefingId: _unref(briefingId)\n                }, null, 8, [\"briefingId\"]))\n              : _createCommentVNode(\"\", true)\n          ])\n        ])\n      ])\n    ]),\n    _: 1\n  }))\n}\n}\n\n}\n\n\n\nexport default _sfc_main",
-      "start": 1711659330879,
-      "end": 1711659330881,
+      "start": 1711660235622,
+      "end": 1711660235624,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -173,50 +173,50 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1711659330881,
-      "end": 1711659330881,
+      "start": 1711660235624,
+      "end": 1711660235624,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659330881,
-      "end": 1711659330881,
+      "start": 1711660235624,
+      "end": 1711660235624,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659330881,
-      "end": 1711659330881,
+      "start": 1711660235624,
+      "end": 1711660235624,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659330881,
-      "end": 1711659330881,
+      "start": 1711660235624,
+      "end": 1711660235624,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659330881,
-      "end": 1711659330881,
+      "start": 1711660235624,
+      "end": 1711660235624,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659330881,
-      "end": 1711659330881,
+      "start": 1711660235624,
+      "end": 1711660235624,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659330881,
-      "end": 1711659330881,
+      "start": 1711660235624,
+      "end": 1711660235625,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659330881,
-      "end": 1711659330881,
+      "start": 1711660235625,
+      "end": 1711660235625,
       "order": "normal"
     }
   ]

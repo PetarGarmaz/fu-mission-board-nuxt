@@ -4,185 +4,185 @@
     {
       "name": "vite:load-fallback",
       "result": "import { defu } from \"defu\";\nimport { readonly } from \"vue\";\nimport { appendHeader } from \"h3\";\nimport { callWithNuxt } from \"#app/nuxt\";\nimport { determineCallbackUrl } from \"../../utils/url.mjs\";\nimport { makeCWN, joinPathToApiURLWN, navigateToAuthPageWN, getRequestURLWN } from \"../../utils/callWithNuxt.mjs\";\nimport { _fetch } from \"../../utils/fetch.mjs\";\nimport { isNonEmptyObject } from \"../../utils/checkSessionResult.mjs\";\nimport { useTypedBackendConfig } from \"../../helpers.mjs\";\nimport { createError, useNuxtApp, useRuntimeConfig, useRequestHeaders, useAuthState } from \"#imports\";\nconst getRequestCookies = async (nuxt) => {\n  const { cookie } = await callWithNuxt(nuxt, () => useRequestHeaders([\"cookie\"]));\n  if (cookie) {\n    return { cookie };\n  }\n  return {};\n};\nconst getCsrfToken = async () => {\n  const nuxt = useNuxtApp();\n  const headers = await getRequestCookies(nuxt);\n  return _fetch(nuxt, \"csrf\", { headers }).then((response) => response.csrfToken);\n};\nconst getCsrfTokenWithNuxt = makeCWN(getCsrfToken);\nconst signIn = async (provider, options, authorizationParams) => {\n  const nuxt = useNuxtApp();\n  const configuredProviders = await getProviders();\n  if (!configuredProviders) {\n    const errorUrl = await joinPathToApiURLWN(nuxt, \"error\");\n    return navigateToAuthPageWN(nuxt, errorUrl);\n  }\n  const runtimeConfig = await callWithNuxt(nuxt, useRuntimeConfig);\n  const backendConfig = useTypedBackendConfig(runtimeConfig, \"authjs\");\n  if (typeof provider === \"undefined\") {\n    provider = backendConfig.defaultProvider;\n  }\n  const { redirect = true } = options ?? {};\n  let { callbackUrl } = options ?? {};\n  if (typeof callbackUrl === \"undefined\" && backendConfig.addDefaultCallbackUrl) {\n    callbackUrl = await determineCallbackUrl(runtimeConfig.public.auth, () => getRequestURLWN(nuxt));\n  }\n  const signinUrl = await joinPathToApiURLWN(nuxt, \"signin\");\n  const queryParams = callbackUrl ? `?${new URLSearchParams({ callbackUrl })}` : \"\";\n  const hrefSignInAllProviderPage = `${signinUrl}${queryParams}`;\n  if (!provider) {\n    return navigateToAuthPageWN(nuxt, hrefSignInAllProviderPage);\n  }\n  const selectedProvider = configuredProviders[provider];\n  if (!selectedProvider) {\n    return navigateToAuthPageWN(nuxt, hrefSignInAllProviderPage);\n  }\n  const isCredentials = selectedProvider.type === \"credentials\";\n  const isEmail = selectedProvider.type === \"email\";\n  const isSupportingReturn = isCredentials || isEmail;\n  let action = \"signin\";\n  if (isCredentials) {\n    action = \"callback\";\n  }\n  const csrfToken = await callWithNuxt(nuxt, getCsrfToken);\n  const headers = {\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    ...await getRequestCookies(nuxt)\n  };\n  const body = new URLSearchParams({\n    ...options,\n    csrfToken,\n    callbackUrl,\n    json: true\n  });\n  const fetchSignIn = () => _fetch(nuxt, `${action}/${provider}`, {\n    method: \"post\",\n    params: authorizationParams,\n    headers,\n    body\n  }).catch((error2) => error2.data);\n  const data = await callWithNuxt(nuxt, fetchSignIn);\n  if (redirect || !isSupportingReturn) {\n    const href = data.url ?? callbackUrl;\n    return navigateToAuthPageWN(nuxt, href);\n  }\n  const error = new URL(data.url).searchParams.get(\"error\");\n  await getSessionWithNuxt(nuxt);\n  return {\n    error,\n    status: 200,\n    ok: true,\n    url: error ? null : data.url\n  };\n};\nconst getProviders = () => _fetch(useNuxtApp(), \"providers\");\nconst getSession = async (getSessionOptions) => {\n  const nuxt = useNuxtApp();\n  const callbackUrlFallback = await getRequestURLWN(nuxt);\n  const { required, callbackUrl, onUnauthenticated } = defu(getSessionOptions || {}, {\n    required: false,\n    callbackUrl: void 0,\n    onUnauthenticated: () => signIn(void 0, {\n      callbackUrl: getSessionOptions?.callbackUrl || callbackUrlFallback\n    })\n  });\n  const { data, status, loading, lastRefreshedAt } = await callWithNuxt(nuxt, useAuthState);\n  const onError = () => {\n    loading.value = false;\n  };\n  const headers = await getRequestCookies(nuxt);\n  return _fetch(nuxt, \"session\", {\n    onResponse: ({ response }) => {\n      const sessionData = response._data;\n      if (process.server) {\n        const setCookieValue = response.headers.get(\"set-cookie\");\n        if (setCookieValue && nuxt.ssrContext) {\n          appendHeader(nuxt.ssrContext.event, \"set-cookie\", setCookieValue);\n        }\n      }\n      data.value = isNonEmptyObject(sessionData) ? sessionData : null;\n      loading.value = false;\n      if (required && status.value === \"unauthenticated\") {\n        return onUnauthenticated();\n      }\n      return sessionData;\n    },\n    onRequest: ({ options }) => {\n      lastRefreshedAt.value = /* @__PURE__ */ new Date();\n      options.params = {\n        ...options.params || {},\n        callbackUrl: callbackUrl || callbackUrlFallback\n      };\n    },\n    onRequestError: onError,\n    onResponseError: onError,\n    headers\n  });\n};\nconst getSessionWithNuxt = makeCWN(getSession);\nconst signOut = async (options) => {\n  const nuxt = useNuxtApp();\n  const requestURL = await getRequestURLWN(nuxt);\n  const { callbackUrl = requestURL, redirect = true } = options ?? {};\n  const csrfToken = await getCsrfTokenWithNuxt(nuxt);\n  if (!csrfToken) {\n    throw createError({ statusCode: 400, statusMessage: \"Could not fetch CSRF Token for signing out\" });\n  }\n  const callbackUrlFallback = requestURL;\n  const signoutData = await _fetch(nuxt, \"signout\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/x-www-form-urlencoded\"\n    },\n    onRequest: ({ options: options2 }) => {\n      options2.body = new URLSearchParams({\n        csrfToken,\n        callbackUrl: callbackUrl || callbackUrlFallback,\n        json: \"true\"\n      });\n    }\n  }).catch((error) => error.data);\n  if (redirect) {\n    const url = signoutData.url ?? callbackUrl;\n    return navigateToAuthPageWN(nuxt, url);\n  }\n  await getSessionWithNuxt(nuxt);\n  return signoutData;\n};\nexport const useAuth = () => {\n  const {\n    data,\n    status,\n    lastRefreshedAt\n  } = useAuthState();\n  const getters = {\n    status,\n    data: readonly(data),\n    lastRefreshedAt: readonly(lastRefreshedAt)\n  };\n  const actions = {\n    getSession,\n    getCsrfToken,\n    getProviders,\n    signIn,\n    signOut\n  };\n  return {\n    ...actions,\n    ...getters\n  };\n};\nexport default useAuth;\n",
-      "start": 1711659334738,
-      "end": 1711659334783,
+      "start": 1711660239370,
+      "end": 1711660239396,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "pre"
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239396,
+      "end": 1711660239396,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239397,
+      "end": 1711660239397,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239397,
+      "end": 1711660239397,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659334783,
-      "end": 1711659334783,
+      "start": 1711660239397,
+      "end": 1711660239397,
       "order": "normal"
     },
     {
       "name": "vite:define",
       "result": "import { defu } from \"defu\";\nimport { readonly } from \"vue\";\nimport { appendHeader } from \"h3\";\nimport { callWithNuxt } from \"#app/nuxt\";\nimport { determineCallbackUrl } from \"../../utils/url.mjs\";\nimport { makeCWN, joinPathToApiURLWN, navigateToAuthPageWN, getRequestURLWN } from \"../../utils/callWithNuxt.mjs\";\nimport { _fetch } from \"../../utils/fetch.mjs\";\nimport { isNonEmptyObject } from \"../../utils/checkSessionResult.mjs\";\nimport { useTypedBackendConfig } from \"../../helpers.mjs\";\nimport { createError, useNuxtApp, useRuntimeConfig, useRequestHeaders, useAuthState } from \"#imports\";\nconst getRequestCookies = async (nuxt) => {\n  const { cookie } = await callWithNuxt(nuxt, () => useRequestHeaders([\"cookie\"]));\n  if (cookie) {\n    return { cookie };\n  }\n  return {};\n};\nconst getCsrfToken = async () => {\n  const nuxt = useNuxtApp();\n  const headers = await getRequestCookies(nuxt);\n  return _fetch(nuxt, \"csrf\", { headers }).then((response) => response.csrfToken);\n};\nconst getCsrfTokenWithNuxt = makeCWN(getCsrfToken);\nconst signIn = async (provider, options, authorizationParams) => {\n  const nuxt = useNuxtApp();\n  const configuredProviders = await getProviders();\n  if (!configuredProviders) {\n    const errorUrl = await joinPathToApiURLWN(nuxt, \"error\");\n    return navigateToAuthPageWN(nuxt, errorUrl);\n  }\n  const runtimeConfig = await callWithNuxt(nuxt, useRuntimeConfig);\n  const backendConfig = useTypedBackendConfig(runtimeConfig, \"authjs\");\n  if (typeof provider === \"undefined\") {\n    provider = backendConfig.defaultProvider;\n  }\n  const { redirect = true } = options ?? {};\n  let { callbackUrl } = options ?? {};\n  if (typeof callbackUrl === \"undefined\" && backendConfig.addDefaultCallbackUrl) {\n    callbackUrl = await determineCallbackUrl(runtimeConfig.public.auth, () => getRequestURLWN(nuxt));\n  }\n  const signinUrl = await joinPathToApiURLWN(nuxt, \"signin\");\n  const queryParams = callbackUrl ? `?${new URLSearchParams({ callbackUrl })}` : \"\";\n  const hrefSignInAllProviderPage = `${signinUrl}${queryParams}`;\n  if (!provider) {\n    return navigateToAuthPageWN(nuxt, hrefSignInAllProviderPage);\n  }\n  const selectedProvider = configuredProviders[provider];\n  if (!selectedProvider) {\n    return navigateToAuthPageWN(nuxt, hrefSignInAllProviderPage);\n  }\n  const isCredentials = selectedProvider.type === \"credentials\";\n  const isEmail = selectedProvider.type === \"email\";\n  const isSupportingReturn = isCredentials || isEmail;\n  let action = \"signin\";\n  if (isCredentials) {\n    action = \"callback\";\n  }\n  const csrfToken = await callWithNuxt(nuxt, getCsrfToken);\n  const headers = {\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    ...await getRequestCookies(nuxt)\n  };\n  const body = new URLSearchParams({\n    ...options,\n    csrfToken,\n    callbackUrl,\n    json: true\n  });\n  const fetchSignIn = () => _fetch(nuxt, `${action}/${provider}`, {\n    method: \"post\",\n    params: authorizationParams,\n    headers,\n    body\n  }).catch((error2) => error2.data);\n  const data = await callWithNuxt(nuxt, fetchSignIn);\n  if (redirect || !isSupportingReturn) {\n    const href = data.url ?? callbackUrl;\n    return navigateToAuthPageWN(nuxt, href);\n  }\n  const error = new URL(data.url).searchParams.get(\"error\");\n  await getSessionWithNuxt(nuxt);\n  return {\n    error,\n    status: 200,\n    ok: true,\n    url: error ? null : data.url\n  };\n};\nconst getProviders = () => _fetch(useNuxtApp(), \"providers\");\nconst getSession = async (getSessionOptions) => {\n  const nuxt = useNuxtApp();\n  const callbackUrlFallback = await getRequestURLWN(nuxt);\n  const { required, callbackUrl, onUnauthenticated } = defu(getSessionOptions || {}, {\n    required: false,\n    callbackUrl: void 0,\n    onUnauthenticated: () => signIn(void 0, {\n      callbackUrl: getSessionOptions?.callbackUrl || callbackUrlFallback\n    })\n  });\n  const { data, status, loading, lastRefreshedAt } = await callWithNuxt(nuxt, useAuthState);\n  const onError = () => {\n    loading.value = false;\n  };\n  const headers = await getRequestCookies(nuxt);\n  return _fetch(nuxt, \"session\", {\n    onResponse: ({ response }) => {\n      const sessionData = response._data;\n      if (true) {\n        const setCookieValue = response.headers.get(\"set-cookie\");\n        if (setCookieValue && nuxt.ssrContext) {\n          appendHeader(nuxt.ssrContext.event, \"set-cookie\", setCookieValue);\n        }\n      }\n      data.value = isNonEmptyObject(sessionData) ? sessionData : null;\n      loading.value = false;\n      if (required && status.value === \"unauthenticated\") {\n        return onUnauthenticated();\n      }\n      return sessionData;\n    },\n    onRequest: ({ options }) => {\n      lastRefreshedAt.value = /* @__PURE__ */ new Date();\n      options.params = {\n        ...options.params || {},\n        callbackUrl: callbackUrl || callbackUrlFallback\n      };\n    },\n    onRequestError: onError,\n    onResponseError: onError,\n    headers\n  });\n};\nconst getSessionWithNuxt = makeCWN(getSession);\nconst signOut = async (options) => {\n  const nuxt = useNuxtApp();\n  const requestURL = await getRequestURLWN(nuxt);\n  const { callbackUrl = requestURL, redirect = true } = options ?? {};\n  const csrfToken = await getCsrfTokenWithNuxt(nuxt);\n  if (!csrfToken) {\n    throw createError({ statusCode: 400, statusMessage: \"Could not fetch CSRF Token for signing out\" });\n  }\n  const callbackUrlFallback = requestURL;\n  const signoutData = await _fetch(nuxt, \"signout\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/x-www-form-urlencoded\"\n    },\n    onRequest: ({ options: options2 }) => {\n      options2.body = new URLSearchParams({\n        csrfToken,\n        callbackUrl: callbackUrl || callbackUrlFallback,\n        json: \"true\"\n      });\n    }\n  }).catch((error) => error.data);\n  if (redirect) {\n    const url = signoutData.url ?? callbackUrl;\n    return navigateToAuthPageWN(nuxt, url);\n  }\n  await getSessionWithNuxt(nuxt);\n  return signoutData;\n};\nexport const useAuth = () => {\n  const {\n    data,\n    status,\n    lastRefreshedAt\n  } = useAuthState();\n  const getters = {\n    status,\n    data: readonly(data),\n    lastRefreshedAt: readonly(lastRefreshedAt)\n  };\n  const actions = {\n    getSession,\n    getCsrfToken,\n    getProviders,\n    signIn,\n    signOut\n  };\n  return {\n    ...actions,\n    ...getters\n  };\n};\nexport default useAuth;\n",
-      "start": 1711659334783,
-      "end": 1711659334824,
+      "start": 1711660239397,
+      "end": 1711660239441,
       "order": "normal",
       "sourcemaps": "{\n  \"version\": 3,\n  \"sources\": [\"D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuth.mjs\"],\n  \"sourcesContent\": [\"import { defu } from \\\"defu\\\";\\nimport { readonly } from \\\"vue\\\";\\nimport { appendHeader } from \\\"h3\\\";\\nimport { callWithNuxt } from \\\"#app/nuxt\\\";\\nimport { determineCallbackUrl } from \\\"../../utils/url.mjs\\\";\\nimport { makeCWN, joinPathToApiURLWN, navigateToAuthPageWN, getRequestURLWN } from \\\"../../utils/callWithNuxt.mjs\\\";\\nimport { _fetch } from \\\"../../utils/fetch.mjs\\\";\\nimport { isNonEmptyObject } from \\\"../../utils/checkSessionResult.mjs\\\";\\nimport { useTypedBackendConfig } from \\\"../../helpers.mjs\\\";\\nimport { createError, useNuxtApp, useRuntimeConfig, useRequestHeaders, useAuthState } from \\\"#imports\\\";\\nconst getRequestCookies = async (nuxt) => {\\n  const { cookie } = await callWithNuxt(nuxt, () => useRequestHeaders([\\\"cookie\\\"]));\\n  if (cookie) {\\n    return { cookie };\\n  }\\n  return {};\\n};\\nconst getCsrfToken = async () => {\\n  const nuxt = useNuxtApp();\\n  const headers = await getRequestCookies(nuxt);\\n  return _fetch(nuxt, \\\"csrf\\\", { headers }).then((response) => response.csrfToken);\\n};\\nconst getCsrfTokenWithNuxt = makeCWN(getCsrfToken);\\nconst signIn = async (provider, options, authorizationParams) => {\\n  const nuxt = useNuxtApp();\\n  const configuredProviders = await getProviders();\\n  if (!configuredProviders) {\\n    const errorUrl = await joinPathToApiURLWN(nuxt, \\\"error\\\");\\n    return navigateToAuthPageWN(nuxt, errorUrl);\\n  }\\n  const runtimeConfig = await callWithNuxt(nuxt, useRuntimeConfig);\\n  const backendConfig = useTypedBackendConfig(runtimeConfig, \\\"authjs\\\");\\n  if (typeof provider === \\\"undefined\\\") {\\n    provider = backendConfig.defaultProvider;\\n  }\\n  const { redirect = true } = options ?? {};\\n  let { callbackUrl } = options ?? {};\\n  if (typeof callbackUrl === \\\"undefined\\\" && backendConfig.addDefaultCallbackUrl) {\\n    callbackUrl = await determineCallbackUrl(runtimeConfig.public.auth, () => getRequestURLWN(nuxt));\\n  }\\n  const signinUrl = await joinPathToApiURLWN(nuxt, \\\"signin\\\");\\n  const queryParams = callbackUrl ? `?${new URLSearchParams({ callbackUrl })}` : \\\"\\\";\\n  const hrefSignInAllProviderPage = `${signinUrl}${queryParams}`;\\n  if (!provider) {\\n    return navigateToAuthPageWN(nuxt, hrefSignInAllProviderPage);\\n  }\\n  const selectedProvider = configuredProviders[provider];\\n  if (!selectedProvider) {\\n    return navigateToAuthPageWN(nuxt, hrefSignInAllProviderPage);\\n  }\\n  const isCredentials = selectedProvider.type === \\\"credentials\\\";\\n  const isEmail = selectedProvider.type === \\\"email\\\";\\n  const isSupportingReturn = isCredentials || isEmail;\\n  let action = \\\"signin\\\";\\n  if (isCredentials) {\\n    action = \\\"callback\\\";\\n  }\\n  const csrfToken = await callWithNuxt(nuxt, getCsrfToken);\\n  const headers = {\\n    \\\"Content-Type\\\": \\\"application/x-www-form-urlencoded\\\",\\n    ...await getRequestCookies(nuxt)\\n  };\\n  const body = new URLSearchParams({\\n    ...options,\\n    csrfToken,\\n    callbackUrl,\\n    json: true\\n  });\\n  const fetchSignIn = () => _fetch(nuxt, `${action}/${provider}`, {\\n    method: \\\"post\\\",\\n    params: authorizationParams,\\n    headers,\\n    body\\n  }).catch((error2) => error2.data);\\n  const data = await callWithNuxt(nuxt, fetchSignIn);\\n  if (redirect || !isSupportingReturn) {\\n    const href = data.url ?? callbackUrl;\\n    return navigateToAuthPageWN(nuxt, href);\\n  }\\n  const error = new URL(data.url).searchParams.get(\\\"error\\\");\\n  await getSessionWithNuxt(nuxt);\\n  return {\\n    error,\\n    status: 200,\\n    ok: true,\\n    url: error ? null : data.url\\n  };\\n};\\nconst getProviders = () => _fetch(useNuxtApp(), \\\"providers\\\");\\nconst getSession = async (getSessionOptions) => {\\n  const nuxt = useNuxtApp();\\n  const callbackUrlFallback = await getRequestURLWN(nuxt);\\n  const { required, callbackUrl, onUnauthenticated } = defu(getSessionOptions || {}, {\\n    required: false,\\n    callbackUrl: void 0,\\n    onUnauthenticated: () => signIn(void 0, {\\n      callbackUrl: getSessionOptions?.callbackUrl || callbackUrlFallback\\n    })\\n  });\\n  const { data, status, loading, lastRefreshedAt } = await callWithNuxt(nuxt, useAuthState);\\n  const onError = () => {\\n    loading.value = false;\\n  };\\n  const headers = await getRequestCookies(nuxt);\\n  return _fetch(nuxt, \\\"session\\\", {\\n    onResponse: ({ response }) => {\\n      const sessionData = response._data;\\n      if (process.server) {\\n        const setCookieValue = response.headers.get(\\\"set-cookie\\\");\\n        if (setCookieValue && nuxt.ssrContext) {\\n          appendHeader(nuxt.ssrContext.event, \\\"set-cookie\\\", setCookieValue);\\n        }\\n      }\\n      data.value = isNonEmptyObject(sessionData) ? sessionData : null;\\n      loading.value = false;\\n      if (required && status.value === \\\"unauthenticated\\\") {\\n        return onUnauthenticated();\\n      }\\n      return sessionData;\\n    },\\n    onRequest: ({ options }) => {\\n      lastRefreshedAt.value = /* @__PURE__ */ new Date();\\n      options.params = {\\n        ...options.params || {},\\n        callbackUrl: callbackUrl || callbackUrlFallback\\n      };\\n    },\\n    onRequestError: onError,\\n    onResponseError: onError,\\n    headers\\n  });\\n};\\nconst getSessionWithNuxt = makeCWN(getSession);\\nconst signOut = async (options) => {\\n  const nuxt = useNuxtApp();\\n  const requestURL = await getRequestURLWN(nuxt);\\n  const { callbackUrl = requestURL, redirect = true } = options ?? {};\\n  const csrfToken = await getCsrfTokenWithNuxt(nuxt);\\n  if (!csrfToken) {\\n    throw createError({ statusCode: 400, statusMessage: \\\"Could not fetch CSRF Token for signing out\\\" });\\n  }\\n  const callbackUrlFallback = requestURL;\\n  const signoutData = await _fetch(nuxt, \\\"signout\\\", {\\n    method: \\\"POST\\\",\\n    headers: {\\n      \\\"Content-Type\\\": \\\"application/x-www-form-urlencoded\\\"\\n    },\\n    onRequest: ({ options: options2 }) => {\\n      options2.body = new URLSearchParams({\\n        csrfToken,\\n        callbackUrl: callbackUrl || callbackUrlFallback,\\n        json: \\\"true\\\"\\n      });\\n    }\\n  }).catch((error) => error.data);\\n  if (redirect) {\\n    const url = signoutData.url ?? callbackUrl;\\n    return navigateToAuthPageWN(nuxt, url);\\n  }\\n  await getSessionWithNuxt(nuxt);\\n  return signoutData;\\n};\\nexport const useAuth = () => {\\n  const {\\n    data,\\n    status,\\n    lastRefreshedAt\\n  } = useAuthState();\\n  const getters = {\\n    status,\\n    data: readonly(data),\\n    lastRefreshedAt: readonly(lastRefreshedAt)\\n  };\\n  const actions = {\\n    getSession,\\n    getCsrfToken,\\n    getProviders,\\n    signIn,\\n    signOut\\n  };\\n  return {\\n    ...actions,\\n    ...getters\\n  };\\n};\\nexport default useAuth;\\n\"],\n  \"mappings\": \"AAAA,SAAS,YAAY;AACrB,SAAS,gBAAgB;AACzB,SAAS,oBAAoB;AAC7B,SAAS,oBAAoB;AAC7B,SAAS,4BAA4B;AACrC,SAAS,SAAS,oBAAoB,sBAAsB,uBAAuB;AACnF,SAAS,cAAc;AACvB,SAAS,wBAAwB;AACjC,SAAS,6BAA6B;AACtC,SAAS,aAAa,YAAY,kBAAkB,mBAAmB,oBAAoB;AAC3F,MAAM,oBAAoB,OAAO,SAAS;AACxC,QAAM,EAAE,OAAO,IAAI,MAAM,aAAa,MAAM,MAAM,kBAAkB,CAAC,QAAQ,CAAC,CAAC;AAC/E,MAAI,QAAQ;AACV,WAAO,EAAE,OAAO;AAAA,EAClB;AACA,SAAO,CAAC;AACV;AACA,MAAM,eAAe,YAAY;AAC/B,QAAM,OAAO,WAAW;AACxB,QAAM,UAAU,MAAM,kBAAkB,IAAI;AAC5C,SAAO,OAAO,MAAM,QAAQ,EAAE,QAAQ,CAAC,EAAE,KAAK,CAAC,aAAa,SAAS,SAAS;AAChF;AACA,MAAM,uBAAuB,QAAQ,YAAY;AACjD,MAAM,SAAS,OAAO,UAAU,SAAS,wBAAwB;AAC/D,QAAM,OAAO,WAAW;AACxB,QAAM,sBAAsB,MAAM,aAAa;AAC/C,MAAI,CAAC,qBAAqB;AACxB,UAAM,WAAW,MAAM,mBAAmB,MAAM,OAAO;AACvD,WAAO,qBAAqB,MAAM,QAAQ;AAAA,EAC5C;AACA,QAAM,gBAAgB,MAAM,aAAa,MAAM,gBAAgB;AAC/D,QAAM,gBAAgB,sBAAsB,eAAe,QAAQ;AACnE,MAAI,OAAO,aAAa,aAAa;AACnC,eAAW,cAAc;AAAA,EAC3B;AACA,QAAM,EAAE,WAAW,KAAK,IAAI,WAAW,CAAC;AACxC,MAAI,EAAE,YAAY,IAAI,WAAW,CAAC;AAClC,MAAI,OAAO,gBAAgB,eAAe,cAAc,uBAAuB;AAC7E,kBAAc,MAAM,qBAAqB,cAAc,OAAO,MAAM,MAAM,gBAAgB,IAAI,CAAC;AAAA,EACjG;AACA,QAAM,YAAY,MAAM,mBAAmB,MAAM,QAAQ;AACzD,QAAM,cAAc,cAAc,IAAI,IAAI,gBAAgB,EAAE,YAAY,CAAC,CAAC,KAAK;AAC/E,QAAM,4BAA4B,GAAG,SAAS,GAAG,WAAW;AAC5D,MAAI,CAAC,UAAU;AACb,WAAO,qBAAqB,MAAM,yBAAyB;AAAA,EAC7D;AACA,QAAM,mBAAmB,oBAAoB,QAAQ;AACrD,MAAI,CAAC,kBAAkB;AACrB,WAAO,qBAAqB,MAAM,yBAAyB;AAAA,EAC7D;AACA,QAAM,gBAAgB,iBAAiB,SAAS;AAChD,QAAM,UAAU,iBAAiB,SAAS;AAC1C,QAAM,qBAAqB,iBAAiB;AAC5C,MAAI,SAAS;AACb,MAAI,eAAe;AACjB,aAAS;AAAA,EACX;AACA,QAAM,YAAY,MAAM,aAAa,MAAM,YAAY;AACvD,QAAM,UAAU;AAAA,IACd,gBAAgB;AAAA,IAChB,GAAG,MAAM,kBAAkB,IAAI;AAAA,EACjC;AACA,QAAM,OAAO,IAAI,gBAAgB;AAAA,IAC/B,GAAG;AAAA,IACH;AAAA,IACA;AAAA,IACA,MAAM;AAAA,EACR,CAAC;AACD,QAAM,cAAc,MAAM,OAAO,MAAM,GAAG,MAAM,IAAI,QAAQ,IAAI;AAAA,IAC9D,QAAQ;AAAA,IACR,QAAQ;AAAA,IACR;AAAA,IACA;AAAA,EACF,CAAC,EAAE,MAAM,CAAC,WAAW,OAAO,IAAI;AAChC,QAAM,OAAO,MAAM,aAAa,MAAM,WAAW;AACjD,MAAI,YAAY,CAAC,oBAAoB;AACnC,UAAM,OAAO,KAAK,OAAO;AACzB,WAAO,qBAAqB,MAAM,IAAI;AAAA,EACxC;AACA,QAAM,QAAQ,IAAI,IAAI,KAAK,GAAG,EAAE,aAAa,IAAI,OAAO;AACxD,QAAM,mBAAmB,IAAI;AAC7B,SAAO;AAAA,IACL;AAAA,IACA,QAAQ;AAAA,IACR,IAAI;AAAA,IACJ,KAAK,QAAQ,OAAO,KAAK;AAAA,EAC3B;AACF;AACA,MAAM,eAAe,MAAM,OAAO,WAAW,GAAG,WAAW;AAC3D,MAAM,aAAa,OAAO,sBAAsB;AAC9C,QAAM,OAAO,WAAW;AACxB,QAAM,sBAAsB,MAAM,gBAAgB,IAAI;AACtD,QAAM,EAAE,UAAU,aAAa,kBAAkB,IAAI,KAAK,qBAAqB,CAAC,GAAG;AAAA,IACjF,UAAU;AAAA,IACV,aAAa;AAAA,IACb,mBAAmB,MAAM,OAAO,QAAQ;AAAA,MACtC,aAAa,mBAAmB,eAAe;AAAA,IACjD,CAAC;AAAA,EACH,CAAC;AACD,QAAM,EAAE,MAAM,QAAQ,SAAS,gBAAgB,IAAI,MAAM,aAAa,MAAM,YAAY;AACxF,QAAM,UAAU,MAAM;AACpB,YAAQ,QAAQ;AAAA,EAClB;AACA,QAAM,UAAU,MAAM,kBAAkB,IAAI;AAC5C,SAAO,OAAO,MAAM,WAAW;AAAA,IAC7B,YAAY,CAAC,EAAE,SAAS,MAAM;AAC5B,YAAM,cAAc,SAAS;AAC7B,UAAI,MAAgB;AAClB,cAAM,iBAAiB,SAAS,QAAQ,IAAI,YAAY;AACxD,YAAI,kBAAkB,KAAK,YAAY;AACrC,uBAAa,KAAK,WAAW,OAAO,cAAc,cAAc;AAAA,QAClE;AAAA,MACF;AACA,WAAK,QAAQ,iBAAiB,WAAW,IAAI,cAAc;AAC3D,cAAQ,QAAQ;AAChB,UAAI,YAAY,OAAO,UAAU,mBAAmB;AAClD,eAAO,kBAAkB;AAAA,MAC3B;AACA,aAAO;AAAA,IACT;AAAA,IACA,WAAW,CAAC,EAAE,QAAQ,MAAM;AAC1B,sBAAgB,QAAwB,oBAAI,KAAK;AACjD,cAAQ,SAAS;AAAA,QACf,GAAG,QAAQ,UAAU,CAAC;AAAA,QACtB,aAAa,eAAe;AAAA,MAC9B;AAAA,IACF;AAAA,IACA,gBAAgB;AAAA,IAChB,iBAAiB;AAAA,IACjB;AAAA,EACF,CAAC;AACH;AACA,MAAM,qBAAqB,QAAQ,UAAU;AAC7C,MAAM,UAAU,OAAO,YAAY;AACjC,QAAM,OAAO,WAAW;AACxB,QAAM,aAAa,MAAM,gBAAgB,IAAI;AAC7C,QAAM,EAAE,cAAc,YAAY,WAAW,KAAK,IAAI,WAAW,CAAC;AAClE,QAAM,YAAY,MAAM,qBAAqB,IAAI;AACjD,MAAI,CAAC,WAAW;AACd,UAAM,YAAY,EAAE,YAAY,KAAK,eAAe,6CAA6C,CAAC;AAAA,EACpG;AACA,QAAM,sBAAsB;AAC5B,QAAM,cAAc,MAAM,OAAO,MAAM,WAAW;AAAA,IAChD,QAAQ;AAAA,IACR,SAAS;AAAA,MACP,gBAAgB;AAAA,IAClB;AAAA,IACA,WAAW,CAAC,EAAE,SAAS,SAAS,MAAM;AACpC,eAAS,OAAO,IAAI,gBAAgB;AAAA,QAClC;AAAA,QACA,aAAa,eAAe;AAAA,QAC5B,MAAM;AAAA,MACR,CAAC;AAAA,IACH;AAAA,EACF,CAAC,EAAE,MAAM,CAAC,UAAU,MAAM,IAAI;AAC9B,MAAI,UAAU;AACZ,UAAM,MAAM,YAAY,OAAO;AAC/B,WAAO,qBAAqB,MAAM,GAAG;AAAA,EACvC;AACA,QAAM,mBAAmB,IAAI;AAC7B,SAAO;AACT;AACO,aAAM,UAAU,MAAM;AAC3B,QAAM;AAAA,IACJ;AAAA,IACA;AAAA,IACA;AAAA,EACF,IAAI,aAAa;AACjB,QAAM,UAAU;AAAA,IACd;AAAA,IACA,MAAM,SAAS,IAAI;AAAA,IACnB,iBAAiB,SAAS,eAAe;AAAA,EAC3C;AACA,QAAM,UAAU;AAAA,IACd;AAAA,IACA;AAAA,IACA;AAAA,IACA;AAAA,IACA;AAAA,EACF;AACA,SAAO;AAAA,IACL,GAAG;AAAA,IACH,GAAG;AAAA,EACL;AACF;AACA,eAAe;\",\n  \"names\": []\n}\n"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659334824,
-      "end": 1711659334824,
+      "start": 1711660239441,
+      "end": 1711660239441,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659334824,
-      "end": 1711659334824,
+      "start": 1711660239441,
+      "end": 1711660239441,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659334824,
-      "end": 1711659334824,
+      "start": 1711660239441,
+      "end": 1711660239441,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659334824,
-      "end": 1711659334824,
+      "start": 1711660239441,
+      "end": 1711660239441,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659334825,
-      "end": 1711659334825,
+      "start": 1711660239442,
+      "end": 1711660239442,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659334825,
-      "end": 1711659334825,
+      "start": 1711660239442,
+      "end": 1711660239442,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659334825,
-      "end": 1711659334825,
+      "start": 1711660239442,
+      "end": 1711660239442,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659334825,
-      "end": 1711659334825,
+      "start": 1711660239442,
+      "end": 1711660239442,
       "order": "post"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659334825,
-      "end": 1711659334825,
+      "start": 1711660239442,
+      "end": 1711660239442,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { createError } from '#app/composables/error';\nimport { useNuxtApp, useRuntimeConfig } from '#app/nuxt';\nimport { useRequestHeaders } from '#app/composables/ssr';\nimport { useAuthState } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuthState';\nimport { defu } from \"defu\";\nimport { readonly } from \"vue\";\nimport { appendHeader } from \"h3\";\nimport { callWithNuxt } from \"#app/nuxt\";\nimport { determineCallbackUrl } from \"../../utils/url.mjs\";\nimport { makeCWN, joinPathToApiURLWN, navigateToAuthPageWN, getRequestURLWN } from \"../../utils/callWithNuxt.mjs\";\nimport { _fetch } from \"../../utils/fetch.mjs\";\nimport { isNonEmptyObject } from \"../../utils/checkSessionResult.mjs\";\nimport { useTypedBackendConfig } from \"../../helpers.mjs\";\nconst getRequestCookies = async (nuxt) => {\n  const { cookie } = await callWithNuxt(nuxt, () => useRequestHeaders([\"cookie\"]));\n  if (cookie) {\n    return { cookie };\n  }\n  return {};\n};\nconst getCsrfToken = async () => {\n  const nuxt = useNuxtApp();\n  const headers = await getRequestCookies(nuxt);\n  return _fetch(nuxt, \"csrf\", { headers }).then((response) => response.csrfToken);\n};\nconst getCsrfTokenWithNuxt = makeCWN(getCsrfToken);\nconst signIn = async (provider, options, authorizationParams) => {\n  const nuxt = useNuxtApp();\n  const configuredProviders = await getProviders();\n  if (!configuredProviders) {\n    const errorUrl = await joinPathToApiURLWN(nuxt, \"error\");\n    return navigateToAuthPageWN(nuxt, errorUrl);\n  }\n  const runtimeConfig = await callWithNuxt(nuxt, useRuntimeConfig);\n  const backendConfig = useTypedBackendConfig(runtimeConfig, \"authjs\");\n  if (typeof provider === \"undefined\") {\n    provider = backendConfig.defaultProvider;\n  }\n  const { redirect = true } = options ?? {};\n  let { callbackUrl } = options ?? {};\n  if (typeof callbackUrl === \"undefined\" && backendConfig.addDefaultCallbackUrl) {\n    callbackUrl = await determineCallbackUrl(runtimeConfig.public.auth, () => getRequestURLWN(nuxt));\n  }\n  const signinUrl = await joinPathToApiURLWN(nuxt, \"signin\");\n  const queryParams = callbackUrl ? `?${new URLSearchParams({ callbackUrl })}` : \"\";\n  const hrefSignInAllProviderPage = `${signinUrl}${queryParams}`;\n  if (!provider) {\n    return navigateToAuthPageWN(nuxt, hrefSignInAllProviderPage);\n  }\n  const selectedProvider = configuredProviders[provider];\n  if (!selectedProvider) {\n    return navigateToAuthPageWN(nuxt, hrefSignInAllProviderPage);\n  }\n  const isCredentials = selectedProvider.type === \"credentials\";\n  const isEmail = selectedProvider.type === \"email\";\n  const isSupportingReturn = isCredentials || isEmail;\n  let action = \"signin\";\n  if (isCredentials) {\n    action = \"callback\";\n  }\n  const csrfToken = await callWithNuxt(nuxt, getCsrfToken);\n  const headers = {\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    ...await getRequestCookies(nuxt)\n  };\n  const body = new URLSearchParams({\n    ...options,\n    csrfToken,\n    callbackUrl,\n    json: true\n  });\n  const fetchSignIn = () => _fetch(nuxt, `${action}/${provider}`, {\n    method: \"post\",\n    params: authorizationParams,\n    headers,\n    body\n  }).catch((error2) => error2.data);\n  const data = await callWithNuxt(nuxt, fetchSignIn);\n  if (redirect || !isSupportingReturn) {\n    const href = data.url ?? callbackUrl;\n    return navigateToAuthPageWN(nuxt, href);\n  }\n  const error = new URL(data.url).searchParams.get(\"error\");\n  await getSessionWithNuxt(nuxt);\n  return {\n    error,\n    status: 200,\n    ok: true,\n    url: error ? null : data.url\n  };\n};\nconst getProviders = () => _fetch(useNuxtApp(), \"providers\");\nconst getSession = async (getSessionOptions) => {\n  const nuxt = useNuxtApp();\n  const callbackUrlFallback = await getRequestURLWN(nuxt);\n  const { required, callbackUrl, onUnauthenticated } = defu(getSessionOptions || {}, {\n    required: false,\n    callbackUrl: void 0,\n    onUnauthenticated: () => signIn(void 0, {\n      callbackUrl: getSessionOptions?.callbackUrl || callbackUrlFallback\n    })\n  });\n  const { data, status, loading, lastRefreshedAt } = await callWithNuxt(nuxt, useAuthState);\n  const onError = () => {\n    loading.value = false;\n  };\n  const headers = await getRequestCookies(nuxt);\n  return _fetch(nuxt, \"session\", {\n    onResponse: ({ response }) => {\n      const sessionData = response._data;\n      if (true) {\n        const setCookieValue = response.headers.get(\"set-cookie\");\n        if (setCookieValue && nuxt.ssrContext) {\n          appendHeader(nuxt.ssrContext.event, \"set-cookie\", setCookieValue);\n        }\n      }\n      data.value = isNonEmptyObject(sessionData) ? sessionData : null;\n      loading.value = false;\n      if (required && status.value === \"unauthenticated\") {\n        return onUnauthenticated();\n      }\n      return sessionData;\n    },\n    onRequest: ({ options }) => {\n      lastRefreshedAt.value = /* @__PURE__ */ new Date();\n      options.params = {\n        ...options.params || {},\n        callbackUrl: callbackUrl || callbackUrlFallback\n      };\n    },\n    onRequestError: onError,\n    onResponseError: onError,\n    headers\n  });\n};\nconst getSessionWithNuxt = makeCWN(getSession);\nconst signOut = async (options) => {\n  const nuxt = useNuxtApp();\n  const requestURL = await getRequestURLWN(nuxt);\n  const { callbackUrl = requestURL, redirect = true } = options ?? {};\n  const csrfToken = await getCsrfTokenWithNuxt(nuxt);\n  if (!csrfToken) {\n    throw createError({ statusCode: 400, statusMessage: \"Could not fetch CSRF Token for signing out\" });\n  }\n  const callbackUrlFallback = requestURL;\n  const signoutData = await _fetch(nuxt, \"signout\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/x-www-form-urlencoded\"\n    },\n    onRequest: ({ options: options2 }) => {\n      options2.body = new URLSearchParams({\n        csrfToken,\n        callbackUrl: callbackUrl || callbackUrlFallback,\n        json: \"true\"\n      });\n    }\n  }).catch((error) => error.data);\n  if (redirect) {\n    const url = signoutData.url ?? callbackUrl;\n    return navigateToAuthPageWN(nuxt, url);\n  }\n  await getSessionWithNuxt(nuxt);\n  return signoutData;\n};\nexport const useAuth = () => {\n  const {\n    data,\n    status,\n    lastRefreshedAt\n  } = useAuthState();\n  const getters = {\n    status,\n    data: readonly(data),\n    lastRefreshedAt: readonly(lastRefreshedAt)\n  };\n  const actions = {\n    getSession,\n    getCsrfToken,\n    getProviders,\n    signIn,\n    signOut\n  };\n  return {\n    ...actions,\n    ...getters\n  };\n};\nexport default useAuth;\n",
-      "start": 1711659334825,
-      "end": 1711659334826,
+      "start": 1711660239442,
+      "end": 1711660239444,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -196,8 +196,8 @@
     {
       "name": "nuxt:imports-transform",
       "result": "import { createError } from '#app/composables/error';\nimport { useNuxtApp, useRuntimeConfig } from '#app/nuxt';\nimport { useRequestHeaders } from '#app/composables/ssr';\nimport { useAuthState } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuthState';\nimport { defu } from \"defu\";\nimport { readonly } from \"vue\";\nimport { appendHeader } from \"h3\";\nimport { callWithNuxt } from \"#app/nuxt\";\nimport { determineCallbackUrl } from \"../../utils/url.mjs\";\nimport { makeCWN, joinPathToApiURLWN, navigateToAuthPageWN, getRequestURLWN } from \"../../utils/callWithNuxt.mjs\";\nimport { _fetch } from \"../../utils/fetch.mjs\";\nimport { isNonEmptyObject } from \"../../utils/checkSessionResult.mjs\";\nimport { useTypedBackendConfig } from \"../../helpers.mjs\";\nconst getRequestCookies = async (nuxt) => {\n  const { cookie } = await callWithNuxt(nuxt, () => useRequestHeaders([\"cookie\"]));\n  if (cookie) {\n    return { cookie };\n  }\n  return {};\n};\nconst getCsrfToken = async () => {\n  const nuxt = useNuxtApp();\n  const headers = await getRequestCookies(nuxt);\n  return _fetch(nuxt, \"csrf\", { headers }).then((response) => response.csrfToken);\n};\nconst getCsrfTokenWithNuxt = makeCWN(getCsrfToken);\nconst signIn = async (provider, options, authorizationParams) => {\n  const nuxt = useNuxtApp();\n  const configuredProviders = await getProviders();\n  if (!configuredProviders) {\n    const errorUrl = await joinPathToApiURLWN(nuxt, \"error\");\n    return navigateToAuthPageWN(nuxt, errorUrl);\n  }\n  const runtimeConfig = await callWithNuxt(nuxt, useRuntimeConfig);\n  const backendConfig = useTypedBackendConfig(runtimeConfig, \"authjs\");\n  if (typeof provider === \"undefined\") {\n    provider = backendConfig.defaultProvider;\n  }\n  const { redirect = true } = options ?? {};\n  let { callbackUrl } = options ?? {};\n  if (typeof callbackUrl === \"undefined\" && backendConfig.addDefaultCallbackUrl) {\n    callbackUrl = await determineCallbackUrl(runtimeConfig.public.auth, () => getRequestURLWN(nuxt));\n  }\n  const signinUrl = await joinPathToApiURLWN(nuxt, \"signin\");\n  const queryParams = callbackUrl ? `?${new URLSearchParams({ callbackUrl })}` : \"\";\n  const hrefSignInAllProviderPage = `${signinUrl}${queryParams}`;\n  if (!provider) {\n    return navigateToAuthPageWN(nuxt, hrefSignInAllProviderPage);\n  }\n  const selectedProvider = configuredProviders[provider];\n  if (!selectedProvider) {\n    return navigateToAuthPageWN(nuxt, hrefSignInAllProviderPage);\n  }\n  const isCredentials = selectedProvider.type === \"credentials\";\n  const isEmail = selectedProvider.type === \"email\";\n  const isSupportingReturn = isCredentials || isEmail;\n  let action = \"signin\";\n  if (isCredentials) {\n    action = \"callback\";\n  }\n  const csrfToken = await callWithNuxt(nuxt, getCsrfToken);\n  const headers = {\n    \"Content-Type\": \"application/x-www-form-urlencoded\",\n    ...await getRequestCookies(nuxt)\n  };\n  const body = new URLSearchParams({\n    ...options,\n    csrfToken,\n    callbackUrl,\n    json: true\n  });\n  const fetchSignIn = () => _fetch(nuxt, `${action}/${provider}`, {\n    method: \"post\",\n    params: authorizationParams,\n    headers,\n    body\n  }).catch((error2) => error2.data);\n  const data = await callWithNuxt(nuxt, fetchSignIn);\n  if (redirect || !isSupportingReturn) {\n    const href = data.url ?? callbackUrl;\n    return navigateToAuthPageWN(nuxt, href);\n  }\n  const error = new URL(data.url).searchParams.get(\"error\");\n  await getSessionWithNuxt(nuxt);\n  return {\n    error,\n    status: 200,\n    ok: true,\n    url: error ? null : data.url\n  };\n};\nconst getProviders = () => _fetch(useNuxtApp(), \"providers\");\nconst getSession = async (getSessionOptions) => {\n  const nuxt = useNuxtApp();\n  const callbackUrlFallback = await getRequestURLWN(nuxt);\n  const { required, callbackUrl, onUnauthenticated } = defu(getSessionOptions || {}, {\n    required: false,\n    callbackUrl: void 0,\n    onUnauthenticated: () => signIn(void 0, {\n      callbackUrl: getSessionOptions?.callbackUrl || callbackUrlFallback\n    })\n  });\n  const { data, status, loading, lastRefreshedAt } = await callWithNuxt(nuxt, useAuthState);\n  const onError = () => {\n    loading.value = false;\n  };\n  const headers = await getRequestCookies(nuxt);\n  return _fetch(nuxt, \"session\", {\n    onResponse: ({ response }) => {\n      const sessionData = response._data;\n      if (true) {\n        const setCookieValue = response.headers.get(\"set-cookie\");\n        if (setCookieValue && nuxt.ssrContext) {\n          appendHeader(nuxt.ssrContext.event, \"set-cookie\", setCookieValue);\n        }\n      }\n      data.value = isNonEmptyObject(sessionData) ? sessionData : null;\n      loading.value = false;\n      if (required && status.value === \"unauthenticated\") {\n        return onUnauthenticated();\n      }\n      return sessionData;\n    },\n    onRequest: ({ options }) => {\n      lastRefreshedAt.value = /* @__PURE__ */ new Date();\n      options.params = {\n        ...options.params || {},\n        callbackUrl: callbackUrl || callbackUrlFallback\n      };\n    },\n    onRequestError: onError,\n    onResponseError: onError,\n    headers\n  });\n};\nconst getSessionWithNuxt = makeCWN(getSession);\nconst signOut = async (options) => {\n  const nuxt = useNuxtApp();\n  const requestURL = await getRequestURLWN(nuxt);\n  const { callbackUrl = requestURL, redirect = true } = options ?? {};\n  const csrfToken = await getCsrfTokenWithNuxt(nuxt);\n  if (!csrfToken) {\n    throw createError({ statusCode: 400, statusMessage: \"Could not fetch CSRF Token for signing out\" });\n  }\n  const callbackUrlFallback = requestURL;\n  const signoutData = await _fetch(nuxt, \"signout\", {\n    method: \"POST\",\n    headers: {\n      \"Content-Type\": \"application/x-www-form-urlencoded\"\n    },\n    onRequest: ({ options: options2 }) => {\n      options2.body = new URLSearchParams({\n        csrfToken,\n        callbackUrl: callbackUrl || callbackUrlFallback,\n        json: \"true\"\n      });\n    }\n  }).catch((error) => error.data);\n  if (redirect) {\n    const url = signoutData.url ?? callbackUrl;\n    return navigateToAuthPageWN(nuxt, url);\n  }\n  await getSessionWithNuxt(nuxt);\n  return signoutData;\n};\nexport const useAuth = () => {\n  const {\n    data,\n    status,\n    lastRefreshedAt\n  } = useAuthState();\n  const getters = {\n    status,\n    data: readonly(data),\n    lastRefreshedAt: readonly(lastRefreshedAt)\n  };\n  const actions = {\n    getSession,\n    getCsrfToken,\n    getProviders,\n    signIn,\n    signOut\n  };\n  return {\n    ...actions,\n    ...getters\n  };\n};\nexport default useAuth;\n",
-      "start": 1711659334825,
-      "end": 1711659334826,
+      "start": 1711660239442,
+      "end": 1711660239444,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -210,56 +210,56 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1711659334827,
-      "end": 1711659334827,
+      "start": 1711660239444,
+      "end": 1711660239444,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711659334827,
-      "end": 1711659334827,
+      "start": 1711660239444,
+      "end": 1711660239444,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659334827,
-      "end": 1711659334827,
+      "start": 1711660239444,
+      "end": 1711660239444,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659334827,
-      "end": 1711659334827,
+      "start": 1711660239444,
+      "end": 1711660239444,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-template",
-      "start": 1711659334827,
-      "end": 1711659334827,
+      "start": 1711660239446,
+      "end": 1711660239446,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659334827,
-      "end": 1711659334827,
+      "start": 1711660239446,
+      "end": 1711660239446,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659334827,
-      "end": 1711659334827,
+      "start": 1711660239447,
+      "end": 1711660239447,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659334827,
-      "end": 1711659334827,
+      "start": 1711660239447,
+      "end": 1711660239447,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659334827,
-      "end": 1711659334827,
+      "start": 1711660239447,
+      "end": 1711660239447,
       "order": "normal"
     }
   ]

@@ -4,159 +4,159 @@
     {
       "name": "vite:load-fallback",
       "result": "import { getHeader } from \"h3\";\nimport authMiddleware from \"./middleware/auth.mjs\";\nimport { addRouteMiddleware, defineNuxtPlugin, useRuntimeConfig, useAuth, useAuthState } from \"#imports\";\nexport default defineNuxtPlugin(async (nuxtApp) => {\n  const { data, lastRefreshedAt } = useAuthState();\n  const { getSession } = useAuth();\n  const runtimeConfig = useRuntimeConfig().public.auth;\n  let nitroPrerender = false;\n  if (nuxtApp.ssrContext) {\n    nitroPrerender = getHeader(nuxtApp.ssrContext.event, \"x-nitro-prerender\") !== void 0;\n  }\n  if (typeof data.value === \"undefined\" && !nitroPrerender) {\n    await getSession();\n  }\n  const { enableRefreshOnWindowFocus, enableRefreshPeriodically } = runtimeConfig.session;\n  const visibilityHandler = () => {\n    if (enableRefreshOnWindowFocus && document.visibilityState === \"visible\") {\n      getSession();\n    }\n  };\n  let refetchIntervalTimer;\n  let refreshTokenIntervalTimer;\n  nuxtApp.hook(\"app:mounted\", () => {\n    document.addEventListener(\"visibilitychange\", visibilityHandler, false);\n    if (enableRefreshPeriodically !== false) {\n      const intervalTime = enableRefreshPeriodically === true ? 1e3 : enableRefreshPeriodically;\n      refetchIntervalTimer = setInterval(() => {\n        if (data.value) {\n          getSession();\n        }\n      }, intervalTime);\n    }\n    if (runtimeConfig.provider.type === \"refresh\") {\n      const intervalTime = runtimeConfig.provider.token.maxAgeInSeconds * 1e3;\n      const { refresh, refreshToken } = useAuth();\n      refreshTokenIntervalTimer = setInterval(() => {\n        if (refreshToken.value) {\n          refresh();\n        }\n      }, intervalTime);\n    }\n  });\n  const _unmount = nuxtApp.vueApp.unmount;\n  nuxtApp.vueApp.unmount = function() {\n    document.removeEventListener(\"visibilitychange\", visibilityHandler, false);\n    clearInterval(refetchIntervalTimer);\n    if (refreshTokenIntervalTimer) {\n      clearInterval(refreshTokenIntervalTimer);\n    }\n    lastRefreshedAt.value = void 0;\n    data.value = void 0;\n    _unmount();\n  };\n  const { globalAppMiddleware } = useRuntimeConfig().public.auth;\n  if (globalAppMiddleware === true || globalAppMiddleware.isEnabled) {\n    addRouteMiddleware(\"auth\", authMiddleware, {\n      global: true\n    });\n  }\n});\n",
-      "start": 1711659330241,
-      "end": 1711659330328,
+      "start": 1711660234984,
+      "end": 1711660235073,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659330328,
-      "end": 1711659330328,
+      "start": 1711660235073,
+      "end": 1711660235073,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659330328,
-      "end": 1711659330328,
+      "start": 1711660235073,
+      "end": 1711660235073,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659330328,
-      "end": 1711659330328,
+      "start": 1711660235073,
+      "end": 1711660235073,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659330328,
-      "end": 1711659330328,
+      "start": 1711660235073,
+      "end": 1711660235073,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659330328,
-      "end": 1711659330328,
+      "start": 1711660235073,
+      "end": 1711660235073,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659330328,
-      "end": 1711659330328,
+      "start": 1711660235073,
+      "end": 1711660235073,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659330328,
-      "end": 1711659330328,
+      "start": 1711660235073,
+      "end": 1711660235073,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659330328,
-      "end": 1711659330328,
+      "start": 1711660235073,
+      "end": 1711660235073,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659330328,
-      "end": 1711659330328,
+      "start": 1711660235073,
+      "end": 1711660235073,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659330328,
-      "end": 1711659330328,
+      "start": 1711660235073,
+      "end": 1711660235073,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659330328,
-      "end": 1711659330329,
+      "start": 1711660235073,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659330329,
-      "end": 1711659330329,
+      "start": 1711660235074,
+      "end": 1711660235074,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { addRouteMiddleware } from '#app/composables/router';\nimport { defineNuxtPlugin, useRuntimeConfig } from '#app/nuxt';\nimport { useAuth } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuth';\nimport { useAuthState } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuthState';\nimport { getHeader } from \"h3\";\nimport authMiddleware from \"./middleware/auth.mjs\";\nexport default defineNuxtPlugin(async (nuxtApp) => {\n  const { data, lastRefreshedAt } = useAuthState();\n  const { getSession } = useAuth();\n  const runtimeConfig = useRuntimeConfig().public.auth;\n  let nitroPrerender = false;\n  if (nuxtApp.ssrContext) {\n    nitroPrerender = getHeader(nuxtApp.ssrContext.event, \"x-nitro-prerender\") !== void 0;\n  }\n  if (typeof data.value === \"undefined\" && !nitroPrerender) {\n    await getSession();\n  }\n  const { enableRefreshOnWindowFocus, enableRefreshPeriodically } = runtimeConfig.session;\n  const visibilityHandler = () => {\n    if (enableRefreshOnWindowFocus && document.visibilityState === \"visible\") {\n      getSession();\n    }\n  };\n  let refetchIntervalTimer;\n  let refreshTokenIntervalTimer;\n  nuxtApp.hook(\"app:mounted\", () => {\n    document.addEventListener(\"visibilitychange\", visibilityHandler, false);\n    if (enableRefreshPeriodically !== false) {\n      const intervalTime = enableRefreshPeriodically === true ? 1e3 : enableRefreshPeriodically;\n      refetchIntervalTimer = setInterval(() => {\n        if (data.value) {\n          getSession();\n        }\n      }, intervalTime);\n    }\n    if (runtimeConfig.provider.type === \"refresh\") {\n      const intervalTime = runtimeConfig.provider.token.maxAgeInSeconds * 1e3;\n      const { refresh, refreshToken } = useAuth();\n      refreshTokenIntervalTimer = setInterval(() => {\n        if (refreshToken.value) {\n          refresh();\n        }\n      }, intervalTime);\n    }\n  });\n  const _unmount = nuxtApp.vueApp.unmount;\n  nuxtApp.vueApp.unmount = function() {\n    document.removeEventListener(\"visibilitychange\", visibilityHandler, false);\n    clearInterval(refetchIntervalTimer);\n    if (refreshTokenIntervalTimer) {\n      clearInterval(refreshTokenIntervalTimer);\n    }\n    lastRefreshedAt.value = void 0;\n    data.value = void 0;\n    _unmount();\n  };\n  const { globalAppMiddleware } = useRuntimeConfig().public.auth;\n  if (globalAppMiddleware === true || globalAppMiddleware.isEnabled) {\n    addRouteMiddleware(\"auth\", authMiddleware, {\n      global: true\n    });\n  }\n});\n",
-      "start": 1711659330329,
-      "end": 1711659330330,
+      "start": 1711660235074,
+      "end": 1711660235076,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -170,8 +170,8 @@
     {
       "name": "unctx:transform",
       "result": "/* _processed_nuxt_unctx_transform */\nimport { executeAsync as __executeAsync } from \"D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/unctx/dist/index.mjs\";import { addRouteMiddleware } from '#app/composables/router';\nimport { defineNuxtPlugin, useRuntimeConfig } from '#app/nuxt';\nimport { useAuth } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuth';\nimport { useAuthState } from 'D:/Projects/Web Dev/fu-mission-board-nuxt/node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuthState';\nimport { getHeader } from \"h3\";\nimport authMiddleware from \"./middleware/auth.mjs\";\nexport default defineNuxtPlugin(async (nuxtApp) => {let __temp, __restore;\n  const { data, lastRefreshedAt } = useAuthState();\n  const { getSession } = useAuth();\n  const runtimeConfig = useRuntimeConfig().public.auth;\n  let nitroPrerender = false;\n  if (nuxtApp.ssrContext) {\n    nitroPrerender = getHeader(nuxtApp.ssrContext.event, \"x-nitro-prerender\") !== void 0;\n  }\n  if (typeof data.value === \"undefined\" && !nitroPrerender) {\n    ;(([__temp,__restore]=__executeAsync(()=>getSession())),await __temp,__restore());;\n  }\n  const { enableRefreshOnWindowFocus, enableRefreshPeriodically } = runtimeConfig.session;\n  const visibilityHandler = () => {\n    if (enableRefreshOnWindowFocus && document.visibilityState === \"visible\") {\n      getSession();\n    }\n  };\n  let refetchIntervalTimer;\n  let refreshTokenIntervalTimer;\n  nuxtApp.hook(\"app:mounted\", () => {\n    document.addEventListener(\"visibilitychange\", visibilityHandler, false);\n    if (enableRefreshPeriodically !== false) {\n      const intervalTime = enableRefreshPeriodically === true ? 1e3 : enableRefreshPeriodically;\n      refetchIntervalTimer = setInterval(() => {\n        if (data.value) {\n          getSession();\n        }\n      }, intervalTime);\n    }\n    if (runtimeConfig.provider.type === \"refresh\") {\n      const intervalTime = runtimeConfig.provider.token.maxAgeInSeconds * 1e3;\n      const { refresh, refreshToken } = useAuth();\n      refreshTokenIntervalTimer = setInterval(() => {\n        if (refreshToken.value) {\n          refresh();\n        }\n      }, intervalTime);\n    }\n  });\n  const _unmount = nuxtApp.vueApp.unmount;\n  nuxtApp.vueApp.unmount = function() {\n    document.removeEventListener(\"visibilitychange\", visibilityHandler, false);\n    clearInterval(refetchIntervalTimer);\n    if (refreshTokenIntervalTimer) {\n      clearInterval(refreshTokenIntervalTimer);\n    }\n    lastRefreshedAt.value = void 0;\n    data.value = void 0;\n    _unmount();\n  };\n  const { globalAppMiddleware } = useRuntimeConfig().public.auth;\n  if (globalAppMiddleware === true || globalAppMiddleware.isEnabled) {\n    addRouteMiddleware(\"auth\", authMiddleware, {\n      global: true\n    });\n  }\n},1);\n",
-      "start": 1711659330330,
-      "end": 1711659330332,
+      "start": 1711660235076,
+      "end": 1711660235077,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -184,44 +184,44 @@
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659330332,
-      "end": 1711659330332,
+      "start": 1711660235077,
+      "end": 1711660235077,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659330332,
-      "end": 1711659330332,
+      "start": 1711660235077,
+      "end": 1711660235077,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659330332,
-      "end": 1711659330332,
+      "start": 1711660235077,
+      "end": 1711660235077,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659330332,
-      "end": 1711659330332,
+      "start": 1711660235077,
+      "end": 1711660235077,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659330332,
-      "end": 1711659330332,
+      "start": 1711660235077,
+      "end": 1711660235077,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659330332,
-      "end": 1711659330332,
+      "start": 1711660235077,
+      "end": 1711660235077,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659330332,
-      "end": 1711659330332,
+      "start": 1711660235077,
+      "end": 1711660235077,
       "order": "normal"
     }
   ]

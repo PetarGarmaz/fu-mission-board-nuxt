@@ -4,206 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "// Replace link-like texts with link nodes.\n//\n// Currently restricted by `md.validateLink()` to http/https/ftp\n//\n\nimport { arrayReplaceAt } from '../common/utils.mjs'\n\nfunction isLinkOpen (str) {\n  return /^<a[>\\s]/i.test(str)\n}\nfunction isLinkClose (str) {\n  return /^<\\/a\\s*>/i.test(str)\n}\n\nexport default function linkify (state) {\n  const blockTokens = state.tokens\n\n  if (!state.md.options.linkify) { return }\n\n  for (let j = 0, l = blockTokens.length; j < l; j++) {\n    if (blockTokens[j].type !== 'inline' ||\n        !state.md.linkify.pretest(blockTokens[j].content)) {\n      continue\n    }\n\n    let tokens = blockTokens[j].children\n\n    let htmlLinkLevel = 0\n\n    // We scan from the end, to keep position when new tags added.\n    // Use reversed logic in links start/end match\n    for (let i = tokens.length - 1; i >= 0; i--) {\n      const currentToken = tokens[i]\n\n      // Skip content of markdown links\n      if (currentToken.type === 'link_close') {\n        i--\n        while (tokens[i].level !== currentToken.level && tokens[i].type !== 'link_open') {\n          i--\n        }\n        continue\n      }\n\n      // Skip content of html tag links\n      if (currentToken.type === 'html_inline') {\n        if (isLinkOpen(currentToken.content) && htmlLinkLevel > 0) {\n          htmlLinkLevel--\n        }\n        if (isLinkClose(currentToken.content)) {\n          htmlLinkLevel++\n        }\n      }\n      if (htmlLinkLevel > 0) { continue }\n\n      if (currentToken.type === 'text' && state.md.linkify.test(currentToken.content)) {\n        const text = currentToken.content\n        let links = state.md.linkify.match(text)\n\n        // Now split string to nodes\n        const nodes = []\n        let level = currentToken.level\n        let lastPos = 0\n\n        // forbid escape sequence at the start of the string,\n        // this avoids http\\://example.com/ from being linkified as\n        // http:<a href=\"//example.com/\">//example.com/</a>\n        if (links.length > 0 &&\n            links[0].index === 0 &&\n            i > 0 &&\n            tokens[i - 1].type === 'text_special') {\n          links = links.slice(1)\n        }\n\n        for (let ln = 0; ln < links.length; ln++) {\n          const url = links[ln].url\n          const fullUrl = state.md.normalizeLink(url)\n          if (!state.md.validateLink(fullUrl)) { continue }\n\n          let urlText = links[ln].text\n\n          // Linkifier might send raw hostnames like \"example.com\", where url\n          // starts with domain name. So we prepend http:// in those cases,\n          // and remove it afterwards.\n          //\n          if (!links[ln].schema) {\n            urlText = state.md.normalizeLinkText('http://' + urlText).replace(/^http:\\/\\//, '')\n          } else if (links[ln].schema === 'mailto:' && !/^mailto:/i.test(urlText)) {\n            urlText = state.md.normalizeLinkText('mailto:' + urlText).replace(/^mailto:/, '')\n          } else {\n            urlText = state.md.normalizeLinkText(urlText)\n          }\n\n          const pos = links[ln].index\n\n          if (pos > lastPos) {\n            const token   = new state.Token('text', '', 0)\n            token.content = text.slice(lastPos, pos)\n            token.level   = level\n            nodes.push(token)\n          }\n\n          const token_o   = new state.Token('link_open', 'a', 1)\n          token_o.attrs   = [['href', fullUrl]]\n          token_o.level   = level++\n          token_o.markup  = 'linkify'\n          token_o.info    = 'auto'\n          nodes.push(token_o)\n\n          const token_t   = new state.Token('text', '', 0)\n          token_t.content = urlText\n          token_t.level   = level\n          nodes.push(token_t)\n\n          const token_c   = new state.Token('link_close', 'a', -1)\n          token_c.level   = --level\n          token_c.markup  = 'linkify'\n          token_c.info    = 'auto'\n          nodes.push(token_c)\n\n          lastPos = links[ln].lastIndex\n        }\n        if (lastPos < text.length) {\n          const token   = new state.Token('text', '', 0)\n          token.content = text.slice(lastPos)\n          token.level   = level\n          nodes.push(token)\n        }\n\n        // replace current node\n        blockTokens[j].children = tokens = arrayReplaceAt(tokens, i, nodes)\n      }\n    }\n  }\n}\n",
-      "start": 1711659332375,
-      "end": 1711659332397,
+      "start": 1711660237058,
+      "end": 1711660237080,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659332397,
-      "end": 1711659332397,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659332397,
-      "end": 1711659332397,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659332397,
-      "end": 1711659332397,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659332397,
-      "end": 1711659332397,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659332397,
-      "end": 1711659332397,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659332397,
-      "end": 1711659332397,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659332397,
-      "end": 1711659332397,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659332397,
-      "end": 1711659332397,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659332397,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237080,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237080,
+      "end": 1711660237081,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659332398,
-      "end": 1711659332398,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     }
   ]

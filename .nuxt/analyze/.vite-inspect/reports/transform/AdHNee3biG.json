@@ -4,206 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "// ~~strike through~~\n//\n\n// Insert each marker as a separate text token, and add it to delimiter list\n//\nfunction strikethrough_tokenize (state, silent) {\n  const start = state.pos\n  const marker = state.src.charCodeAt(start)\n\n  if (silent) { return false }\n\n  if (marker !== 0x7E/* ~ */) { return false }\n\n  const scanned = state.scanDelims(state.pos, true)\n  let len = scanned.length\n  const ch = String.fromCharCode(marker)\n\n  if (len < 2) { return false }\n\n  let token\n\n  if (len % 2) {\n    token         = state.push('text', '', 0)\n    token.content = ch\n    len--\n  }\n\n  for (let i = 0; i < len; i += 2) {\n    token         = state.push('text', '', 0)\n    token.content = ch + ch\n\n    state.delimiters.push({\n      marker,\n      length: 0,     // disable \"rule of 3\" length checks meant for emphasis\n      token: state.tokens.length - 1,\n      end: -1,\n      open: scanned.can_open,\n      close: scanned.can_close\n    })\n  }\n\n  state.pos += scanned.length\n\n  return true\n}\n\nfunction postProcess (state, delimiters) {\n  let token\n  const loneMarkers = []\n  const max = delimiters.length\n\n  for (let i = 0; i < max; i++) {\n    const startDelim = delimiters[i]\n\n    if (startDelim.marker !== 0x7E/* ~ */) {\n      continue\n    }\n\n    if (startDelim.end === -1) {\n      continue\n    }\n\n    const endDelim = delimiters[startDelim.end]\n\n    token         = state.tokens[startDelim.token]\n    token.type    = 's_open'\n    token.tag     = 's'\n    token.nesting = 1\n    token.markup  = '~~'\n    token.content = ''\n\n    token         = state.tokens[endDelim.token]\n    token.type    = 's_close'\n    token.tag     = 's'\n    token.nesting = -1\n    token.markup  = '~~'\n    token.content = ''\n\n    if (state.tokens[endDelim.token - 1].type === 'text' &&\n        state.tokens[endDelim.token - 1].content === '~') {\n      loneMarkers.push(endDelim.token - 1)\n    }\n  }\n\n  // If a marker sequence has an odd number of characters, it's splitted\n  // like this: `~~~~~` -> `~` + `~~` + `~~`, leaving one marker at the\n  // start of the sequence.\n  //\n  // So, we have to move all those markers after subsequent s_close tags.\n  //\n  while (loneMarkers.length) {\n    const i = loneMarkers.pop()\n    let j = i + 1\n\n    while (j < state.tokens.length && state.tokens[j].type === 's_close') {\n      j++\n    }\n\n    j--\n\n    if (i !== j) {\n      token = state.tokens[j]\n      state.tokens[j] = state.tokens[i]\n      state.tokens[i] = token\n    }\n  }\n}\n\n// Walk through delimiter list and replace text tokens with tags\n//\nfunction strikethrough_postProcess (state) {\n  const tokens_meta = state.tokens_meta\n  const max = state.tokens_meta.length\n\n  postProcess(state, state.delimiters)\n\n  for (let curr = 0; curr < max; curr++) {\n    if (tokens_meta[curr] && tokens_meta[curr].delimiters) {\n      postProcess(state, tokens_meta[curr].delimiters)\n    }\n  }\n}\n\nexport default {\n  tokenize: strikethrough_tokenize,\n  postProcess: strikethrough_postProcess\n}\n",
-      "start": 1711659332400,
-      "end": 1711659332430,
+      "start": 1711660237082,
+      "end": 1711660237108,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659332430,
-      "end": 1711659332430,
+      "start": 1711660237108,
+      "end": 1711660237108,
       "order": "normal"
     }
   ]

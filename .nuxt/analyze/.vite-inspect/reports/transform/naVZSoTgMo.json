@@ -4,206 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "// Convert straight quotation marks to typographic ones\n//\n\nimport { isWhiteSpace, isPunctChar, isMdAsciiPunct } from '../common/utils.mjs'\n\nconst QUOTE_TEST_RE = /['\"]/\nconst QUOTE_RE = /['\"]/g\nconst APOSTROPHE = '\\u2019' /* ’ */\n\nfunction replaceAt (str, index, ch) {\n  return str.slice(0, index) + ch + str.slice(index + 1)\n}\n\nfunction process_inlines (tokens, state) {\n  let j\n\n  const stack = []\n\n  for (let i = 0; i < tokens.length; i++) {\n    const token = tokens[i]\n\n    const thisLevel = tokens[i].level\n\n    for (j = stack.length - 1; j >= 0; j--) {\n      if (stack[j].level <= thisLevel) { break }\n    }\n    stack.length = j + 1\n\n    if (token.type !== 'text') { continue }\n\n    let text = token.content\n    let pos = 0\n    let max = text.length\n\n    /* eslint no-labels:0,block-scoped-var:0 */\n    OUTER:\n    while (pos < max) {\n      QUOTE_RE.lastIndex = pos\n      const t = QUOTE_RE.exec(text)\n      if (!t) { break }\n\n      let canOpen = true\n      let canClose = true\n      pos = t.index + 1\n      const isSingle = (t[0] === \"'\")\n\n      // Find previous character,\n      // default to space if it's the beginning of the line\n      //\n      let lastChar = 0x20\n\n      if (t.index - 1 >= 0) {\n        lastChar = text.charCodeAt(t.index - 1)\n      } else {\n        for (j = i - 1; j >= 0; j--) {\n          if (tokens[j].type === 'softbreak' || tokens[j].type === 'hardbreak') break // lastChar defaults to 0x20\n          if (!tokens[j].content) continue // should skip all tokens except 'text', 'html_inline' or 'code_inline'\n\n          lastChar = tokens[j].content.charCodeAt(tokens[j].content.length - 1)\n          break\n        }\n      }\n\n      // Find next character,\n      // default to space if it's the end of the line\n      //\n      let nextChar = 0x20\n\n      if (pos < max) {\n        nextChar = text.charCodeAt(pos)\n      } else {\n        for (j = i + 1; j < tokens.length; j++) {\n          if (tokens[j].type === 'softbreak' || tokens[j].type === 'hardbreak') break // nextChar defaults to 0x20\n          if (!tokens[j].content) continue // should skip all tokens except 'text', 'html_inline' or 'code_inline'\n\n          nextChar = tokens[j].content.charCodeAt(0)\n          break\n        }\n      }\n\n      const isLastPunctChar = isMdAsciiPunct(lastChar) || isPunctChar(String.fromCharCode(lastChar))\n      const isNextPunctChar = isMdAsciiPunct(nextChar) || isPunctChar(String.fromCharCode(nextChar))\n\n      const isLastWhiteSpace = isWhiteSpace(lastChar)\n      const isNextWhiteSpace = isWhiteSpace(nextChar)\n\n      if (isNextWhiteSpace) {\n        canOpen = false\n      } else if (isNextPunctChar) {\n        if (!(isLastWhiteSpace || isLastPunctChar)) {\n          canOpen = false\n        }\n      }\n\n      if (isLastWhiteSpace) {\n        canClose = false\n      } else if (isLastPunctChar) {\n        if (!(isNextWhiteSpace || isNextPunctChar)) {\n          canClose = false\n        }\n      }\n\n      if (nextChar === 0x22 /* \" */ && t[0] === '\"') {\n        if (lastChar >= 0x30 /* 0 */ && lastChar <= 0x39 /* 9 */) {\n          // special case: 1\"\" - count first quote as an inch\n          canClose = canOpen = false\n        }\n      }\n\n      if (canOpen && canClose) {\n        // Replace quotes in the middle of punctuation sequence, but not\n        // in the middle of the words, i.e.:\n        //\n        // 1. foo \" bar \" baz - not replaced\n        // 2. foo-\"-bar-\"-baz - replaced\n        // 3. foo\"bar\"baz     - not replaced\n        //\n        canOpen = isLastPunctChar\n        canClose = isNextPunctChar\n      }\n\n      if (!canOpen && !canClose) {\n        // middle of word\n        if (isSingle) {\n          token.content = replaceAt(token.content, t.index, APOSTROPHE)\n        }\n        continue\n      }\n\n      if (canClose) {\n        // this could be a closing quote, rewind the stack to get a match\n        for (j = stack.length - 1; j >= 0; j--) {\n          let item = stack[j]\n          if (stack[j].level < thisLevel) { break }\n          if (item.single === isSingle && stack[j].level === thisLevel) {\n            item = stack[j]\n\n            let openQuote\n            let closeQuote\n            if (isSingle) {\n              openQuote = state.md.options.quotes[2]\n              closeQuote = state.md.options.quotes[3]\n            } else {\n              openQuote = state.md.options.quotes[0]\n              closeQuote = state.md.options.quotes[1]\n            }\n\n            // replace token.content *before* tokens[item.token].content,\n            // because, if they are pointing at the same token, replaceAt\n            // could mess up indices when quote length != 1\n            token.content = replaceAt(token.content, t.index, closeQuote)\n            tokens[item.token].content = replaceAt(\n              tokens[item.token].content, item.pos, openQuote)\n\n            pos += closeQuote.length - 1\n            if (item.token === i) { pos += openQuote.length - 1 }\n\n            text = token.content\n            max = text.length\n\n            stack.length = j\n            continue OUTER\n          }\n        }\n      }\n\n      if (canOpen) {\n        stack.push({\n          token: i,\n          pos: t.index,\n          single: isSingle,\n          level: thisLevel\n        })\n      } else if (canClose && isSingle) {\n        token.content = replaceAt(token.content, t.index, APOSTROPHE)\n      }\n    }\n  }\n}\n\nexport default function smartquotes (state) {\n  /* eslint max-depth:0 */\n  if (!state.md.options.typographer) { return }\n\n  for (let blkIdx = state.tokens.length - 1; blkIdx >= 0; blkIdx--) {\n    if (state.tokens[blkIdx].type !== 'inline' ||\n        !QUOTE_TEST_RE.test(state.tokens[blkIdx].content)) {\n      continue\n    }\n\n    process_inlines(state.tokens[blkIdx].children, state)\n  }\n}\n",
-      "start": 1711659332376,
-      "end": 1711659332400,
+      "start": 1711660237058,
+      "end": 1711660237081,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1711659332400,
-      "end": 1711659332400,
+      "start": 1711660237081,
+      "end": 1711660237081,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1711659332400,
-      "end": 1711659332401,
+      "start": 1711660237081,
+      "end": 1711660237082,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1711659332401,
-      "end": 1711659332401,
+      "start": 1711660237082,
+      "end": 1711660237082,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1711659332401,
-      "end": 1711659332401,
+      "start": 1711660237082,
+      "end": 1711660237082,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1711659332401,
-      "end": 1711659332401,
+      "start": 1711660237082,
+      "end": 1711660237082,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1711659332401,
-      "end": 1711659332401,
+      "start": 1711660237082,
+      "end": 1711660237082,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1711659332401,
-      "end": 1711659332401,
+      "start": 1711660237082,
+      "end": 1711660237082,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1711659332401,
-      "end": 1711659332401,
+      "start": 1711660237082,
+      "end": 1711660237082,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1711659332401,
-      "end": 1711659332401,
+      "start": 1711660237082,
+      "end": 1711660237082,
       "order": "normal"
     }
   ]
