@@ -65,7 +65,7 @@ class BriefingStore {
 	};
 
 	getBriefings = async (type, profileId) => {
-		const req = type == "Profile" ? "/api/users/briefings?" : "api/briefings?";
+		const req = type == "Profile" ? "/api/users/briefings?" : "/api/briefings?";
 		const res = await $fetch(req, {
 			method: "GET",
 			query: {
