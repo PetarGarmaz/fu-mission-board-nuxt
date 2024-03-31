@@ -2,15 +2,15 @@
 	import { Observer } from 'mobx-vue-lite';
 	import navbarStore from "../src/stores/NavbarStore.js";
 
-	const { signIn, signOut} = useAuth();
-	
-	const initNavbar = async () => {
-		if(!navbarStore.session) {
-			await navbarStore.getSession();
-		};
-	};
+	const { signIn, signOut, getSession, getProviders} = useAuth();
 
-	initNavbar();
+	onMounted(async () => {
+		const sesh = await getSession();
+		const prov = await getProviders();
+
+		navbarStore.setSession(sesh);
+		navbarStore.setProviders(prov);
+	})
 </script>
 
 <template>

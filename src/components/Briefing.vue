@@ -1,4 +1,6 @@
 <script setup>
+	import { onMounted } from "vue";
+
 	import MarkdownIt from 'markdown-it';
 	import MarkdownItAttrs from 'markdown-it-attrs';
 
@@ -9,8 +11,6 @@
 
 	const router = useRouter();
 	const briefingId = router.currentRoute._value.params.id;
-	
-	briefingStore.getBriefing(briefingId);
 
 	const getDateString = (timestamp) => {
 		const parsedDate = new Date(parseInt(timestamp));
@@ -24,10 +24,11 @@
 		return newTime;
 	};
 
-	const renderMarkdown = (content) => {
-		const md = new MarkdownIt().use(MarkdownItAttrs)
+	const renderMarkdown = () => {
+		const md = new MarkdownIt().use(MarkdownItAttrs);
+		const rend = md.render(briefingStore.briefing.desc);
 		
-		return md.render(content)
+		return rend;
 	};
 
 	const handleProfileClick = () => {
@@ -42,6 +43,10 @@
 		formStore.handleDelete(briefingId);
 		router.push("/");
 	}
+
+	onMounted(async () => {
+		await briefingStore.getBriefing(briefingId);
+	})
 </script>
 
 <template>
@@ -59,7 +64,7 @@
 				<hr class='border-gray-600 mt-1'/>
 				<hr class='border-gray-600 mt-1'/>
 				
-				<p v-html="renderMarkdown(briefingStore.briefing.desc)" class='m-5 text-lg max-lg:text-sm text-gray-200 text-justify whitespace-pre-line'></p>
+				<p v-if="briefingStore.briefing.desc" v-html="renderMarkdown()" class='m-5 text-lg max-lg:text-sm text-gray-200 text-justify whitespace-pre-line'></p>
 
 				<img v-if="briefingStore.briefing.image" v-bind:src="briefingStore.briefing.image" alt="briefing_image" class="m-5 rounded-lg"/>
 

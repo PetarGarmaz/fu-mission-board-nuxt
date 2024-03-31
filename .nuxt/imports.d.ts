@@ -29,4 +29,5 @@ export { default as useSession } from '../node_modules/@sidebase/nuxt-session/di
 export { useAuth } from '../node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuth';
 export { useAuthState } from '../node_modules/@sidebase/nuxt-auth/dist/runtime/composables/authjs/useAuthState';
 export { useMail } from '../node_modules/nuxt-mail/dist/composable';
+export { useNuxtDevTools } from '../node_modules/nuxt/node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';
 export { definePageMeta } from '../node_modules/nuxt/dist/pages/runtime/composables';

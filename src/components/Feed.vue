@@ -1,4 +1,5 @@
 <script setup>
+	import { onMounted } from "vue";
 	import { Observer } from 'mobx-vue-lite';
 
 	import SortBar from '../src/components/SortBar.vue';
@@ -7,8 +8,10 @@
 
 	import briefingStore from "../src/stores/BriefingStore";
 
-	briefingStore.setPage(1); //Reset page before loading data
-	briefingStore.getBriefings();
+	onMounted(async () => {
+		briefingStore.setPage(1);
+		await briefingStore.getBriefings();
+	})
 </script>
 
 <template>
@@ -27,7 +30,9 @@
 				<FeedCard v-bind:briefing="item" />
 			</div>
 
-			<PageBar type="Feed" profileId=""/>
+			<ClientOnly fallbackTag="div">
+				<PageBar type="Feed" profileId=""/>
+			</ClientOnly>
 		</div>
 	</Observer>
 </template>

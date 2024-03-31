@@ -1,3 +1,5 @@
+import { ClientOnly } from '#build/components';
+
 <script>
 	import Feed from '../src/components/Feed.vue';
 
@@ -8,7 +10,9 @@
 
 <template>
 	<div class="w-full flex-center flex-col">
-		<Feed />
+		<ClientOnly>
+			<Feed />
+		</ClientOnly>
 	</div>
 </template>
 

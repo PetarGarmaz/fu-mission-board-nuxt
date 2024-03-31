@@ -34,7 +34,6 @@ class BriefingStore {
 		this.filterType = val;
 		this.setFilter(['Present & Past Missions', 'Future Missions', 'All Missions'][val]);
 		this.getBriefings(type, profileId);
-		console.log(type);
 	};
 
 	setOrder = (val, type, profileId) => {
@@ -65,7 +64,7 @@ class BriefingStore {
 	};
 
 	getBriefings = async (type, profileId) => {
-		const req = type == "Profile" ? "/api/users/briefings?" : "api/briefings?";
+		const req = type == "Profile" ? "/api/users/briefings?" : "/api/briefings?";
 		const res = await $fetch(req, {
 			method: "GET",
 			query: {
@@ -88,7 +87,8 @@ class BriefingStore {
 	getBriefing = async (briefingId) => {
 		this.setBriefing(null);
 
-		const res = await $fetch('/api/briefings/' + briefingId, {
+		const url = '/api/briefings/' + briefingId;
+		const res = await $fetch(url, {
 			method: "GET",
 		});
 

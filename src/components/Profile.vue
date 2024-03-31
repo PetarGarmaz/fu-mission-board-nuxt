@@ -1,6 +1,7 @@
 <script setup>
 	import { Observer } from 'mobx-vue-lite';
-
+	import { onMounted } from "vue";
+	
 	import SortBar from '../src/components/SortBar.vue';
 	import FeedCard from '../src/components/FeedCard.vue';
 	import PageBar from '../src/components/PageBar.vue';
@@ -11,12 +12,10 @@
 	const profileId = router.currentRoute._value.params.id;
 	const profileName = router.currentRoute._value.query.name;
 
-	const initFeed = async () => {
-		briefingStore.setPage(1); //Reset page before loading data
+	onMounted(async () => {
+		briefingStore.setPage(1);
 		await briefingStore.getBriefings("Profile", profileId);
-	};
-
-	initFeed();
+	})
 </script>
 
 <template>

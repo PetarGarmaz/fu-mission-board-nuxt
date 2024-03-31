@@ -1,4 +1,5 @@
 import { NuxtPage } from '#build/components';
+import { ClientOnly } from '#build/components';
 
 <script>
 	import '../src/styles/main.css'
@@ -12,7 +13,9 @@ import { NuxtPage } from '#build/components';
 
 <template>
 	<main class="flex flex-col">
-		<Navbar />
+		<ClientOnly>
+			<Navbar />
+		</ClientOnly>
 		<div class=" min-h-screen">
 			<NuxtPage />
 		</div>

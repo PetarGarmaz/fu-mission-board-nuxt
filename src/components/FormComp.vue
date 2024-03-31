@@ -1,5 +1,5 @@
 <script setup>
-	import { ref } from "vue";
+	import { ref, onMounted } from "vue";
 	import VueDatePicker from '@vuepic/vue-datepicker';
 	import '@vuepic/vue-datepicker/dist/main.css';
 
@@ -51,18 +51,23 @@
 		}		
 	};
 
-	const initForm = async () => {
+	onMounted(async () => {
 		if(props.briefingId) {
 			await formStore.getBriefing(props.briefingId);
 		}
-		await briefingStore.getBriefings();
-	};
 
-	initForm();
+		await briefingStore.getBriefings();
+	})
 </script>
 
 <template>
 	<Observer>
+		<header class="flex flex-col bg-gray-900 mt-10 border border-gray-600 rounded-lg">
+			<h1 class='text-5xl text-gray-200 font-bold tracking-widest text-center my-4 max-lg:text-3xl max-lg:tracking-normal'>{{formStore.type.toUpperCase()}} BRIEFING</h1>
+			<hr class='border-gray-600'/>
+			<p class='text-gray-200 text-center max-lg:text-sm tracking-wider italic my-4 mx-4'>{{formStore.type == "Create" ? "Create a briefing for an upcoming mission." : "Edit an existing mission briefing."}}</p>
+		</header>
+
 		<Tooltip />
 		<form :onSubmit="event => handleSubmit(event)" class="flex flex-col bg-gray-900 my-10 border border-gray-600 rounded-lg">
 			<div class="m-5">
@@ -79,7 +84,7 @@
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Date:</h3>
 				
 				<client-only>
-					<VueDatePicker @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" required :minDate="new Date()" :enable-time-picker="false" :disabled-week-days="[0, 1, 2, 3, 4, 6]" :disabledDates="formStore.getDisabledDates(briefingStore.allBriefings)" :start-date="new Date(parseInt(formStore.date))" auto-apply v-model="date" @date-update="formStore.setDate" :tooltipValue="'Select an available date to host your mission. Only Fridays are available.'"/>
+					<VueDatePicker @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" required :clearable="false" :minDate="new Date()" :enable-time-picker="false" :disabled-week-days="[0, 1, 2, 3, 4, 6]" :disabledDates="formStore.getDisabledDates(briefingStore.allBriefings)" :start-date="new Date(parseInt(formStore.date))" auto-apply v-model="date" @date-update="formStore.setDate" :tooltipValue="'Select an available date to host your mission. Only Fridays are available.'"/>
 				</client-only>	
 			</div>
 

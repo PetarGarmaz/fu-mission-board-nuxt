@@ -8,15 +8,6 @@ class NavbarStore {
 	constructor () {
 		makeAutoObservable(this);
 	}
-
-	getSession = async () => {
-		const { getSession, getProviders } = useAuth();
-		const sesh = await getSession();
-		const prov = await getProviders();
-
-		this.setSession(sesh);
-		this.setProviders(prov);
-	};
 	
 	setSession = (sesh) => {
 		this.session = sesh;
