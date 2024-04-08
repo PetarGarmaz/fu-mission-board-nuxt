@@ -17,7 +17,7 @@
 					<div @click="sortStore.toggleFilterDropdown()" class='flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer'>
 						<div class='flex flex-col'>
 							<p class='m-auto ml-4 text-gray-200 tracking-wider lg:text-lg'>{{briefingStore.filter}}</p>
-							<div v-if="sortStore.filterDropdown" class="absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40">
+							<div v-if="sortStore.filterDropdown" class="absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60">
 								<button v-for="(item, index) in ['Present & Past Missions', 'Future Missions', 'All Missions']" type="button" @click="briefingStore.setFilterType(index, type, profileId)" class='text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300'>{{item}}</button>
 							</div>
 						</div>
@@ -32,7 +32,7 @@
 					<div @click="sortStore.toggleOrderDropdown()" class='flex py-1 w-full text-gray-200 bg-gray-800 hover:bg-gray-600 border border-gray-600 rounded-lg transition duration-300 cursor-pointer'>
 						<div class='flex flex-col'>
 							<p class='m-auto ml-4 text-gray-200 tracking-wider lg:text-lg'>{{briefingStore.order}}</p>
-							<div v-if="sortStore.orderDropdown" class="absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60 max-lg:w-40">
+							<div v-if="sortStore.orderDropdown" class="absolute flex flex-col mt-10 p-2 bg-gray-800 border border-gray-600 rounded-lg w-60">
 								<button type="button" v-for="item in ['Ascending', 'Descending']" @click="briefingStore.setOrder(item, type, profileId)" class="text-gray-200 text-start text-lg border-b py-1 border-transparent hover:border-gray-200 transition duration-300">{{item}}</button>
 							</div>
 						</div>

@@ -1,5 +1,5 @@
 <script setup>
-	import { onMounted } from "vue";
+	import { onMounted, ref} from "vue";
 
 	import MarkdownIt from 'markdown-it';
 	import MarkdownItAttrs from 'markdown-it-attrs';
@@ -8,6 +8,10 @@
 	import briefingStore from "../src/stores/BriefingStore";
 	import navbarStore from "../src/stores/NavbarStore";
 	import formStore from "../src/stores/FormStore";
+
+	const seoTitle = ref("");
+	const seoDesc = ref("");
+	const seoImg = ref("");
 
 	const router = useRouter();
 	const briefingId = router.currentRoute._value.params.id;
@@ -46,6 +50,18 @@
 
 	onMounted(async () => {
 		await briefingStore.getBriefing(briefingId);
+
+		seoTitle._value = briefingStore.briefing.title;
+		seoDesc._value = "Briefing for the mission named " + briefingStore.briefing.title + ", hosted by " + briefingStore.briefing.host;
+		seoImg._value = briefingStore.briefing.image == "" ? '/FU_Logo.png' : briefingStore.briefing.image;
+
+		useSeoMeta({
+			title: () => `${seoTitle._value}`,
+			ogTitle: () => `Freelancers Union - ${seoTitle._value}`,
+			description: () => `${seoDesc._value}`,
+			ogDescription: () => `${seoDesc._value}`,
+			ogImage: () => `${seoImg._value}`,
+		})
 	})
 </script>
 

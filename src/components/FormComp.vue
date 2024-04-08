@@ -17,10 +17,12 @@
 
 	const doMouseEnter = (event) => {
 		tooltipStore.setTooltip(event.target.getAttribute("tooltipvalue"));
+		tooltipStore.setWidth(window.innerWidth);
 	}
 
 	const doMouseMove = (event) => {
 		tooltipStore.setPos([event.clientX, event.clientY]);
+		console.log([window.innerWidth, event.clientX, event.clientY]);
 	}
 
 	const doMouseExit = (event) => {
