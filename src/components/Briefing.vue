@@ -48,8 +48,8 @@
 		router.push("/");
 	}
 
-	onMounted(async () => {
-		setTimeout(() => {
+	onMounted(() => {
+		setTimeout(async () => {
 			await briefingStore.getBriefing(briefingId);
 
 			seoTitle._value = briefingStore.briefing.title;
