@@ -21,7 +21,7 @@ import { ClientOnly } from '#build/components';
 			<Navbar />
 		</ClientOnly>
 		<div class=" min-h-screen">
-			<NuxtPage />
+			<NuxtPage :key="$route.fullPath" />
 		</div>
 		<FooterComp />
 	</main>
