@@ -49,19 +49,21 @@
 	}
 
 	onMounted(async () => {
-		await briefingStore.getBriefing(briefingId);
+		setTimeout(() => {
+			await briefingStore.getBriefing(briefingId);
 
-		seoTitle._value = briefingStore.briefing.title;
-		seoDesc._value = "Briefing for the mission named " + briefingStore.briefing.title + ", hosted by " + briefingStore.briefing.host;
-		seoImg._value = briefingStore.briefing.image == "" ? '/FU_Logo.png' : briefingStore.briefing.image;
+			seoTitle._value = briefingStore.briefing.title;
+			seoDesc._value = "Briefing for the mission named " + briefingStore.briefing.title + ", hosted by " + briefingStore.briefing.host;
+			seoImg._value = briefingStore.briefing.image == "" ? '/FU_Logo.png' : briefingStore.briefing.image;
 
-		useSeoMeta({
-			title: () => `${seoTitle._value}`,
-			ogTitle: () => `Freelancers Union - ${seoTitle._value}`,
-			description: () => `${seoDesc._value}`,
-			ogDescription: () => `${seoDesc._value}`,
-			ogImage: () => `${seoImg._value}`,
-		})
+			useSeoMeta({
+				title: () => `${seoTitle._value}`,
+				ogTitle: () => `Freelancers Union - ${seoTitle._value}`,
+				description: () => `${seoDesc._value}`,
+				ogDescription: () => `${seoDesc._value}`,
+				ogImage: () => `${seoImg._value}`,
+			})
+		}, 1);
 	})
 </script>
 
