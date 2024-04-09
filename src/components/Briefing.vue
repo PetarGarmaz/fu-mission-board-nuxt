@@ -48,29 +48,27 @@
 		router.push("/");
 	}
 
-	onMounted(() => {
-		setTimeout(async () => {
-			await briefingStore.getBriefing(briefingId);
+	onMounted(async () => {
+		await briefingStore.getBriefing(briefingId);
 
-			seoTitle._value = briefingStore.briefing.title;
-			seoDesc._value = "Briefing for the mission named " + briefingStore.briefing.title + ", hosted by " + briefingStore.briefing.host;
-			seoImg._value = briefingStore.briefing.image == "" ? '/FU_Logo.png' : briefingStore.briefing.image;
+		seoTitle._value = briefingStore.briefing.title;
+		seoDesc._value = "Briefing for the mission named " + briefingStore.briefing.title + ", hosted by " + briefingStore.briefing.host;
+		seoImg._value = briefingStore.briefing.image == "" ? '/FU_Logo.png' : briefingStore.briefing.image;
 
-			useSeoMeta({
-				title: () => `${seoTitle._value}`,
-				ogTitle: () => `Freelancers Union - ${seoTitle._value}`,
-				description: () => `${seoDesc._value}`,
-				ogDescription: () => `${seoDesc._value}`,
-				ogImage: () => `${seoImg._value}`,
-			})
-		}, 1);
+		useSeoMeta({
+			title: () => `${seoTitle._value}`,
+			ogTitle: () => `Freelancers Union - ${seoTitle._value}`,
+			description: () => `${seoDesc._value}`,
+			ogDescription: () => `${seoDesc._value}`,
+			ogImage: () => `${seoImg._value}`,
+		})
 	})
 </script>
 
 <template>
 	<Observer>
 		<section class='min-h-screen'>
-			<div v-if="!!briefingStore.briefing" class="flex flex-col w-9/12 mx-auto max-lg:w-11/12 bg-gray-900 my-16 border border-gray-600 rounded-lg">
+			<div v-if="briefingStore.briefing" class="flex flex-col w-9/12 mx-auto max-lg:w-11/12 bg-gray-900 my-16 border border-gray-600 rounded-lg">
 				<img v-bind:src="briefingStore.briefing.creator?.image" @click="handleProfileClick" alt="Logo" class='object-contain max-w-16 mx-auto my-2 rounded-full cursor-pointer' />
 				
 				<hr class='border-gray-600'/>

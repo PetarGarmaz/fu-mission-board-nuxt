@@ -17,10 +17,10 @@
 	<Observer>
 		<nav>
 			<div class='flex bg-gray-900 py-5 border-b border-b-gray-600'>
-				<nuxt-link to="/" class='flex m-auto'>
+				<a href="/" class='flex m-auto'>
 					<img src="/Logo.png" alt="Logo" class='w-10 object-contain ' />
 					<h1 class='m-auto ml-4 text-4xl max-lg:text-2xl text-gray-200 font-bold'>Arma Mission Board</h1>
-				</nuxt-link>
+				</a>
 
 				<button @click="navbarStore.toggleDropdown()" class="flex flex-col mr-5 my-auto justify-center items-center">
 					<div class="space-y-2">
