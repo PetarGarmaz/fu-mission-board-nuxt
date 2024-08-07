@@ -21,35 +21,36 @@ body {
 }
 
 h1 {
-	@apply font-bold text-3xl my-2 tracking-wider uppercase
+	@apply font-bold text-3xl my-2 tracking-wider uppercase;
 }
 
 h2 {
-	@apply font-bold text-2xl mt-4 mb-2 tracking-wide
+	@apply font-bold text-2xl mt-4 mb-2 tracking-wide;
 }
 
 h3 {
-	@apply font-bold text-xl mt-4 mb-2
+	@apply font-bold text-xl mt-4 mb-2;
 }
 
 h4 {
-	@apply font-bold mt-4 mb-2
+	@apply font-bold mt-4 mb-2;
 }
 
 ul {
 	list-style-position: inside;
 	list-style-type: circle;
+	line-height: 1;
 
-	@apply my-0
+	@apply mt-2 mb-0;
 }
 
 li {
-	@apply my-0
+	@apply my-0;
 }
 
 p {
 	text-align: justify;
 	text-justify: inter-word;
 	
-	@apply text-wrap mt-2;
+	@apply flex flex-col text-wrap mt-2;
 }
