@@ -52,5 +52,5 @@ p {
 	text-align: justify;
 	text-justify: inter-word;
 	
-	@apply flex flex-col text-wrap mt-2;
+	@apply text-wrap mt-2;
 }
