@@ -46,7 +46,7 @@
 			mail.send({
 				from: 'mailtrap@demomailtrap.com',
 				subject: formStore.briefing.title + " - " + formStore.briefing.host,
-				text: formStore.briefing.title.toUpperCase() + "\n\nHOST: " + formStore.briefing.host + "\n\nLINK: " + "https://a3.fugaming.org/briefing/" + formStore.briefing._id + "\n\nBRIEFING:\n" + formStore.briefing.desc,
+				text: formStore.briefing.title.toUpperCase() + "\n\nHOST: " + formStore.briefing.host + "\n\nLINK: " + "https://a3.fugaming.org/briefings/" + formStore.briefing._id + "\n\nBRIEFING:\n" + formStore.briefing.desc,
 			})
 		} catch (error) {
 			console.log("Error sending mail:\n" + error);
