@@ -38,10 +38,18 @@ h4 {
 
 ul {
 	list-style-position: inside;
-	list-style-type: circle;
+	list-style-type: disc;
 	line-height: 1;
 
-	@apply mt-2 mb-0;
+	@apply mt-4 mb-0;
+}
+
+ol {
+	list-style-position: inside;
+	list-style-type: decimal;
+	line-height: 1;
+
+	@apply mt-4 mb-0;
 }
 
 li {
