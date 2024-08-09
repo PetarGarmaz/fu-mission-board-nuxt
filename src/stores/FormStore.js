@@ -71,8 +71,6 @@ class FormStore {
 		e.preventDefault();
 
 		try {
-
-
 			await fetch("/api/briefings/" + briefingId, {
 				method: "PATCH",
 				body: JSON.stringify(this.briefing),

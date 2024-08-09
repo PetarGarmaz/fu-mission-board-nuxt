@@ -15,19 +15,6 @@
 	const router = useRouter();
 	const props = defineProps(["briefingId"]);
 
-	const doMouseEnter = (event) => {
-		tooltipStore.setTooltip(event.target.getAttribute("tooltipvalue"));
-		tooltipStore.setWidth(window.innerWidth);
-	}
-
-	const doMouseMove = (event) => {
-		tooltipStore.setPos([event.clientX, event.clientY]);
-	}
-
-	const doMouseExit = (event) => {
-		tooltipStore.setTooltip("");
-	}
-
 	const handleSubmit = (event) => {
 		if(formStore.type == "Edit") {
 			formStore.handleEdit(event, props.briefingId);
@@ -68,45 +55,53 @@
 			<hr class='border-gray-600'/>
 			<p class='text-gray-200 text-center max-lg:text-sm tracking-wider italic my-4 mx-4'>{{formStore.type == "Create" ? "Create a briefing for an upcoming mission." : "Edit an existing mission briefing."}}</p>
 		</header>
-
-		<Tooltip />
+		
 		<form :onSubmit="event => handleSubmit(event)" class="flex flex-col bg-gray-900 my-10 border border-gray-600 rounded-lg">
 			<div class="m-5">
-				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Title:</h3>
-				<input @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Desert Storm, Thunder, Sword, etc..." required maxLength="50" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.title" @input="event => formStore.setBriefing({...formStore.briefing, title: event.target.value})" :tooltipValue="'Enter the operation title, e.g. Operation: Cinder, Operation: Sandstorm, etc...'"/>
+				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Title: <button type="button" @click="tooltipStore.setTooltipType('title')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
+				<input placeholder="Desert Storm, Thunder, Sword, etc..." required maxLength="50" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.title" @input="event => formStore.setBriefing({...formStore.briefing, title: event.target.value})"/>
+				<Tooltip v-bind:tooltipType="'title'" v-bind:tooltipValue="'Enter the operation title, e.g. Operation: Cinder, Operation: Sandstorm, etc...'"/>
 			</div>
 
 			<div class="m-5">
-				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Host:</h3>
-				<input @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Warlord Beezo, Slobodan Beast, etc..." required maxLength="30" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.host" @input="event => formStore.setBriefing({...formStore.briefing, host: event.target.value})" :tooltipValue="'Enter the operation host name, e.g. Chyper, Pug, Weasel, Bizo, Dotz0r, etc...'"/>
+				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Host: <button type="button" @click="tooltipStore.setTooltipType('host')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
+				<input placeholder="Warlord Beezo, Slobodan Beast, etc..." required maxLength="30" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.host" @input="event => formStore.setBriefing({...formStore.briefing, host: event.target.value})" />
+				<Tooltip v-bind:tooltipType="'host'" v-bind:tooltipValue="'Enter the operation host name, e.g. Chyper, Pug, Weasel, Bizo, Dotz0r, etc...'"/>
 			</div>
 
 			<div v-if="formStore.type != 'Edit'" class="m-5">
-				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Date:</h3>
+				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Date: <button type="button" @click="tooltipStore.setTooltipType('date')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
 				
 				<client-only>
-					<VueDatePicker v-if="formStore.type != 'Edit'" @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" required :clearable="false" :minDate="new Date()" :enable-time-picker="false" :disabled-week-days="[0, 1, 2, 3, 4, 6]" :disabledDates="formStore.getDisabledDates(briefingStore.allBriefings)" :start-date="new Date(parseInt(formStore.date))" auto-apply v-model="date" @date-update="formStore.setDate" :tooltipValue="'Select an available date to host your mission. Only Fridays are available.'"/>
-				</client-only>	
+					<VueDatePicker v-if="formStore.type != 'Edit'"  required :clearable="false" :minDate="new Date()" :enable-time-picker="false" :disabled-week-days="[0, 1, 2, 3, 4, 6]" :disabledDates="formStore.getDisabledDates(briefingStore.allBriefings)" :start-date="new Date(parseInt(formStore.date))" auto-apply v-model="date" @date-update="formStore.setDate" />
+				</client-only>
+				<Tooltip v-bind:tooltipType="'date'" v-bind:tooltipValue="'Select an available date to host your mission. Only Fridays are available.'"/>
 			</div>
 
 			<div class="m-5">
-				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Description:</h3>
-				<textarea @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non sem fringilla, malesuada nibh sit amet, mollis nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam varius eu mi in pellentesque. Maecenas a dolor vel enim volutpat." required rows="15" class="flex resize-none text-gray-200 tracking-wider lg:text-lg text-justify bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg py-1 px-2 w-full transition duration-300" :value="formStore.briefing.desc" @input="event => formStore.setBriefing({...formStore.briefing, desc: event.target.value})" :tooltipValue="'Enter a mission description, it can be as big or small as you want. It allows MARKDOWN syntax, for example:\n# Big Heading\n## Normal Heading\n ### Small Heading\n*Italic text*\n**Bold text**\n- List item\n\nFor a proper example:\n## SITUATION:\nYou are FACTION A fighting FACTION B.\n\n## MISSION:\nYour tasks include:\n- Destroy this\n- Destroy that\n\n## EXECUTION:\nDetailed mission explanation and execution, blah blah blah.'"></textarea>
+				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Description: <button type="button" @click="tooltipStore.setTooltipType('desc')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
+				<textarea  placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non sem fringilla, malesuada nibh sit amet, mollis nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam varius eu mi in pellentesque. Maecenas a dolor vel enim volutpat." required rows="15" class="flex resize-none text-gray-200 tracking-wider lg:text-lg text-justify bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg py-1 px-2 w-full transition duration-300" :value="formStore.briefing.desc" @input="event => formStore.setBriefing({...formStore.briefing, desc: event.target.value})" ></textarea>
+				<Tooltip v-bind:tooltipType="'desc'" v-bind:tooltipValue="'Enter a mission description, it can be as big or small as you want. It allows MARKDOWN syntax, for example:\n# Big Heading\n## Normal Heading\n ### Small Heading\n*Italic text*\n**Bold text**\n- List item\n\nFor a proper example:\n## SITUATION:\nYou are FACTION A fighting FACTION B.\n\n## MISSION:\nYour tasks include:\n- Destroy this\n- Destroy that\n\n## EXECUTION:\nDetailed mission explanation and execution, blah blah blah.'"/>
 			</div>
 
 			<div class="m-5">
-				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Status:</h3>
-				<input @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Unknown, Completed, Failed, etc..." required maxLength="30" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.status" @input="event => formStore.setBriefing({...formStore.briefing, status: event.target.value})" :tooltipValue="'Enter custom status of the mission, usually you can put it as Unknown.'" />
+				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Status: <button type="button" @click="tooltipStore.setTooltipType('status')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
+				<input  placeholder="Unknown, Completed, Failed, etc..." required maxLength="50" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.status" @input="event => formStore.setBriefing({...formStore.briefing, status: event.target.value})" />
+				<Tooltip v-bind:tooltipType="'status'" v-bind:tooltipValue="'Enter custom status of the mission, usually you can put it as Unknown.'"/>
 			</div>
 
 			<div class="m-5">
-				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Image (Optional):</h3>
-				<input @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Insert image link here..." rows="2" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.image" @input="event => formStore.setBriefing({...formStore.briefing, image: event.target.value})" :tooltipValue="'Enter a custom image link, e.g. https://i.imgur.com/XUgMBZN.jpeg'"/>
+				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Image (Optional): <button type="button" @click="tooltipStore.setTooltipType('image')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
+				<input  placeholder="Insert image link here..." rows="2" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.image" @input="event => formStore.setBriefing({...formStore.briefing, image: event.target.value})"/>
+				<Tooltip v-bind:tooltipType="'image'" v-bind:tooltipValue="'Enter a custom image link, e.g. https://i.imgur.com/XUgMBZN.jpeg'"/>
 			</div>
-
-			<button @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" type='submit' class="flex m-auto my-5 py-1 px-6 text-gray-200 tracking-wider text-2xl bg-red-600 hover:bg-red-400 rounded-lg transition duration-300" :tooltipValue="'Submit'">
+			
+			<img v-if="formStore.briefing.image" v-bind:src="formStore.briefing.image" alt="briefing_image" class="m-5 rounded-lg"/>
+			
+			<button type='submit' class="flex m-auto my-5 py-1 px-6 text-gray-200 tracking-wider text-2xl bg-red-600 hover:bg-red-400 rounded-lg transition duration-300">
 				{{formStore.type == "Create" ? "Create Briefing" : "Edit Briefing"}}
 			</button>
+
 		</form>
 	</Observer>
 </template>
