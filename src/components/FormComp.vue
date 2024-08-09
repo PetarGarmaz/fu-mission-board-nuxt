@@ -30,7 +30,7 @@
 
 	const handleSubmit = (event) => {
 		if(formStore.type == "Edit") {
-			formStore.handleEdit(event, navbarStore.session, props.briefingId);
+			formStore.handleEdit(event, props.briefingId);
 		} else {
 			formStore.handleSubmit(event, navbarStore.session);
 		}
