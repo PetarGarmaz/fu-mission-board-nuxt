@@ -81,7 +81,7 @@
 				<input @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Warlord Beezo, Slobodan Beast, etc..." required maxLength="30" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.host" @input="event => formStore.setBriefing({...formStore.briefing, host: event.target.value})" :tooltipValue="'Enter the operation host name, e.g. Chyper, Pug, Weasel, Bizo, Dotz0r, etc...'"/>
 			</div>
 
-			<div class="m-5">
+			<div v-if="formStore.type != 'Edit'" class="m-5">
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Date:</h3>
 				
 				<client-only>
