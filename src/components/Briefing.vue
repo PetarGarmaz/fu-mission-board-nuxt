@@ -80,7 +80,7 @@
 				<hr class='border-gray-600 mt-1'/>
 				<hr class='border-gray-600 mt-1'/>
 				
-				<p v-if="briefingStore.briefing.desc" v-html="renderMarkdown()" class='flex flex-col m-5 text-lg max-lg:text-sm text-gray-200 text-justify whitespace-pre-wrap'></p>
+				<p v-if="briefingStore.briefing.desc" v-html="renderMarkdown()" class='flex flex-col m-5 text-lg max-lg:text-sm text-gray-200 text-wrap whitespace-pre-wrap'></p>
 
 				<img v-if="briefingStore.briefing.image" v-bind:src="briefingStore.briefing.image" alt="briefing_image" class="m-5 rounded-lg"/>
 
