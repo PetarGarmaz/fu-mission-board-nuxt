@@ -44,7 +44,7 @@
 		</header>
 
 		<hr class='border-gray-600'/>
-		<p v-if="briefing.desc" v-html="renderMarkdown(briefing.desc)" class='m-5 text-lg max-lg:text-sm text-gray-200 text-justify italic text-wrap line-clamp-5 max-lg:line-clamp-6 whitespace-pre-wrap'></p>
+		<p v-if="briefing.desc" v-html="renderMarkdown(briefing.desc)" class='m-5 text-lg max-lg:text-sm text-gray-200 text-justify italic text-wrap line-clamp-5 max-lg:line-clamp-6'></p>
 
 		<hr class='border-gray-600'/>
 		<p class='mx-5 my-2 text-2xl max-lg:text-xl text-gray-200 font-bold'>STATUS: {{briefing.status}}</p>
