@@ -67,15 +67,12 @@ class FormStore {
 		}
 	}
 
-	handleEdit = async (e, session, briefingId) => {
+	handleEdit = async (e, briefingId) => {
 		e.preventDefault();
 
 		try {
-			//const offset = (this.date.getTimezoneOffset() / 60);
-			//console.log(offset);
-			const timestamp = this.date.setUTCHours(18,0,0,0);
-			this.setBriefing({...this.briefing, creator: session.user.id, timestamp: timestamp});
-			
+
+
 			await fetch("/api/briefings/" + briefingId, {
 				method: "PATCH",
 				body: JSON.stringify(this.briefing),
@@ -102,6 +99,7 @@ class FormStore {
 
 		const data = JSON.parse(res);
 		this.setBriefing(data);
+		console.log(data);
 	};
 }
 

@@ -22,7 +22,6 @@
 
 	const doMouseMove = (event) => {
 		tooltipStore.setPos([event.clientX, event.clientY]);
-		console.log([window.innerWidth, event.clientX, event.clientY]);
 	}
 
 	const doMouseExit = (event) => {
@@ -82,11 +81,11 @@
 				<input @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" placeholder="Warlord Beezo, Slobodan Beast, etc..." required maxLength="30" rows="1" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.host" @input="event => formStore.setBriefing({...formStore.briefing, host: event.target.value})" :tooltipValue="'Enter the operation host name, e.g. Chyper, Pug, Weasel, Bizo, Dotz0r, etc...'"/>
 			</div>
 
-			<div v-if="formStore.type != 'Edit'" class="m-5">
+			<div class="m-5">
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Date:</h3>
 				
 				<client-only>
-					<VueDatePicker @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" required :clearable="false" :minDate="new Date()" :enable-time-picker="false" :disabled-week-days="[0, 1, 2, 3, 4, 6]" :disabledDates="formStore.getDisabledDates(briefingStore.allBriefings)" :start-date="new Date(parseInt(formStore.date))" auto-apply v-model="date" @date-update="formStore.setDate" :tooltipValue="'Select an available date to host your mission. Only Fridays are available.'"/>
+					<VueDatePicker v-if="formStore.type != 'Edit'" @mouseenter="doMouseEnter" @mousemove="doMouseMove" @mouseleave="doMouseExit" required :clearable="false" :minDate="new Date()" :enable-time-picker="false" :disabled-week-days="[0, 1, 2, 3, 4, 6]" :disabledDates="formStore.getDisabledDates(briefingStore.allBriefings)" :start-date="new Date(parseInt(formStore.date))" auto-apply v-model="date" @date-update="formStore.setDate" :tooltipValue="'Select an available date to host your mission. Only Fridays are available.'"/>
 				</client-only>	
 			</div>
 
