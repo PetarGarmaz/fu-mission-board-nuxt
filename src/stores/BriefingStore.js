@@ -85,7 +85,7 @@ class BriefingStore {
 	};
 
 	getAllBriefings = async () => {
-		const req = type == "/api/briefings?";
+		const req = "/api/briefings?";
 		const res = await $fetch(req, {
 			method: "GET",
 			query: {
