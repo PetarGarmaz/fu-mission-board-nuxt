@@ -84,6 +84,27 @@ class BriefingStore {
 		return data;
 	};
 
+	getAllBriefings = async () => {
+		const req = type == "/api/briefings?";
+		const res = await $fetch(req, {
+			method: "GET",
+			query: {
+				page: 0,
+				pageLimit: 10,
+				searchQuery: "",
+				filterBy: 2,
+				orderBy: "Descending",
+				creatorId: ""
+			}
+		});
+		const data = JSON.parse(res);
+
+		this.setMaxPages(Math.ceil(data[1]/10));
+		this.setAllBriefing(data[0]);
+
+		return data;
+	};
+
 	getBriefing = async (briefingId) => {
 		this.setBriefing(null);
 

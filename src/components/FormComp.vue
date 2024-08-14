@@ -44,7 +44,7 @@
 			await formStore.getBriefing(props.briefingId);
 		}
 
-		await briefingStore.getBriefings();
+		await briefingStore.getAllBriefings();
 	})
 </script>
 

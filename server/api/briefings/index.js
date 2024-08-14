@@ -12,13 +12,13 @@ export default defineEventHandler(async (event) => {
 			let dataCount = 0;
 
 			if(filter == 0) {
-				data = await BriefingSchema.find({$or: [{title}, {host}]}).lte("timestamp", nextWeek).populate({path:"creator"}).limit(10).skip((params.page - 1) * params.pageLimit).sort({timestamp : sort});
+				data = await BriefingSchema.find({$or: [{title}, {host}]}).lte("timestamp", nextWeek).populate({path:"creator"}).limit(params.pageLimit).skip((params.page - 1) * params.pageLimit).sort({timestamp : sort});
 				dataCount = await BriefingSchema.countDocuments({$or: [{title}, {host}]}).lte("timestamp", nextWeek);
 			} else if(filter == 1) {
-				data = await BriefingSchema.find({$or: [{title}, {host}]}).gt("timestamp", nextWeek).populate({path:"creator"}).limit(10).skip((params.page - 1) * params.pageLimit).sort({timestamp : sort});
+				data = await BriefingSchema.find({$or: [{title}, {host}]}).gt("timestamp", nextWeek).populate({path:"creator"}).limit(params.pageLimit).skip((params.page - 1) * params.pageLimit).sort({timestamp : sort});
 				dataCount = await BriefingSchema.countDocuments({$or: [{title}, {host}]}).gt("timestamp", nextWeek);
 			} else if(filter == 2) {
-				data = await BriefingSchema.find({$or: [{title}, {host}]}).populate({path:"creator"}).limit(10).skip((params.page - 1) * params.pageLimit).sort({timestamp : sort});
+				data = await BriefingSchema.find({$or: [{title}, {host}]}).populate({path:"creator"}).limit(params.pageLimit).skip((params.page - 1) * params.pageLimit).sort({timestamp : sort});
 				dataCount = await BriefingSchema.countDocuments({$or: [{title}, {host}]});
 			}
 			
