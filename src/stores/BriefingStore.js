@@ -89,7 +89,7 @@ class BriefingStore {
 		const res = await $fetch(req, {
 			method: "GET",
 			query: {
-				page: 0,
+				page: 1,
 				pageLimit: 10,
 				searchQuery: "",
 				filterBy: 2,
