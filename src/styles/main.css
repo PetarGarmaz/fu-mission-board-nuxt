@@ -39,7 +39,6 @@ h4 {
 ul {
 	list-style-position: inside;
 	list-style-type: disc;
-	line-height: 1;
 
 	@apply mt-4 mb-0;
 }
@@ -47,7 +46,6 @@ ul {
 ol {
 	list-style-position: inside;
 	list-style-type: decimal;
-	line-height: 1;
 
 	@apply mt-4 mb-0;
 }
