@@ -65,16 +65,20 @@ p {
 	@apply mx-10 
 }
 
+.briefing-text {
+	@apply text-lg max-lg:text-sm
+}
+
 .briefing-text a {
 	@apply text-blue-400 underline
 }
 
 .briefing-text img {
-	@apply object-cover lg:w-4/6 mx-auto
+	@apply object-cover lg:w-4/6 mx-auto mt-5
 }
 
 .briefing-text em {
-	@apply justify-center mx-auto
+	@apply flex justify-center mx-auto mb-5
 }
 
 .briefing-text h1, h2, h3, h4, h5 {
