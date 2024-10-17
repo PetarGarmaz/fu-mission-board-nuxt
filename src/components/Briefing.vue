@@ -48,8 +48,8 @@
 		router.push("/");
 	}
 
-	onBeforeMount(async () => {
-		await briefingStore.getBriefing(briefingId);
+	onBeforeMount(() => {
+		briefingStore.getBriefing(briefingId);
 	})
 
 	onMounted(async () => {
@@ -69,8 +69,8 @@
 
 <template>
 	<Observer>
-		<section v-if="briefingStore.briefing" class='min-h-screen'>
-			<div class="flex flex-col w-9/12 mx-auto max-lg:w-11/12 bg-gray-900 my-16 border border-gray-600 rounded-lg">
+		<section class='min-h-screen'>
+			<div v-if="briefingStore.briefing" class="flex flex-col w-9/12 mx-auto max-lg:w-11/12 bg-gray-900 my-16 border border-gray-600 rounded-lg">
 				<img v-bind:src="briefingStore.briefing.creator?.image" @click="handleProfileClick" alt="Logo" class='object-contain max-w-16 mx-auto my-2 rounded-full cursor-pointer' />
 				
 				<hr class='border-gray-600'/>

@@ -2,16 +2,7 @@ import { makeAutoObservable } from 'mobx';
 
 class BriefingStore {
 	allBriefings = [];
-	briefing = {
-		id: "",
-		creator: {},
-		title: "",
-		host: "",
-		timestamp: "",
-		desc: "",
-		image: "",
-		status: "",
-	};
+	briefing = null;
 	query = "";
 	filter = "Present & Past Missions";
 	filterType = 0;
