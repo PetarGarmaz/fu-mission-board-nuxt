@@ -1,5 +1,5 @@
 <script setup>
-	import { onMounted, ref, onBeforeMount} from "vue";
+	import { onMounted, ref, onBeforeUpdate} from "vue";
 
 	import MarkdownIt from 'markdown-it';
 	import MarkdownItAttrs from 'markdown-it-attrs';
@@ -48,11 +48,11 @@
 		router.push("/");
 	}
 
-	onBeforeMount(() => {
+	onBeforeUpdate(() => {
 		briefingStore.getBriefing(briefingId);
 	})
 
-	onMounted(async () => {
+	onMounted(() => {
 		seoTitle._value = briefingStore.briefing.title;
 		seoDesc._value = "Briefing for the mission named " + briefingStore.briefing.title + ", hosted by " + briefingStore.briefing.host;
 		seoImg._value = briefingStore.briefing.image == "" ? '/FU_Logo.png' : briefingStore.briefing.image;
