@@ -2,7 +2,16 @@ import { makeAutoObservable } from 'mobx';
 
 class BriefingStore {
 	allBriefings = [];
-	briefing = {};
+	briefing = {
+		id: "",
+		creator: {},
+		title: "",
+		host: "",
+		timestamp: "",
+		desc: "",
+		image: "",
+		status: "",
+	};
 	query = "";
 	filter = "Present & Past Missions";
 	filterType = 0;
@@ -106,6 +115,8 @@ class BriefingStore {
 	};
 
 	getBriefing = async (briefingId) => {
+		this.setBriefing(null);
+
 		const url = '/api/briefings/' + briefingId;
 		const res = await $fetch(url, {
 			method: "GET",
