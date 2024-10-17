@@ -11,9 +11,13 @@
 	import Tooltip from '../src/components/Tooltip.vue';
 	import { Observer } from 'mobx-vue-lite';
 
+	import MarkdownIt from 'markdown-it';
+	import MarkdownItAttrs from 'markdown-it-attrs';
+
 	const date = ref(formStore.date);
 	const router = useRouter();
 	const props = defineProps(["briefingId"]);
+	let showPreview = false;
 
 	const handleSubmit = (event) => {
 		if(formStore.type == "Edit") {
@@ -24,6 +28,17 @@
 		sendMail();
 		router.push("/");
 	};
+
+	const renderMarkdown = () => {
+		const md = new MarkdownIt().use(MarkdownItAttrs);
+		const rend = md.render(formStore.briefing.desc.toString());
+		
+		return rend;
+	};
+
+	const handlePreview = () => {
+		showPreview = !showPreview;
+	}
 
 	const sendMail = () => {
 		try {
@@ -79,9 +94,15 @@
 			</div>
 
 			<div class="m-5">
-				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Description: <button type="button" @click="tooltipStore.setTooltipType('desc')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
-				<textarea  placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non sem fringilla, malesuada nibh sit amet, mollis nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam varius eu mi in pellentesque. Maecenas a dolor vel enim volutpat." required rows="15" class="flex resize-none text-gray-200 tracking-wider lg:text-lg text-justify bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg py-1 px-2 w-full transition duration-300" :value="formStore.briefing.desc" @input="event => formStore.setBriefing({...formStore.briefing, desc: event.target.value})" ></textarea>
-				<Tooltip v-bind:tooltipType="'desc'" v-bind:tooltipValue="'Enter a mission description, it can be as big or small as you want. It allows MARKDOWN syntax, for example:\n# Big Heading\n## Normal Heading\n ### Small Heading\n*Italic text*\n**Bold text**\n- List item\n\nFor a proper example:\n## SITUATION:\nYou are FACTION A fighting FACTION B.\n\n## MISSION:\nYour tasks include:\n- Destroy this\n- Destroy that\n\n## EXECUTION:\nDetailed mission explanation and execution, blah blah blah.'"/>
+				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Description: 
+					<button type="button" @click="tooltipStore.setTooltipType('desc')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button>
+					<button type="button" @click="formStore.toggleShowPreview()" class="font-normal cursor-pointer transition-all duration-300 ml-2">👁</button>
+				</h3>
+				<div class="flex max-lg:flex-col gap-2">
+					<textarea placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non sem fringilla, malesuada nibh sit amet, mollis nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam varius eu mi in pellentesque. Maecenas a dolor vel enim volutpat." required rows="15" class="flex resize-none text-gray-200 tracking-wider lg:text-lg text-justify bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg py-1 px-2 w-full transition duration-300" :value="formStore.briefing.desc" @input="event => formStore.setBriefing({...formStore.briefing, desc: event.target.value})" ></textarea>
+					<p v-if="formStore.showPreview" v-html="renderMarkdown()" class='briefing-text-form lg:mt-0 bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg py-1 px-2 lg:w-full '></p>
+				</div>
+				<Tooltip v-bind:tooltipType="'desc'" v-bind:tooltipValue="'Enter a mission description, it can be as big or small as you want. It allows MARKDOWN syntax, for example:\n# Big Heading\n## Normal Heading\n ### Small Heading\n*Italic text*\n**Bold text**\n- List item\n\nFor a proper example:\n## SITUATION:\nYou are FACTION A fighting FACTION B.\n\n## MISSION:\nYour tasks include:\n- Destroy this\n- Destroy that\n\n## EXECUTION:\nDetailed mission explanation and execution, blah blah blah.\n\n== YOU CAN ALSO INSERT CUSTOM IMAGES ==\n![image_1](https://i.imgur.com/XUgMBZN.jpeg)*Insert Image Caption Here!*'"/>
 			</div>
 
 			<div class="m-5">

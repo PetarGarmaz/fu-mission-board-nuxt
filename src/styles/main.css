@@ -84,3 +84,24 @@ p {
 .briefing-text h1, h2, h3, h4, h5 {
 	@apply mt-10
 }
+
+
+.briefing-text-form {
+	@apply text-lg max-lg:text-sm
+}
+
+.briefing-text-form a {
+	@apply text-blue-400 underline
+}
+
+.briefing-text-form img {
+	@apply object-cover lg:w-4/6 mx-auto mt-5
+}
+
+.briefing-text-form em {
+	@apply flex justify-center mx-auto mb-5
+}
+
+.briefing-text-form h1, h2, h3, h4, h5 {
+	@apply mt-10
+}

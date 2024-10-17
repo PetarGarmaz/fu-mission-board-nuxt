@@ -13,10 +13,15 @@ class FormStore {
 		image: "",
 		status: "",
 	};
+	showPreview = false;
 
 	constructor () {
 		makeAutoObservable(this);
 	}
+
+	toggleShowPreview = () => {
+		this.showPreview = !this.showPreview;
+	};
 
 	setType = (val) => {
 		this.type = val;
