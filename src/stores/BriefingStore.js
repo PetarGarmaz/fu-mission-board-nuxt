@@ -106,8 +106,6 @@ class BriefingStore {
 	};
 
 	getBriefing = async (briefingId) => {
-		this.setBriefing(null);
-
 		const url = '/api/briefings/' + briefingId;
 		const res = await $fetch(url, {
 			method: "GET",
