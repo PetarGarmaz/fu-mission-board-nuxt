@@ -44,9 +44,9 @@
 		router.push("/");
 	}
 
-	onMounted(() => {
+	onMounted(async() => {
 		briefingStore.setBriefing(null);
-		const data = briefingStore.getBriefing(briefingId);
+		const data = await briefingStore.getBriefing(briefingId);
 		briefingStore.setBriefing(data);
 	})
 </script>
