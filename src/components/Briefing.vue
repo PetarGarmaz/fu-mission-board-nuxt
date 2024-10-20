@@ -9,10 +9,6 @@
 	import navbarStore from "../src/stores/NavbarStore";
 	import formStore from "../src/stores/FormStore";
 
-	const seoTitle = ref("");
-	const seoDesc = ref("");
-	const seoImg = ref("");
-
 	const router = useRouter();
 	const briefingId = router.currentRoute._value.params.id;
 
@@ -49,7 +45,8 @@
 	}
 
 	onMounted(() => {
-		briefingStore.getBriefing(briefingId);
+		const data = briefingStore.getBriefing(briefingId);
+		briefingStore.setBriefing(data);
 	})
 </script>
 
