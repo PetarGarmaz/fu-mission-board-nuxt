@@ -1,13 +1,17 @@
 <script setup>
-	import { onMounted, ref, onBeforeMount} from "vue";
+	import { onMounted, ref} from "vue";
 
 	import MarkdownIt from 'markdown-it';
 	import MarkdownItAttrs from 'markdown-it-attrs';
 
 	import { Observer } from 'mobx-vue-lite';
 	import briefingStore from "../src/stores/BriefingStore";
-	import navbarStore from "../src/stores/NavbarStore";
 	import formStore from "../src/stores/FormStore";
+
+	const { signIn, signOut, getSession, getProviders} = useAuth();
+
+	const sesh = ref({});
+	const prov = ref({});
 
 	const router = useRouter();
 	const briefingId = router.currentRoute._value.params.id;
@@ -46,6 +50,9 @@
 	}
 
 	onMounted(async() => {
+		sesh.value = await getSession();
+		prov.value = await getProviders();
+
 		const data = await briefingStore.getBriefing(briefingId);
 		briefingStore.setBriefing(data);
 		briefing.value = data;
