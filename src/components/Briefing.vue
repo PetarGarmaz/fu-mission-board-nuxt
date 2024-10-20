@@ -49,6 +49,8 @@
 		const data = briefingStore.getBriefing(briefingId);
 		briefingStore.setBriefing(data);
 		briefing.value = data;
+
+		console.log(data);
 	})
 </script>
 
