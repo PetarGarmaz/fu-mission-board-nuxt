@@ -8,10 +8,9 @@
 	import briefingStore from "../src/stores/BriefingStore";
 	import formStore from "../src/stores/FormStore";
 
-	const { signIn, signOut, getSession, getProviders} = useAuth();
+	const {getSession} = useAuth();
 
 	const sesh = ref({});
-	const prov = ref({});
 
 	const router = useRouter();
 	const briefingId = router.currentRoute._value.params.id;
@@ -51,7 +50,6 @@
 
 	onMounted(async() => {
 		sesh.value = await getSession();
-		prov.value = await getProviders();
 
 		const data = await briefingStore.getBriefing(briefingId);
 		briefingStore.setBriefing(data);
@@ -83,7 +81,7 @@
 				<hr class='border-gray-600'/>
 				<p class='mx-5 my-2 text-2xl text-gray-200 font-bold'>STATUS: {{briefing.status}}</p>
 
-				<div v-if="briefing.creator?.id == navbarStore.session?.user.id || navbarStore.session?.user.isAdmin">
+				<div v-if="briefing.creator?.id == sesh?.user.id || sesh?.user.isAdmin">
 					<hr class='border-gray-600'/>
 					<div class='flex flex-wrap'>
 						<button @click="handleEdit()" class='w-full mx-5 mt-5 text-center text-gray-200 bg-lime-700 border border-gray-600 hover:bg-lime-500 rounded-lg py-1 transition duration-300'>Edit Briefing</button>			
