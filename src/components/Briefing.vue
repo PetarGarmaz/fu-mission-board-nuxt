@@ -58,7 +58,7 @@
 	<Observer>
 		<section class='min-h-screen'>
 			<Suspense>
-				<div v-if="briefing" class="flex flex-col w-9/12 mx-auto max-lg:w-11/12 bg-gray-900 my-16 border border-gray-600 rounded-lg">
+				<div class="flex flex-col w-9/12 mx-auto max-lg:w-11/12 bg-gray-900 my-16 border border-gray-600 rounded-lg">
 					<img v-bind:src="briefing.creator?.image" @click="handleProfileClick" alt="Logo" class='object-contain max-w-16 mx-auto my-2 rounded-full cursor-pointer' />
 					
 					<hr class='border-gray-600'/>
