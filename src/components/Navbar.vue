@@ -10,6 +10,9 @@
 	onMounted(async () => {
 		sesh.value = await getSession();
 		prov.value = await getProviders();
+
+		navbarStore.setSession(sesh.value);
+		navbarStore.setProviders(prov.value);
 	})
 </script>
 
