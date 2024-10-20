@@ -10,6 +10,8 @@
 	onMounted(async () => {
 		sesh.value = await getSession();
 		prov.value = await getProviders();
+
+		console.log(sesh.value);
 	})
 </script>
 

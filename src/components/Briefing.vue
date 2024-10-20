@@ -56,6 +56,7 @@
 		briefing.value = data;
 
 		console.log(data);
+		console.log(sesh.value);
 	})
 </script>
 
