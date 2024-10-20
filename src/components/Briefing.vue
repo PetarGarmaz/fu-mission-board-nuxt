@@ -57,7 +57,7 @@
 <template>
 	<Observer>
 		<section class='min-h-screen'>
-			<div class="flex flex-col w-9/12 mx-auto max-lg:w-11/12 bg-gray-900 my-16 border border-gray-600 rounded-lg">
+			<div v-if="briefing" class="flex flex-col w-9/12 mx-auto max-lg:w-11/12 bg-gray-900 my-16 border border-gray-600 rounded-lg">
 				<img v-bind:src="briefing.creator?.image" @click="handleProfileClick" alt="Logo" class='object-contain max-w-16 mx-auto my-2 rounded-full cursor-pointer' />
 				
 				<hr class='border-gray-600'/>
@@ -76,7 +76,7 @@
 				<hr class='border-gray-600'/>
 				<p class='mx-5 my-2 text-2xl text-gray-200 font-bold'>STATUS: {{briefing.status}}</p>
 
-				<div v-if="briefing.creator?._id == navbarStore.session?.user.id || navbarStore.session?.user.isAdmin">
+				<div v-if="briefing.creator?.id == navbarStore.session?.user.id || navbarStore.session?.user.isAdmin">
 					<hr class='border-gray-600'/>
 					<div class='flex flex-wrap'>
 						<button @click="handleEdit()" class='w-full mx-5 mt-5 text-center text-gray-200 bg-lime-700 border border-gray-600 hover:bg-lime-500 rounded-lg py-1 transition duration-300'>Edit Briefing</button>			
