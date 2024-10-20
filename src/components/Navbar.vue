@@ -34,26 +34,8 @@
 			</div>
 
 			<aside class="absolute overflow-hidden right-0 bg-gray-900 w-0 border-l border-b border-gray-600 transition-all duration-300" :class="navbarStore.dropdown && 'w-[600px] max-lg:w-full'">
-				<div v-if="sesh?.user" class="flex flex-col">
-					<div class='flex'>
-						<img :src="sesh?.user.image" alt="user_logo" class='m-5 w-20 object-contain rounded-full'/>
-						<h2 class='ml-5 my-auto text-4xl text-gray-200 tracking-wider first-letter:capitalize'>{{sesh?.user.name}}<br /><span class='text-2xl'>{{sesh?.user.isAdmin ? "Officer" : "Member"}}</span></h2>
-					</div>
-
-					<hr class='border-gray-600'/>
-
-					<a v-bind:href="'/profile/' + sesh?.user.id + '?name=' + sesh?.user.name" class='mx-auto mt-5 pb-2 border-b border-transparent hover:border-gray-600 text-2xl text-gray-200 tracking-wider transition duration-300'>My Profile</a>
-					<a href="/create-briefing" class='mx-auto my-5 pb-2 border-b border-transparent hover:border-gray-600 text-2xl text-gray-200 tracking-wider'>Create Briefing</a>
-
-					<hr class='border-gray-600'/>
-
-					<div class='flex flex-col m-5'>
-						<button type="button" @click="() => signOut()" class="w-full py-2 text-center text-gray-200 tracking-wider text-2xl bg-red-800 hover:bg-gray-600 rounded-lg transition duration-300">
-							Sign Out
-						</button>
-					</div>
-				</div>
-				<div v-else class="flex flex-col">
+				
+				<div class="flex flex-col">
 					<div v-for="provider in prov" class='flex flex-col m-5'>
 						<button type="button" @click="() => signIn(provider.id)" class="w-full py-2 text-center text-gray-200 tracking-wider text-2xl hover:bg-gray-600 rounded-lg transition duration-300" :class="provider.id == 'discord' ? 'bg-indigo-500' : 'b-gray-800'">
 							Sign In with {{provider.name}}
