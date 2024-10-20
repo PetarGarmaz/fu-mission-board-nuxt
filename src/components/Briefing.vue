@@ -74,7 +74,7 @@
 					<hr class='border-gray-600'/>
 					<p class='mx-5 my-2 text-2xl text-gray-200 font-bold'>STATUS: {{briefingStore.briefing.status}}</p>
 
-					<div v-if="navbarStore.session.user && briefingStore.briefing.creator?._id == navbarStore.session?.user.id || navbarStore.session.user && navbarStore.session?.user.isAdmin">
+					<div v-if="navbarStore.session?.user && briefingStore.briefing.creator?._id == navbarStore.session?.user.id || navbarStore.session?.user && navbarStore.session?.user.isAdmin">
 						<hr class='border-gray-600'/>
 						<div class='flex flex-wrap'>
 							<button @click="handleEdit()" class='w-full mx-5 mt-5 text-center text-gray-200 bg-lime-700 border border-gray-600 hover:bg-lime-500 rounded-lg py-1 transition duration-300'>Edit Briefing</button>			
