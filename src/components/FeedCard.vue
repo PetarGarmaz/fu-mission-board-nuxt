@@ -31,7 +31,7 @@
 </script>
 
 <template>
-	<a v-bind:href="'/briefings/' + briefing._id" class="flex flex-col cursor-pointer bg-gray-900 my-5 border border-gray-600 rounded-lg transition duration-300 hover:bg-gray-700 hover:-translate-y-1 hover:translate-x-1 hover:drop-shadow-[-5px_5px_2px_rgba(0,0,0,0.5)">
+	<a v-bind:href="'/briefings/' + briefing._id" class="flex flex-col cursor-pointer bg-gray-900 my-5 border border-gray-600 rounded-lg transition duration-300 hover:bg-gray-700 hover:-translate-y-1 hover:translate-x-1 hover:drop-shadow-[-5px_5px_2px_rgba(0,0,0,0.5)]">
 		<header class='flex max-lg:flex-col'>
 			<img v-bind:src="briefing.creator.image" alt="Logo" class='object-cover w-16 mx-5 max-lg:mx-auto my-2 max-lg:my-5 rounded-full' />
 			<hr class='lg:hidden max-lg:border-gray-600'/>

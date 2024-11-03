@@ -69,6 +69,10 @@ p {
 	@apply text-lg max-lg:text-sm
 }
 
+.briefing-text p {
+	@apply whitespace-break-spaces
+}
+
 .briefing-text a {
 	@apply text-blue-400 underline
 }
@@ -88,6 +92,9 @@ p {
 
 .briefing-text-form {
 	@apply text-lg max-lg:text-sm
+}
+.briefing-text-form p {
+	@apply whitespace-break-spaces
 }
 
 .briefing-text-form a {
