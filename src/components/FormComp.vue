@@ -23,9 +23,11 @@
 		if(formStore.type == "Edit") {
 			formStore.handleEdit(event, props.briefingId);
 		} else {
+			//sendDiscordNotification();
 			formStore.handleSubmit(event, navbarStore.session);
 		}
-		sendMail();
+		
+		// sendMail();
 		router.push("/");
 	};
 
