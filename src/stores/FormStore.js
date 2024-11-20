@@ -94,7 +94,7 @@ class FormStore {
 				]
 			};
 
-			await fetch(process.env.DISCORD_MISSIONS_WEBHOOK, {
+			await fetch(import.meta.env.VITE_DISCORD_MISSIONS_WEBHOOK, {
 				headers: {
 					"Content-Type": "application/json",
 				},
