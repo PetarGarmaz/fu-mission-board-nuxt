@@ -118,7 +118,7 @@
 			<div v-if="formStore.type != 'Edit'" class="m-5">
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Ping Mission Makers (Optional): <button type="button" @click="tooltipStore.setTooltipType('ping')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
 				<input type="checkbox" class="h-6 w-6" :value="formStore.pingMissionMakers" @input="event => formStore.setPingMissionMakers(event.target.value)"/>
-				<Tooltip v-bind:tooltipType="'ping'" v-bind:tooltipValue="'Will you ping mission maker role upon creating the briefing.'"/>
+				<Tooltip v-bind:tooltipType="'ping'" v-bind:tooltipValue="'With great power, comes great responsibility!'"/>
 			</div>
 			
 			<img v-if="formStore.briefing.image" v-bind:src="formStore.briefing.image" alt="briefing_image" class="m-5 rounded-lg"/>
