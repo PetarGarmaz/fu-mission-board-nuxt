@@ -55,7 +55,7 @@ export default async function handler(req, res) {
 		for (let i = 0; i <= fridays.length - 1; i++) {
 			const embed = {
 				"title": "",
-				"description": `React with :${emojis[i]}: for <t:${fridays[i]}:F>`,
+				"description": `:${emojis[i]}: :  <t:${fridays[i]}:F>`,
 				"color": 16711680,
 			};
 
@@ -64,7 +64,7 @@ export default async function handler(req, res) {
 
 		const message = {
 			"attachments": [],
-			"content": "<@&598258350718713864>\n\nSchedule time! Here are the available mission slots this month:",
+			"content": "<@&598258350718713864>\n\nSchedule time!\n\nBelow you will find available mission slots this month. If you wish to schedule a mission [click here](https://a3.fugaming.org/create-briefing)!",
 			"embeds": messageEmbeds
 		};
 
