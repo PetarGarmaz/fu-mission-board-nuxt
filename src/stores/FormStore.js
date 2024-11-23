@@ -14,6 +14,7 @@ class FormStore {
 		status: "",
 	};
 	showPreview = false;
+	pingMissionMakers = false;
 
 	constructor () {
 		makeAutoObservable(this);
@@ -42,6 +43,10 @@ class FormStore {
 	setAllBriefing = (val) => {
 		this.allBriefings = val;
 	};
+
+	setPingMissionMakers = (val) => {
+		this.pingMissionMakers = val;
+	}
 
 	getDisabledDates = (allBriefings) => {
 		var dates = [];
@@ -78,10 +83,13 @@ class FormStore {
 
 	handleDiscordMessage = async (data) => {
 		try {
+			const defaultTitle = `**${data.host}** has posted a new briefing!\n\n[<<< Click here for more mission details >>>](https://a3.fugaming.org/briefings/${data._id}\n\n)`;
+			const pingRole = "<@&598258350718713864>\n\n";
+			const newTitle = this.pingMissionMakers ? pingRole + defaultTitle : defaultTitle;
 			const editedDescription = data.desc.replace(/___/g, '');
 			const message = {
 				"attachments": [],
-				"content": `<@&598258350718713864>\n\n**${data.host}** has posted a new briefing!\n\n[<<< Click here for more mission details >>>](https://a3.fugaming.org/briefings/${data._id}\n\n)`,
+				"content": newTitle,
 				"embeds": [
 					{
 						"title": `${data.title}\nHost: ${data.host}\n-----------------------------------\n<t:${data.timestamp / 1000}:F>`,

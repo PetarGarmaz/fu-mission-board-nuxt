@@ -38,11 +38,7 @@
 		return rend;
 	};
 
-	const handlePreview = () => {
-		showPreview = !showPreview;
-	}
-
-	const sendMail = () => {
+	/*const sendMail = () => {
 		try {
 			const mail = useMail();
 
@@ -54,7 +50,7 @@
 		} catch (error) {
 			console.log("Error sending mail:\n" + error);
 		}		
-	};
+	};*/
 
 	onMounted(async () => {
 		if(props.briefingId) {
@@ -117,6 +113,12 @@
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Image (Optional): <button type="button" @click="tooltipStore.setTooltipType('image')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
 				<input  placeholder="Insert image link here..." rows="2" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 w-full transition duration-300" :value="formStore.briefing.image" @input="event => formStore.setBriefing({...formStore.briefing, image: event.target.value})"/>
 				<Tooltip v-bind:tooltipType="'image'" v-bind:tooltipValue="'Enter a custom image link, e.g. https://i.imgur.com/XUgMBZN.jpeg'"/>
+			</div>
+
+			<div v-if="formStore.type != 'Edit'" class="m-5">
+				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Ping Mission Makers (Optional): <button type="button" @click="tooltipStore.setTooltipType('ping')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
+				<input type="checkbox" class="h-6 w-6" :value="formStore.pingMissionMakers" @input="event => formStore.setPingMissionMakers(event.target.value)"/>
+				<Tooltip v-bind:tooltipType="'ping'" v-bind:tooltipValue="'Will you ping mission maker role upon creating the briefing.'"/>
 			</div>
 			
 			<img v-if="formStore.briefing.image" v-bind:src="formStore.briefing.image" alt="briefing_image" class="m-5 rounded-lg"/>
