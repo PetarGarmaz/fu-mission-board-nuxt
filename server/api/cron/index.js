@@ -47,10 +47,6 @@ export default async function handler(req, res) {
 
 			const newDateTimestamp = Math.round(newDate.getTime() / 1000);
 
-			console.log(newDateTimestamp);
-			console.log(allBriefings.includes((newDateTimestamp * 1000).toString()));
-
-
 			if(newDate.getDay() == 5 && !allBriefings.includes((newDateTimestamp * 1000).toString())) {
 				fridays.push(newDateTimestamp);
 			};
