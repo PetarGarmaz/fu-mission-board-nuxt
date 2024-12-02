@@ -1,3 +1,5 @@
+import { eventHandler } from "h3";
+
 async function authorize(req) {
 	return new Promise((resolve) => {
 		if(req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -28,7 +30,7 @@ async function getAllBriefings() {
 	return timestamps;
 };
 
-export default async function eventHandler(req, res) {
+export default eventHandler(async (req) => {
 	const response = await authorize(req);
 
 	if (response) {
@@ -78,4 +80,4 @@ export default async function eventHandler(req, res) {
 
 		return new Response("Nice!", {status: 200});
 	};
-};
+});
