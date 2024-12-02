@@ -14,6 +14,20 @@
 	import MarkdownIt from 'markdown-it';
 	import MarkdownItAttrs from 'markdown-it-attrs';
 
+	const roles = ref([
+		{
+			name: "Armored",
+			icon: "/roles/a3_armored.png",
+			selected: false,
+			slots: 1,
+		},
+		{
+			name: "Artillery",
+			icon: "/roles/a3_artillery.png",
+			selected: false,
+			slots: 1,
+		},
+	]);
 	const date = ref(formStore.date);
 	const router = useRouter();
 	const props = defineProps(["briefingId"]);
@@ -38,19 +52,10 @@
 		return rend;
 	};
 
-	/*const sendMail = () => {
-		try {
-			const mail = useMail();
-
-			mail.send({
-				from: 'mailtrap@demomailtrap.com',
-				subject: formStore.briefing.title + " - " + formStore.briefing.host,
-				text: formStore.briefing.title.toUpperCase() + "\n\nHOST: " + formStore.briefing.host + "\n\nLINK: " + "https://a3.fugaming.org/briefings/" + formStore.briefing._id + "\n\nTIMESTAMP: " + formStore.briefing.timestamp + "\n\nBRIEFING:\n" + formStore.briefing.desc,
-			})
-		} catch (error) {
-			console.log("Error sending mail:\n" + error);
-		}		
-	};*/
+	const handleRole = (role, value) => {
+		role.selected = value;
+		console.log(value);
+	};
 
 	onMounted(async () => {
 		if(props.briefingId) {
@@ -119,6 +124,24 @@
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Ping Mission Makers (Optional): <button type="button" @click="tooltipStore.setTooltipType('ping')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
 				<input type="checkbox" class="h-6 w-6" :value="formStore.pingMissionMakers" @input="event => formStore.setPingMissionMakers(event.target.value)"/>
 				<Tooltip v-bind:tooltipType="'ping'" v-bind:tooltipValue="'With great power, comes great responsibility!'"/>
+			</div>
+
+			<div v-if="formStore.type != 'Edit'" class="m-5">
+				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Special Roles (Optional): <button type="button" @click="tooltipStore.setTooltipType('roles')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
+				
+				<div v-for="role in roles" class="grid grid-cols-7 gap-5 my-5">
+					<img v-bind:src="role.icon" alt="" class="w-10">
+					<p class="text-left">{{role.name}}</p>
+					<input type="checkbox" class="h-6 w-6 mt-2" @input="event => handleRole(role, event.target.checked)"/>
+					<div v-if="role.selected" class="grid grid-cols-4 col-start-4 col-end-7 gap-5">
+						<p>Min Slots:</p>
+						<input type="number" placeholder="2" rows="2" min="1" max="9" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 transition duration-300"/>
+						<p>Max Slots:</p>
+						<input type="number" placeholder="2" rows="2" min="1" max="9" class="flex text-gray-200 tracking-wider lg:text-lg bg-gray-800 border border-gray-600 hover:bg-gray-700 rounded-lg resize-none py-1 px-2 transition duration-300"/>
+					</div>
+				</div>
+
+				<Tooltip v-bind:tooltipType="'roles'" v-bind:tooltipValue="'Roles available to players'"/>
 			</div>
 			
 			<img v-if="formStore.briefing.image" v-bind:src="formStore.briefing.image" alt="briefing_image" class="m-5 rounded-lg"/>
