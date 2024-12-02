@@ -92,7 +92,7 @@ class FormStore {
 				"content": newTitle,
 				"embeds": [
 					{
-						"title": `${data.title}\nHost: ${data.host}\n-----------------------------------\n<t:${data.timestamp / 1000}:F>`,
+						"title": `${data.title}\nHost: ${data.host}\n-----------------------------------\n<t:${data.timestamp / 1000}:F>\nTimestamp:\`<t:${data.timestamp / 1000}:F>\``,
 						"description": `${editedDescription}`,
 						"color": 16711680,
 						"image": {
