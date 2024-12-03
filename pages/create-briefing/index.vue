@@ -14,8 +14,8 @@ import { ClientOnly } from '#build/components';
 		
 		setTimeout(() => {
 			if(!navbarStore.session?.accessToken) {
-				//alert("You are not logged in currently, you cannot make any briefings!");
-				//router.push("/");
+				alert("You are not logged in currently, you cannot make any briefings!");
+				router.push("/");
 			};
 		}, "1000");
 	})
