@@ -126,6 +126,7 @@
 				<Tooltip v-bind:tooltipType="'ping'" v-bind:tooltipValue="'With great power, comes great responsibility!'"/>
 			</div>
 
+			<!--
 			<div v-if="formStore.type != 'Edit'" class="m-5">
 				<h3 class="text-2xl text-gray-200 tracking-wider mb-2">Special Roles (Optional): <button type="button" @click="tooltipStore.setTooltipType('roles')" class="font-normal cursor-pointer transition-all duration-300">ⓘ</button></h3>
 				
@@ -143,6 +144,7 @@
 
 				<Tooltip v-bind:tooltipType="'roles'" v-bind:tooltipValue="'Roles available to players'"/>
 			</div>
+			-->
 			
 			<img v-if="formStore.briefing.image" v-bind:src="formStore.briefing.image" alt="briefing_image" class="m-5 rounded-lg"/>
 			

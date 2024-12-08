@@ -71,9 +71,10 @@ const handler = NuxtAuthHandler({
 
 				//Update image - incase it was changed
 				if(userExists) {
-					const doc = await Model.findById(user.id);
-					doc.image = user.image;
-					await doc.save();
+					if(userExists.image != user.image) {
+						userExists.image = user.image;
+						await userExists.save();
+					}
 				}
 
 				return returnValue;
