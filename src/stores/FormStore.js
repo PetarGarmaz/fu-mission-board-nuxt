@@ -65,7 +65,7 @@ class FormStore {
 		try {
 			//const offset = (this.date.getTimezoneOffset() / 60);
 			//console.log(offset);
-			const timestamp = this.date.setUTCHours(19,0,0,0);
+			const timestamp = this.date.setUTCHours(18,0,0,0);
 			this.setBriefing({...this.briefing, creator: session.user.id, timestamp: timestamp});
 			
 			const result = await fetch("/api/briefings/new", {
